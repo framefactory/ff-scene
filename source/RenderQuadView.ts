@@ -5,9 +5,10 @@
  * License: MIT
  */
 
+import { EViewPreset, EProjection } from "@ff/three/UniversalCamera";
+
 import RenderSystem from "./RenderSystem";
 import RenderView from "./RenderView";
-import { EViewPreset, EProjection } from "../UniversalCamera";
 
 ////////////////////////////////////////////////////////////////////////////////
 

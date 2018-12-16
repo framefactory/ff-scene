@@ -18,8 +18,9 @@ import {
 } from "@ff/browser/ManipTarget";
 
 import Picker from "@ff/three/Picker";
+import Viewport, { IViewportBaseEvent } from "@ff/three/Viewport";
+
 import RenderSystem, { IRenderContext } from "./RenderSystem";
-import Viewport, { IViewportBaseEvent } from "../Viewport";
 
 ////////////////////////////////////////////////////////////////////////////////
 
