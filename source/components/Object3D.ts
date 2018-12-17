@@ -8,14 +8,13 @@
 import * as THREE from "three";
 
 import {
-    Component,
     IComponentEvent,
     Node
 } from "@ff/graph";
 
 import IndexShader from "@ff/three/shaders/IndexShader";
-import RenderSystem from "../RenderSystem";
 import Transform from "./Transform";
+import Component from "../Component";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -44,12 +43,17 @@ const _renderContext = {
     group: null
 };
 
+/**
+ * Base component for Three.js renderable objects.
+ * If component is added to a node together with a [[Transform]] component,
+ * it is automatically added as a child to the transform.
+ */
 export default class Object3D extends Component
 {
     static readonly type: string = "Object3D";
 
-    private _transform: Transform = null;
     private _object3D: THREE.Object3D = null;
+
 
     constructor(node: Node, id?: string)
     {
@@ -67,16 +71,6 @@ export default class Object3D extends Component
         }
     }
 
-    get renderSystem(): RenderSystem
-    {
-        return this.system as RenderSystem;
-    }
-
-    get transform(): Transform
-    {
-        return this._transform;
-    }
-
     get object3D(): THREE.Object3D | null
     {
         return this._object3D;
@@ -84,10 +78,16 @@ export default class Object3D extends Component
 
     set object3D(object: THREE.Object3D)
     {
+        const transform = this.transform;
         const currentObject = this._object3D;
-        if (currentObject && this._transform) {
-            this._transform.removeObject3D(currentObject);
-            this.renderSystem.removeObject3D(currentObject);
+
+        if (currentObject) {
+            this.system.removeObject3D(currentObject);
+
+            if (transform) {
+                transform.removeObject3D(currentObject);
+            }
+
             currentObject.onBeforeRender = undefined;
             currentObject.onAfterRender = undefined;
             currentObject.userData["component"] = null;
@@ -105,10 +105,10 @@ export default class Object3D extends Component
                 object.onAfterRender = this._onAfterRender;
             }
 
-            this.renderSystem.addObject3D(object);
+            this.system.addObject3D(object);
 
-            if (this._transform) {
-                this._transform.addObject3D(object);
+            if (transform) {
+                transform.addObject3D(object);
             }
         }
     }
@@ -116,12 +116,10 @@ export default class Object3D extends Component
     create()
     {
         this.trackComponent(Transform, transform => {
-            this._transform = transform;
             if (this._object3D) {
                 transform.addObject3D(this._object3D);
             }
         }, transform => {
-            this._transform = null;
             if (this._object3D) {
                 transform.removeObject3D(this._object3D);
             }
@@ -130,8 +128,12 @@ export default class Object3D extends Component
 
     dispose()
     {
-        if (this._object3D && this._transform) {
-            this._transform.removeObject3D(this._object3D);
+        if (this._object3D) {
+            const transform = this.transform;
+
+            if (transform) {
+                transform.removeObject3D(this._object3D);
+            }
         }
 
         super.dispose();
@@ -142,7 +144,17 @@ export default class Object3D extends Component
         return super.toString() + (this._object3D ? ` - type: ${this._object3D.type}` : " - (null)");
     }
 
+    /**
+     * Override to get a callback from the Three.js renderer right before actual rendering.
+     * @param context Three.js specific information about the object being rendered.
+     */
     protected beforeRender?(context: IObject3DRenderContext);
+
+    /**
+     * Override to get a callback from the Three.js renderer right after actual rendering.
+     * @param context Three.js specific information about the object being rendered.
+     */
+    protected afterRender?(context: IObject3DRenderContext);
 
     private _onBeforeRender(
         renderer: THREE.WebGLRenderer,
@@ -153,6 +165,8 @@ export default class Object3D extends Component
         group: THREE.Group)
     {
         const shader = material as IndexShader;
+
+        // index rendering for picking: set shader index uniform to object index
         if (shader.isIndexShader) {
             shader.setIndex(this._object3D.userData["index"]);
         }
@@ -168,8 +182,6 @@ export default class Object3D extends Component
             this.beforeRender(_renderContext);
         }
     }
-
-    protected afterRender?(context: IObject3DRenderContext);
 
     private _onAfterRender(
         renderer: THREE.WebGLRenderer,

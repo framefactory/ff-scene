@@ -5,7 +5,8 @@
  * License: MIT
  */
 
-import { Component, Node } from "@ff/graph";
+import Node from "@ff/graph/Node";
+import Component from "../Component";
 
 ////////////////////////////////////////////////////////////////////////////////
 

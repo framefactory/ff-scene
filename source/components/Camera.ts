@@ -12,6 +12,8 @@ import Object3D from "./Object3D";
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export { EProjection };
+
 export default class Camera extends Object3D
 {
     static readonly type: string = "Camera";

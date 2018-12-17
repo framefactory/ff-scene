@@ -45,14 +45,75 @@ export default class Transform extends Hierarchy
         matrix: types.Matrix4("Matrix")
     });
 
-    private _object: THREE.Object3D;
+    private _object3D: THREE.Object3D;
 
     constructor(node: Node, id?: string)
     {
         super(node, id);
 
-        this._object = new THREE.Object3D();
-        this._object.matrixAutoUpdate = false;
+        this._object3D = this.createObject3D();
+        this._object3D.matrixAutoUpdate = false;
+    }
+
+    /**
+     * Returns the three.js renderable object wrapped in this component.
+     * @returns {Object3D}
+     */
+    get object3D(): THREE.Object3D
+    {
+        return this._object3D;
+    }
+
+    /**
+     * Returns an array of child components of this.
+     * @returns {Readonly<Hierarchy[]>}
+     */
+    get children(): Readonly<Transform[]>
+    {
+        return this._children as Transform[] || [];
+    }
+
+    /**
+     * Returns a reference to the local transformation matrix.
+     * @returns {THREE.Matrix4}
+     */
+    get matrix(): Readonly<THREE.Matrix4>
+    {
+        return this._object3D.matrix;
+    }
+
+    update()
+    {
+        const object3D = this._object3D;
+        const { position, rotation, order, scale } = this.ins;
+        const { matrix } = this.outs;
+
+        object3D.position.fromArray(position.value);
+        _vec3.fromArray(rotation.value).multiplyScalar(math.DEG2RAD);
+        const orderName = types.getEnumName(ERotationOrder, order.value);
+        object3D.rotation.setFromVector3(_vec3, orderName);
+        object3D.scale.fromArray(scale.value);
+        object3D.updateMatrix();
+
+        (object3D.matrix as any).toArray(matrix.value);
+        matrix.set();
+
+        return true;
+    }
+
+    dispose()
+    {
+        if (!this._object3D) {
+            return;
+        }
+
+        // detach the three.js object from its parent and children
+        if (this._object3D.parent) {
+            this._object3D.parent.remove(this._object3D);
+        }
+        this._object3D.children.slice().forEach(child => this._object3D.remove(child));
+
+        super.dispose();
     }
 
     setFromMatrix(matrix: THREE.Matrix4)
@@ -74,66 +135,6 @@ export default class Transform extends Hierarchy
         scale.set();
     }
 
-    update()
-    {
-        const object = this._object;
-        const { position, rotation, order, scale } = this.ins;
-        const { matrix } = this.outs;
-
-        object.position.fromArray(position.value);
-        _vec3.fromArray(rotation.value).multiplyScalar(math.DEG2RAD);
-        const orderName = types.getEnumName(ERotationOrder, order.value);
-        object.rotation.setFromVector3(_vec3, orderName);
-        object.scale.fromArray(scale.value);
-        object.updateMatrix();
-
-        (object.matrix as any).toArray(matrix.value);
-        matrix.set();
-
-        return true;
-    }
-
-    dispose()
-    {
-        if (!this._object) {
-            return;
-        }
-
-        // detach the three.js object from its parent and children
-        if (this._object.parent) {
-            this._object.parent.remove(this._object);
-        }
-        this._object.children.slice().forEach(child => this._object.remove(child));
-
-        super.dispose();
-    }
-
-    /**
-     * Returns the three.js renderable object wrapped in this component.
-     * @returns {Object3D}
-     */
-    get object3D(): THREE.Object3D
-    {
-        return this._object;
-    }
-
-    /**
-     * Returns an array of child components of this.
-     * @returns {Readonly<Hierarchy[]>}
-     */
-    get children(): Readonly<Transform[]>
-    {
-        return this._children as Transform[] || [];
-    }
-
-    /**
-     * Returns a reference to the local transformation matrix.
-     * @returns {TMatrix4}
-     */
-    get matrix(): Readonly<THREE.Matrix4>
-    {
-        return this._object.matrix;
-    }
 
     /**
      * Adds a child [[HierarchyComponent]] or [[TransformComponent]] to this.
@@ -142,7 +143,7 @@ export default class Transform extends Hierarchy
     addChild(component: Transform)
     {
         super.addChild(component);
-        this._object.add(component._object);
+        this._object3D.add(component._object3D);
     }
 
     /**
@@ -151,7 +152,7 @@ export default class Transform extends Hierarchy
      */
     removeChild(component: Transform)
     {
-        this._object.remove(component._object);
+        this._object3D.remove(component._object3D);
         super.removeChild(component);
     }
 
@@ -162,7 +163,7 @@ export default class Transform extends Hierarchy
      */
     addObject3D(object: THREE.Object3D)
     {
-        this._object.add(object);
+        this._object3D.add(object);
     }
 
     /**
@@ -172,6 +173,11 @@ export default class Transform extends Hierarchy
      */
     removeObject3D(object: THREE.Object3D)
     {
-        this._object.remove(object);
+        this._object3D.remove(object);
+    }
+
+    protected createObject3D()
+    {
+        return new THREE.Object3D();
     }
 }

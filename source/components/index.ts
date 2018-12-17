@@ -5,8 +5,6 @@
  * License: MIT
  */
 
-import { Registry } from "@ff/graph";
-
 import BasicMaterial from "./BasicMaterial";
 import Box from "./Box";
 import Camera from "./Camera";
@@ -43,19 +41,16 @@ export {
     Transform
 };
 
-export function registerComponents(registry: Registry)
-{
-    registry.registerComponentType([
-        BasicMaterial,
-        Box,
-        Camera,
-        DirectionalLight,
-        Mesh,
-        PhongMaterial,
-        PointLight,
-        Scene,
-        SpotLight,
-        Torus,
-        Transform
-    ]);
-};
+export const componentTypes = [
+    BasicMaterial,
+    Box,
+    Camera,
+    DirectionalLight,
+    Mesh,
+    PhongMaterial,
+    PointLight,
+    Scene,
+    SpotLight,
+    Torus,
+    Transform
+];
