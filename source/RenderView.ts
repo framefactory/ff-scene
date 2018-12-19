@@ -17,7 +17,7 @@ import {
     IManipTriggerEvent
 } from "@ff/browser/ManipTarget";
 
-import Picker from "@ff/three/Picker";
+import GPUPicker from "@ff/three/GPUPicker";
 import Viewport, { IViewportBaseEvent } from "@ff/three/Viewport";
 
 import RenderSystem, { IRenderContext } from "./RenderSystem";
@@ -52,7 +52,7 @@ export default class RenderView implements IManip
 
     protected shouldResize = false;
     protected context: IRenderContext;
-    protected picker: Picker;
+    protected picker: GPUPicker;
 
     constructor(system: RenderSystem, canvas: HTMLCanvasElement, overlay: HTMLElement)
     {
@@ -68,7 +68,7 @@ export default class RenderView implements IManip
         this.renderer.autoClear = false;
         this.renderer.setClearColor("#0090c0");
 
-        this.picker = new Picker(this.renderer);
+        this.picker = new GPUPicker(this.renderer);
 
         this.context = {
             view: this,
@@ -76,6 +76,11 @@ export default class RenderView implements IManip
             scene: null,
             camera: null
         };
+    }
+
+    dispose()
+    {
+        this.renderer.dispose();
     }
 
     get canvasWidth()
@@ -104,13 +109,9 @@ export default class RenderView implements IManip
         this.system.detachView(this);
     }
 
-    render()
+    render(scene: THREE.Scene, camera: THREE.Camera)
     {
-        const scene = this.system.activeScene;
-        const camera = this.system.activeCamera;
-
         if (!scene || !camera) {
-            console.warn("scene and/or camera missing");
             return;
         }
 
@@ -291,9 +292,18 @@ export default class RenderView implements IManip
                 }
                 else {
                     object3D = this.system.getObjectByIndex(index);
-                    if (object3D) {
+                    while(object3D && !component) {
+                        component = object3D.userData["component"];
+                        if (!component) {
+                            object3D = object3D.parent;
+                        }
+                    }
+                    if (component) {
                         component = object3D.userData["component"];
                         console.log("Pick Index - #%s Component: %s", index, component.type);
+                    }
+                    else {
+                        console.warn("Pick Index - #%s Background");
                     }
                 }
             }

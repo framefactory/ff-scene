@@ -10,8 +10,6 @@ import * as THREE from "three";
 import { Dictionary } from "@ff/core/types";
 
 import {
-    Component,
-    IComponentTypeEvent,
     System,
     Registry,
     Pulse
@@ -27,6 +25,7 @@ import RenderView, {
 
 import Scene from "./components/Scene";
 import Camera from "./components/Camera";
+import Main from "./components/Main";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -42,23 +41,12 @@ export interface IRenderContext
     camera: THREE.Camera;
 }
 
-export interface IManipTarget extends Component
-{
-    onPointer?: (event: IPointerEvent) => boolean;
-    onTrigger?: (event: ITriggerEvent) => boolean;
-}
-
 export default class RenderSystem extends System
 {
     protected pulse: Pulse;
     protected animHandler: number;
     protected views: RenderView[];
     protected objects: Dictionary<THREE.Object3D>;
-
-    protected manipTargets: Set<IManipTarget>;
-
-    protected _activeSceneComponent: Scene;
-    protected _activeCameraComponent: Camera;
 
 
     constructor(registry?: Registry)
@@ -71,30 +59,34 @@ export default class RenderSystem extends System
         this.animHandler = 0;
         this.views = [];
         this.objects = {};
-
-        this.manipTargets = new Set();
-
-        this._activeSceneComponent = null;
-        this._activeCameraComponent = null;
-
-        this.addComponentTypeListener(Scene, this.onSceneComponent, this);
-        this.addComponentTypeListener(Camera, this.onCameraComponent, this);
     }
 
-    get activeSceneComponent() {
-        return this._activeSceneComponent;
+    get activeSceneComponent(): Scene | null {
+        const mainComponent = this.components.get(Main);
+        if (mainComponent) {
+            return mainComponent.sceneComponent;
+        }
+
+        return this.components.get(Scene);
     }
 
     get activeCameraComponent() {
-        return this._activeCameraComponent;
+        const mainComponent = this.components.get(Main);
+        if (mainComponent) {
+            return mainComponent.cameraComponent;
+        }
+
+        return this.components.get(Camera);
     }
 
     get activeScene(): THREE.Scene {
-        return this._activeSceneComponent ? this._activeSceneComponent.scene : null;
+        const sceneComponent = this.activeSceneComponent;
+        return sceneComponent ? sceneComponent.scene : null;
     }
 
     get activeCamera(): THREE.Camera {
-        return this._activeCameraComponent ? this._activeCameraComponent.camera : null;
+        const cameraComponent = this.activeCameraComponent;
+        return cameraComponent ? cameraComponent.camera : null;
     }
 
     start()
@@ -180,53 +172,23 @@ export default class RenderSystem extends System
         this.update(pulse);
         this.tick(pulse);
 
+        const scene = this.activeScene;
+        const camera = this.activeCamera;
+
+        if (!scene) {
+            console.warn("no active scene");
+        }
+        if (!camera) {
+            console.warn("no active camera");
+        }
+
         // this in turn calls preRender() and postRender() for each view and viewport
-        this.views.forEach(view => view.render());
+        this.views.forEach(view => view.render(scene, camera));
     }
 
     protected onAnimationFrame()
     {
         this.renderFrame();
         this.animHandler = window.requestAnimationFrame(this.onAnimationFrame);
-    }
-
-    protected onCameraComponent(event: IComponentTypeEvent<Camera>)
-    {
-        if (event.add && !this._activeCameraComponent) {
-            this._activeCameraComponent = event.component;
-        }
-        else if (event.remove && this._activeCameraComponent === event.component) {
-            this._activeCameraComponent = null;
-        }
-    }
-
-    protected onSceneComponent(event: IComponentTypeEvent<Scene>)
-    {
-        if (event.add && !this._activeSceneComponent) {
-            this._activeSceneComponent = event.component;
-        }
-        else if (event.remove && this._activeSceneComponent === event.component) {
-            this._activeSceneComponent = null;
-        }
-    }
-
-    protected componentAdded(component: Component): void
-    {
-        super.componentAdded(component);
-
-        const manipTarget = component as IManipTarget;
-        if (manipTarget.onPointer || manipTarget.onTrigger) {
-            this.manipTargets.add(manipTarget);
-        }
-    }
-
-    protected componentRemoved(component: Component): void
-    {
-        super.componentRemoved(component);
-
-        const manipTarget = component as IManipTarget;
-        if (manipTarget.onPointer || manipTarget.onTrigger) {
-            this.manipTargets.delete(manipTarget);
-        }
     }
 }

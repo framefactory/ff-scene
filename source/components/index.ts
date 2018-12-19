@@ -11,6 +11,7 @@ import Camera from "./Camera";
 import DirectionalLight from "./DirectionalLight";
 import Geometry from "./Geometry";
 import Light from "./Light";
+import Main from "./Main";
 import Material from "./Material";
 import Mesh from "./Mesh";
 import Object3D from "./Object3D";
@@ -30,6 +31,7 @@ export {
     DirectionalLight,
     Geometry,
     Light,
+    Main,
     Material,
     Mesh,
     Object3D,
@@ -46,6 +48,7 @@ export const componentTypes = [
     Box,
     Camera,
     DirectionalLight,
+    Main,
     Mesh,
     PhongMaterial,
     PointLight,
