@@ -28,7 +28,7 @@ import {
 
 const createScene = function(graph: Graph, name?: string): Node
 {
-    const entity = graph.createNode(name);
+    const entity = graph.createNode(Node, name);
     entity.createComponent(Scene);
     return entity;
 };
@@ -40,7 +40,7 @@ const createTransform = function(parent: Node, name?: string): Node
         throw new Error("can't attach to parent; missing a hierarchy component");
     }
 
-    const entity = parent.graph.createNode(name);
+    const entity = parent.graph.createNode(Node, name);
     hierarchy.addChild(entity.createComponent(Transform));
     return entity;
 };

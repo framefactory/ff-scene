@@ -7,7 +7,9 @@
 
 import Commander from "@ff/core/Commander";
 import SelectionControllerBase from "@ff/graph/SelectionController";
-import RenderSystem, { IPointerEvent, EPointerEventType } from "./RenderSystem";
+
+import { IPointerEvent, EPointerEventType } from "./RenderView";
+import RenderSystem from "./RenderSystem";
 
 ////////////////////////////////////////////////////////////////////////////////
 

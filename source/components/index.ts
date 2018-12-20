@@ -15,6 +15,7 @@ import Main from "./Main";
 import Material from "./Material";
 import Mesh from "./Mesh";
 import Object3D from "./Object3D";
+import OrbitManipulator from "./OrbitManipulator";
 import PhongMaterial from "./PhongMaterial";
 import PointLight from "./PointLight";
 import Scene from "./Scene";
@@ -35,6 +36,7 @@ export {
     Material,
     Mesh,
     Object3D,
+    OrbitManipulator,
     PhongMaterial,
     PointLight,
     Scene,
@@ -50,6 +52,7 @@ export const componentTypes = [
     DirectionalLight,
     Main,
     Mesh,
+    OrbitManipulator,
     PhongMaterial,
     PointLight,
     Scene,

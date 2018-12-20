@@ -212,7 +212,7 @@ export default class RenderView implements IManip
         const viewEvent = this.routeEvent(event, doHitTest, doPick);
 
         if (viewEvent) {
-            system.onPointer(viewEvent);
+            system.emitComponentEvent(viewEvent.component, "pointer", viewEvent);
             if (!viewEvent.stopPropagation) {
                 viewEvent.viewport.onPointer(viewEvent);
             }
@@ -233,7 +233,7 @@ export default class RenderView implements IManip
         const viewEvent = this.routeEvent(event, true, true);
 
         if (viewEvent) {
-            system.onTrigger(viewEvent);
+            system.emitComponentEvent(viewEvent.component, "trigger", viewEvent);
             if (!viewEvent.stopPropagation) {
                 viewEvent.viewport.onTrigger(viewEvent);
             }

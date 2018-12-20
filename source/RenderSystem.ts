@@ -18,23 +18,13 @@ import {
 
 import IndexShader from "@ff/three/shaders/IndexShader";
 
-import RenderView, {
-    Viewport,
-    IPointerEvent,
-    ITriggerEvent,
-    EPointerEventType,
-    ETriggerEventType
-} from "./RenderView";
+import RenderView, { Viewport } from "./RenderView";
 
 import Scene from "./components/Scene";
 import Camera from "./components/Camera";
 import Main from "./components/Main";
 
 ////////////////////////////////////////////////////////////////////////////////
-
-let _nextObjectIndex = 1;
-
-export { IPointerEvent, ITriggerEvent, EPointerEventType, ETriggerEventType };
 
 export interface IRenderContext
 {
@@ -158,30 +148,6 @@ export default class RenderSystem extends System
     getObjectByIndex(index: number): THREE.Object3D
     {
         return this.objects[index];
-    }
-
-    onPointer(event: IPointerEvent)
-    {
-        const target = event.component || this.activeSceneComponent;
-        this.emitComponentEvent(target, "pointer", event);
-
-        if (!event.stopPropagation) {
-            this.emitAny("pointer", event);
-        }
-
-        return true;
-    }
-
-    onTrigger(event: ITriggerEvent)
-    {
-        const target = event.component || this.activeSceneComponent;
-        this.emitComponentEvent(target, "trigger", event);
-
-        if (!event.stopPropagation) {
-            this.emitAny("trigger", event);
-        }
-
-        return true;
     }
 
     protected renderFrame()
