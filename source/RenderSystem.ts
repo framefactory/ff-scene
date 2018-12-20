@@ -10,10 +10,13 @@ import * as THREE from "three";
 import { Dictionary } from "@ff/core/types";
 
 import {
+    Component,
     System,
     Registry,
     Pulse
 } from "@ff/graph";
+
+import IndexShader from "@ff/three/shaders/IndexShader";
 
 import RenderView, {
     Viewport,
@@ -122,17 +125,34 @@ export default class RenderSystem extends System
         //console.log("RenderSystem.detachView - total views: %s", this.views.length);
     }
 
-    addObject3D(object: THREE.Object3D)
+    registerObject3D(object: THREE.Object3D, component?: Component)
     {
-        const index = _nextObjectIndex++;
-        object.userData["index"] = index;
-        this.objects[index] = object;
+        if (component) {
+            object.userData["component"] = component;
+        }
+
+        object.traverse(object => {
+            if ((object as any).isMesh) {
+                this.objects[object.id] = object;
+                object.onBeforeRender = function(renderer, scene, camera, geometry, material) {
+                    const shader = material as IndexShader;
+                    // index rendering for picking: set shader index uniform to object index
+                    if (shader.isIndexShader) {
+                        shader.setIndex(this.id);
+                    }
+                }
+            }
+        });
     }
 
-    removeObject3D(object: THREE.Object3D)
+    unregisterObject3D(object: THREE.Object3D)
     {
-        const index = object.userData["index"];
-        delete this.objects[index];
+        object.traverse(object => {
+            if ((object as any).isMesh) {
+                object.onBeforeRender = null;
+                delete this.objects[object.id];
+            }
+        });
     }
 
     getObjectByIndex(index: number): THREE.Object3D
