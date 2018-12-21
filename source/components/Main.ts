@@ -81,7 +81,6 @@ export default class Main extends Component
 
     protected onSceneComponent(event: IComponentTypeEvent<Scene>)
     {
-        console.log("Main.onSceneComponent", event.component.type);
         const inScene = this.ins.scene;
 
         if (event.add) {
@@ -104,7 +103,6 @@ export default class Main extends Component
 
     protected onCameraComponent(event: IComponentTypeEvent<Camera>)
     {
-        console.log("Main.onCameraComponent", event.component.type);
         const inCamera = this.ins.camera;
 
         if (event.add) {
