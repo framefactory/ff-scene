@@ -5,11 +5,9 @@
  * License: MIT
  */
 
-import {
-    Node,
-    Graph,
-    Hierarchy
-} from "@ff/graph";
+import Node from "@ff/graph/Node";
+import Graph from "@ff/graph/Graph";
+import Hierarchy from "@ff/graph/Hierarchy";
 
 import {
     Box,

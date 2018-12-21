@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import { types } from "@ff/graph";
+import { types } from "@ff/graph/propertyTypes";
 
 import ObjectManipulator from "@ff/three/ObjectManipulator";
 

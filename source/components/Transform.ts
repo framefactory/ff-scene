@@ -10,11 +10,9 @@ import * as THREE from "three";
 import { Readonly } from "@ff/core/types";
 import math from "@ff/core/math";
 
-import {
-    types,
-    Hierarchy,
-    Node
-} from "@ff/graph";
+import { types } from "@ff/graph/propertyTypes";
+import Hierarchy from "@ff/graph/Hierarchy";
+import Node from "@ff/graph/Node";
 
 ////////////////////////////////////////////////////////////////////////////////
 

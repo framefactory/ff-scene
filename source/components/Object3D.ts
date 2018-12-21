@@ -7,10 +7,8 @@
 
 import * as THREE from "three";
 
-import {
-    IComponentEvent,
-    Node
-} from "@ff/graph";
+import { IComponentEvent } from "@ff/graph/Component";
+import Node from "@ff/graph/Node";
 
 import Transform from "./Transform";
 import Component from "../Component";

@@ -7,7 +7,8 @@
 
 import * as THREE from "three";
 
-import { types, IComponentTypeEvent } from "@ff/graph";
+import { types } from "@ff/graph/propertyTypes";
+import { IComponentTypeEvent } from "@ff/graph/System"
 
 import Component from "../Component";
 import Scene from "./Scene";

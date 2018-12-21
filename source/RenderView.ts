@@ -7,7 +7,8 @@
 
 import * as THREE from "three";
 
-import { Node, Component } from "@ff/graph";
+import Node from "@ff/graph/Node";
+import Component from "@ff/graph/Component";
 
 import {
     EManipPointerEventType as EPointerEventType,

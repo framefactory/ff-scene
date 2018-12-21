@@ -9,12 +9,10 @@ import * as THREE from "three";
 
 import { Dictionary } from "@ff/core/types";
 
-import {
-    Component,
-    System,
-    Registry,
-    Pulse
-} from "@ff/graph";
+import Component from "@ff/graph/Component";
+import System from "@ff/graph/System";
+import Registry from "@ff/graph/Registry";
+import Pulse from "@ff/graph/Pulse";
 
 import IndexShader from "@ff/three/shaders/IndexShader";
 

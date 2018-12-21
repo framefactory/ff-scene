@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import { types } from "@ff/graph";
+import { types } from "@ff/graph/propertyTypes";
 
 import UniversalCamera, { EProjection } from "@ff/three/UniversalCamera";
 import Object3D from "./Object3D";
