@@ -10,6 +10,7 @@ import Box from "./Box";
 import Camera from "./Camera";
 import DirectionalLight from "./DirectionalLight";
 import Geometry from "./Geometry";
+import Grid from "./Grid";
 import Light from "./Light";
 import Main from "./Main";
 import Material from "./Material";
@@ -31,6 +32,7 @@ export {
     Camera,
     DirectionalLight,
     Geometry,
+    Grid,
     Light,
     Main,
     Material,
@@ -50,6 +52,7 @@ export const componentTypes = [
     Box,
     Camera,
     DirectionalLight,
+    Grid,
     Main,
     Mesh,
     OrbitManipulator,

@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "composite": true,
+        "target": "ES6",
+        "module": "commonjs",
+        "experimentalDecorators": true,
+
+        "declaration": true,
+        "sourceMap": true,
+
+        "rootDir": "source",
+        "outDir": "../../node_modules/@ff/scene"
+    },
+    "include": [
+        "source/**/*"
+    ]
+}

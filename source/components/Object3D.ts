@@ -7,7 +7,7 @@
 
 import * as THREE from "three";
 
-import { IComponentEvent } from "@ff/graph/Component";
+import { IPublisherEvent } from "@ff/core/Publisher";
 import Node from "@ff/graph/Node";
 
 import Transform from "./Transform";
@@ -15,7 +15,7 @@ import Component from "../Component";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export interface IObject3DObjectEvent extends IComponentEvent<Object3D>
+export interface IObject3DObjectEvent extends IPublisherEvent<Object3D>
 {
     current: THREE.Object3D;
     next: THREE.Object3D;

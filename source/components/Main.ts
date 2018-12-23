@@ -8,7 +8,7 @@
 import * as THREE from "three";
 
 import { types } from "@ff/graph/propertyTypes";
-import { IComponentTypeEvent } from "@ff/graph/System"
+import { IComponentEvent } from "@ff/graph/System"
 
 import Component from "../Component";
 import Scene from "./Scene";
@@ -50,10 +50,10 @@ export default class Main extends Component
     create()
     {
         this.scenes = this.system.components.cloneArray(Scene);
-        this.system.addComponentTypeListener(Scene, this.onSceneComponent, this);
+        this.system.components.on(Scene, this.onSceneComponent, this);
 
         this.cameras = this.system.components.cloneArray(Camera);
-        this.system.addComponentTypeListener(Camera, this.onCameraComponent, this);
+        this.system.components.on(Camera, this.onCameraComponent, this);
 
         this.updateOptions();
     }
@@ -76,11 +76,11 @@ export default class Main extends Component
 
     dispose()
     {
-        this.system.removeComponentTypeListener(Scene, this.onSceneComponent, this);
-        this.system.removeComponentTypeListener(Camera, this.onCameraComponent, this);
+        this.system.components.off(Scene, this.onSceneComponent, this);
+        this.system.components.off(Camera, this.onCameraComponent, this);
     }
 
-    protected onSceneComponent(event: IComponentTypeEvent<Scene>)
+    protected onSceneComponent(event: IComponentEvent<Scene>)
     {
         const inScene = this.ins.scene;
 
@@ -102,7 +102,7 @@ export default class Main extends Component
         inScene.set();
     }
 
-    protected onCameraComponent(event: IComponentTypeEvent<Camera>)
+    protected onCameraComponent(event: IComponentEvent<Camera>)
     {
         const inCamera = this.ins.camera;
 
