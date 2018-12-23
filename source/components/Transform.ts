@@ -7,7 +7,6 @@
 
 import * as THREE from "three";
 
-import { Readonly } from "@ff/core/types";
 import math from "@ff/core/math";
 
 import { types } from "@ff/graph/propertyTypes";

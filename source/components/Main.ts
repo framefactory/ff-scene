@@ -7,6 +7,7 @@
 
 import * as THREE from "three";
 
+import Property, { IPropertyChangeEvent } from "@ff/graph/Property";
 import { types } from "@ff/graph/propertyTypes";
 import { IComponentEvent } from "@ff/graph/System"
 
@@ -129,19 +130,17 @@ export default class Main extends Component
         const { scene, camera } = this.ins;
 
         if (this.scenes.length > 0) {
-            scene.schema.options = this.scenes.map(scene => scene.name || scene.type);
+            scene.setOptions(this.scenes.map(scene => scene.name || scene.type));
         }
         else {
-            scene.schema.options = [ "N/A" ];
+            scene.setOptions([ "N/A" ]);
         }
-        scene.emit("update");
 
         if (this.cameras.length > 0) {
-            camera.schema.options = this.cameras.map(camera => camera.name || camera.type);
+            camera.setOptions(this.cameras.map(camera => camera.name || camera.type));
         }
         else {
-            camera.schema.options = [ "N/A" ];
+            camera.setOptions([ "N/A" ]);
         }
-        camera.emit("update");
     }
 }

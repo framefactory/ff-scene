@@ -11,21 +11,21 @@ import Node from "@ff/graph/Node";
 import Component from "@ff/graph/Component";
 
 import {
-    EManipPointerEventType as EPointerEventType,
-    EManipTriggerEventType as ETriggerEventType,
     IManip,
-    IManipPointerEvent,
-    IManipTriggerEvent
+    IPointerEvent as IManipPointerEvent,
+    ITriggerEvent as IManipTriggerEvent
 } from "@ff/browser/ManipTarget";
 
 import GPUPicker from "@ff/three/GPUPicker";
-import Viewport, { IViewportBaseEvent } from "@ff/three/Viewport";
+import Viewport, {
+    IBaseEvent as IViewportBaseEvent
+} from "@ff/three/Viewport";
 
 import RenderSystem, { IRenderContext } from "./RenderSystem";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { Viewport, EPointerEventType, ETriggerEventType };
+export { Viewport };
 
 interface IBaseEvent extends IViewportBaseEvent
 {
@@ -192,7 +192,7 @@ export default class RenderView implements IManip
         return this.viewports.length;
     }
 
-    onPointer(event: IManipPointerEvent)
+    onPointer(event: IPointerEvent)
     {
         const system = this.system;
         if (!system) {
@@ -202,10 +202,10 @@ export default class RenderView implements IManip
         let doPick = false;
         let doHitTest = false;
 
-        if (event.type === EPointerEventType.Hover) {
+        if (event.type === "pointer-hover") {
             doHitTest = true;
         }
-        else if (event.isPrimary && event.type === EPointerEventType.Down) {
+        else if (event.isPrimary && event.type === "pointer-down") {
             doHitTest = true;
             doPick = true;
         }
@@ -213,7 +213,13 @@ export default class RenderView implements IManip
         const viewEvent = this.routeEvent(event, doHitTest, doPick);
 
         if (viewEvent) {
-            system.emitComponentEvent(viewEvent.component, "pointer", viewEvent);
+            if (viewEvent.component) {
+                viewEvent.component.bubbleEvent(viewEvent);
+            }
+            else {
+                this.system.emit(viewEvent);
+            }
+
             if (!viewEvent.stopPropagation) {
                 viewEvent.viewport.onPointer(viewEvent);
             }
@@ -224,7 +230,7 @@ export default class RenderView implements IManip
         return false;
     }
 
-    onTrigger(event: IManipTriggerEvent)
+    onTrigger(event: ITriggerEvent)
     {
         const system = this.system;
         if (!system) {
@@ -234,7 +240,13 @@ export default class RenderView implements IManip
         const viewEvent = this.routeEvent(event, true, true);
 
         if (viewEvent) {
-            system.emitComponentEvent(viewEvent.component, "trigger", viewEvent);
+            if (viewEvent.component) {
+                viewEvent.component.bubbleEvent(viewEvent);
+            }
+            else {
+                this.system.emit(viewEvent);
+            }
+
             if (!viewEvent.stopPropagation) {
                 viewEvent.viewport.onTrigger(viewEvent);
             }
@@ -245,8 +257,8 @@ export default class RenderView implements IManip
         return false;
     }
 
-    protected routeEvent(event: IManipPointerEvent, doHitTest: boolean, doPick: boolean): IPointerEvent;
-    protected routeEvent(event: IManipTriggerEvent, doHitTest: boolean, doPick: boolean): ITriggerEvent;
+    protected routeEvent(event: IPointerEvent, doHitTest: boolean, doPick: boolean): IPointerEvent;
+    protected routeEvent(event: ITriggerEvent, doHitTest: boolean, doPick: boolean): ITriggerEvent;
     protected routeEvent(event, doHitTest, doPick)
     {
         let viewport = this.activeViewport;

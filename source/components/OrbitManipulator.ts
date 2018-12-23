@@ -46,16 +46,16 @@ export default class OrbitManipulator extends Component
 
         this.manip.cameraMode = true;
 
-        this.system.on("pointer", this.onPointer, this);
-        this.system.on("trigger", this.onTrigger, this);
+        this.system.on(["pointer-down", "pointer-up", "pointer-move"], this.onPointer, this);
+        this.system.on("wheel", this.onTrigger, this);
     }
 
     dispose()
     {
         super.dispose();
 
-        this.system.off("pointer", this.onPointer, this);
-        this.system.off("trigger", this.onTrigger, this);
+        this.system.off(["pointer-down", "pointer-up", "pointer-move"], this.onPointer, this);
+        this.system.off("wheel", this.onTrigger, this);
     }
 
     update()

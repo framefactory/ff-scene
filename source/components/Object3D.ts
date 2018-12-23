@@ -7,7 +7,7 @@
 
 import * as THREE from "three";
 
-import { IPublisherEvent } from "@ff/core/Publisher";
+import { ITypedEvent } from "@ff/core/Publisher";
 import Node from "@ff/graph/Node";
 
 import Transform from "./Transform";
@@ -15,7 +15,7 @@ import Component from "../Component";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export interface IObject3DObjectEvent extends IPublisherEvent<Object3D>
+export interface IObject3DObjectEvent extends ITypedEvent<"object">
 {
     current: THREE.Object3D;
     next: THREE.Object3D;
@@ -57,7 +57,7 @@ export default class Object3D extends Component
             }
         }
 
-        this.emit<IObject3DObjectEvent>("object", { current: currentObject, next: object });
+        this.emit<IObject3DObjectEvent>({ type: "object", current: currentObject, next: object });
         this._object3D = object;
 
         if (object) {

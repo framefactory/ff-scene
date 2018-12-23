@@ -36,18 +36,18 @@ export default class Mesh extends Object3D
 
         this.geometryTracker = this.trackComponent(Geometry, component => {
             this.mesh.geometry = component.geometry;
-            component.on(Geometry.geometryEvent, this.updateGeometry, this);
+            component.on("geometry", this.updateGeometry, this);
         }, component => {
             this.mesh.geometry = null;
-            component.off(Geometry.geometryEvent, this.updateGeometry, this);
+            component.off("geometry", this.updateGeometry, this);
         });
 
         this.materialTracker = this.trackComponent(Material, component => {
             this.mesh.material = component.material;
-            component.on(Material.materialEvent, this.updateMaterial, this);
+            component.on("material", this.updateMaterial, this);
         }, component => {
             this.mesh.material = null;
-            component.off(Material.materialEvent, this.updateMaterial, this);
+            component.off("material", this.updateMaterial, this);
         });
     }
 

@@ -14,14 +14,13 @@ export default class Material extends Component
 {
     static readonly type: string = "Material";
 
-    static readonly materialEvent = "material";
 
     private _material: THREE.Material = null;
 
     constructor(node: Node, id?: string)
     {
         super(node, id);
-        this.addEvent(Material.materialEvent);
+        this.addEvent("material");
     }
 
     get material() {
@@ -30,6 +29,6 @@ export default class Material extends Component
 
     set material(value: THREE.Material) {
         this._material = value;
-        this.emitAny(Material.materialEvent, value);
+        this.emit("material", value);
     }
 }
