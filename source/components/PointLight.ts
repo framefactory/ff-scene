@@ -8,6 +8,7 @@
 import * as THREE from "three";
 
 import { types } from "@ff/graph/propertyTypes";
+
 import Light from "./Light";
 
 ////////////////////////////////////////////////////////////////////////////////

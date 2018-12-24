@@ -64,15 +64,17 @@ export default class OrbitManipulator extends Component
         const ins = this.ins;
 
         const { minOrientation, minOffset, maxOrientation, maxOffset } = ins;
-        manip.minOrientation = minOrientation.value;
-        manip.minOffset = minOffset.value;
-        manip.maxOrientation = maxOrientation.value;
-        manip.maxOffset = maxOffset.value;
+        if (minOrientation.changed || minOffset.changed || maxOrientation.changed || maxOffset.changed) {
+            manip.minOrientation.fromArray(minOrientation.value);
+            manip.minOffset.fromArray(minOffset.value);
+            manip.maxOrientation.fromArray(maxOrientation.value);
+            manip.maxOffset.fromArray(maxOffset.value);
+        }
 
         const { overPush, overEnabled, overOrientation, overOffset } = ins;
         if (overPush.changed || overEnabled.value) {
-            manip.orientation = overOrientation.value.slice();
-            manip.offset = overOffset.value.slice();
+            manip.orientation.fromArray(overOrientation.value);
+            manip.offset.fromArray(overOffset.value);
         }
 
         return true;
@@ -87,8 +89,10 @@ export default class OrbitManipulator extends Component
         if (enabled.value) {
             manip.update();
 
-            orientation.setValue(manip.orientation);
-            offset.setValue(manip.offset);
+            manip.orientation.toArray(orientation.value);
+            orientation.set();
+            manip.offset.toArray(offset.value);
+            offset.set();
             size.setValue(manip.size);
 
 

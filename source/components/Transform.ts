@@ -12,6 +12,7 @@ import math from "@ff/core/math";
 import { types } from "@ff/graph/propertyTypes";
 import Hierarchy from "@ff/graph/Hierarchy";
 import Node from "@ff/graph/Node";
+import RenderSystem from "../RenderSystem";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -32,10 +33,10 @@ export default class Transform extends Hierarchy
     static readonly type: string = "Transform";
 
     ins = this.ins.append({
-        position: types.Vector3("Position"),
-        rotation: types.Vector3("Rotation"),
-        order: types.Enum("Order", ERotationOrder),
-        scale: types.Vector3("Scale", [ 1, 1, 1 ])
+        position: types.Vector3("Transform.Position"),
+        rotation: types.Vector3("Transform.Rotation"),
+        order: types.Enum("Transform.Order", ERotationOrder),
+        scale: types.Vector3("Transform.Scale", [ 1, 1, 1 ])
     });
 
     outs = this.outs.append({
@@ -50,6 +51,14 @@ export default class Transform extends Hierarchy
 
         this._object3D = this.createObject3D();
         this._object3D.matrixAutoUpdate = false;
+    }
+
+    get transform() {
+        return this.node.components.get(Transform);
+    }
+
+    get system(): RenderSystem {
+        return this.node.system as RenderSystem;
     }
 
     /**

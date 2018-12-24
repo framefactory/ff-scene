@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import { EViewPreset, EProjection } from "@ff/three/UniversalCamera";
+import { EViewPreset, EProjectionType } from "@ff/three/UniversalCamera";
 
 import RenderSystem from "./RenderSystem";
 import RenderView from "./RenderView";
@@ -26,13 +26,13 @@ export default class RenderQuadView extends RenderView
 
         this.addViewports(4);
 
-        this.viewports[1].setBuiltInCamera(EProjection.Orthographic, EViewPreset.Top);
+        this.viewports[1].setBuiltInCamera(EProjectionType.Orthographic, EViewPreset.Top);
         this.viewports[1].enableCameraManip(true).orientationEnabled = false;
 
-        this.viewports[2].setBuiltInCamera(EProjection.Orthographic, EViewPreset.Left);
+        this.viewports[2].setBuiltInCamera(EProjectionType.Orthographic, EViewPreset.Left);
         this.viewports[2].enableCameraManip(true).orientationEnabled = false;
 
-        this.viewports[3].setBuiltInCamera(EProjection.Orthographic, EViewPreset.Front);
+        this.viewports[3].setBuiltInCamera(EProjectionType.Orthographic, EViewPreset.Front);
         this.viewports[3].enableCameraManip(true).orientationEnabled = false;
 
         this.layout = EQuadViewLayout.Single;

@@ -214,7 +214,7 @@ export default class RenderView implements IManip
 
         if (viewEvent) {
             if (viewEvent.component) {
-                viewEvent.component.bubbleEvent(viewEvent);
+                viewEvent.component.propagateUp(viewEvent);
             }
             else {
                 this.system.emit(viewEvent);
@@ -241,7 +241,7 @@ export default class RenderView implements IManip
 
         if (viewEvent) {
             if (viewEvent.component) {
-                viewEvent.component.bubbleEvent(viewEvent);
+                viewEvent.component.propagateUp(viewEvent);
             }
             else {
                 this.system.emit(viewEvent);

@@ -7,21 +7,23 @@
 
 import { types } from "@ff/graph/propertyTypes";
 
-import UniversalCamera, { EProjection } from "@ff/three/UniversalCamera";
+import UniversalCamera, { EProjectionType } from "@ff/three/UniversalCamera";
 import Object3D from "./Object3D";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { EProjection };
+export { EProjectionType };
 
 export default class Camera extends Object3D
 {
     static readonly type: string = "Camera";
 
     ins = this.ins.append({
+        activate: types.Event("Activate"),
+        autoActivate: types.Boolean_true("AutoActivate"),
         offset: types.Vector3("Transform.Offset"),
         rotation: types.Vector3("Transform.Rotation"),
-        projection: types.Enum("Projection.Type", EProjection, EProjection.Perspective),
+        projection: types.Enum("Projection.Type", EProjectionType, EProjectionType.Perspective),
         fov: types.Number("Projection.FovY", 52),
         size: types.Number("Projection.Size", 20),
         zoom: types.Number("Projection.Zoom", 1),
@@ -41,6 +43,17 @@ export default class Camera extends Object3D
 
     update()
     {
+        const { activate, autoActivate } = this.ins;
+
+        if (autoActivate.changed && autoActivate.value) {
+            if (!this.system.activeCameraComponent) {
+                this.system.activeCameraComponent = this;
+            }
+        }
+        if (activate.value) {
+            this.system.activeCameraComponent = this;
+        }
+
         const { offset, rotation, projection, fov, size, zoom, near, far } = this.ins;
         const camera = this.camera;
 
@@ -51,7 +64,7 @@ export default class Camera extends Object3D
         }
 
         if (projection.changed) {
-            camera.setType(types.getEnumIndex(EProjection, projection.value));
+            camera.setProjection(types.getEnumIndex(EProjectionType, projection.value));
         }
 
         camera.fov = fov.value;

@@ -25,7 +25,7 @@ export default class Grid extends Object3D
     ins = this.ins.append({
         position: types.Vector3("Transform.Position"),
         rotation: types.Vector3("Transform.Rotation"),
-        scale: types.Vector3_Ones("Transform.Scale"),
+        scale: types.Vector3_ones("Transform.Scale"),
         size: types.Number("Grid.Size", 20),
         mainDivs: types.Number("Grid.Main.Divisions", 2),
         mainColor: types.ColorRGB("Grid.Main.Color", [ 1, 1, 1 ]),

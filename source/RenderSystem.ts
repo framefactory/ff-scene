@@ -21,6 +21,7 @@ import RenderView, { Viewport } from "./RenderView";
 import Scene from "./components/Scene";
 import Camera from "./components/Camera";
 import Main from "./components/Main";
+import { ITypedEvent } from "@ff/core/Publisher";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -32,6 +33,18 @@ export interface IRenderContext
     camera: THREE.Camera;
 }
 
+export interface IActiveSceneEvent extends ITypedEvent<"active-scene">
+{
+    previous: Scene;
+    next: Scene;
+}
+
+export interface IActiveCameraEvent extends ITypedEvent<"active-camera">
+{
+    previous: Camera;
+    next: Camera;
+}
+
 export default class RenderSystem extends System
 {
     protected pulse: Pulse;
@@ -39,6 +52,8 @@ export default class RenderSystem extends System
     protected views: RenderView[];
     protected objects: Dictionary<THREE.Object3D>;
 
+    private _activeCamera: Camera;
+    private _activeScene: Scene;
 
     constructor(registry?: Registry)
     {
@@ -52,32 +67,34 @@ export default class RenderSystem extends System
         this.objects = {};
     }
 
-    get activeSceneComponent(): Scene | null {
-        const mainComponent = this.components.get(Main);
-        if (mainComponent) {
-            return mainComponent.sceneComponent;
+    set activeSceneComponent(scene: Scene) {
+        if (scene !== this._activeScene) {
+            this.emit<IActiveSceneEvent>({ type: "active-scene", previous: this._activeScene, next: scene });
+            this._activeScene = scene;
         }
+    }
 
-        return this.components.get(Scene);
+    get activeSceneComponent(): Scene | null {
+        return this._activeScene;
+    }
+
+    set activeCameraComponent(camera: Camera) {
+        if (camera !== this._activeCamera) {
+            this.emit<IActiveCameraEvent>({ type: "active-camera", previous: this._activeCamera, next: camera });
+            this._activeCamera = camera;
+        }
     }
 
     get activeCameraComponent() {
-        const mainComponent = this.components.get(Main);
-        if (mainComponent) {
-            return mainComponent.cameraComponent;
-        }
-
-        return this.components.get(Camera);
+        return this._activeCamera;
     }
 
     get activeScene(): THREE.Scene {
-        const sceneComponent = this.activeSceneComponent;
-        return sceneComponent ? sceneComponent.scene : null;
+        return this._activeScene ? this._activeScene.scene : null;
     }
 
     get activeCamera(): THREE.Camera {
-        const cameraComponent = this.activeCameraComponent;
-        return cameraComponent ? cameraComponent.camera : null;
+        return this._activeCamera ? this._activeCamera.camera : null;
     }
 
     start()
