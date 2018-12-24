@@ -176,13 +176,6 @@ export default class RenderSystem extends System
         const scene = this.activeScene;
         const camera = this.activeCamera;
 
-        if (!scene) {
-            console.warn("no active scene");
-        }
-        if (!camera) {
-            console.warn("no active camera");
-        }
-
         // this in turn calls preRender() and postRender() for each view and viewport
         this.views.forEach(view => view.render(scene, camera));
     }
