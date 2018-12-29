@@ -9,10 +9,16 @@ import { EViewPreset, EProjectionType } from "@ff/three/UniversalCamera";
 
 import RenderSystem from "./RenderSystem";
 import RenderView from "./RenderView";
+import { ITypedEvent } from "@ff/core/Publisher";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export enum EQuadViewLayout { Single, HorizontalSplit, VerticalSplit, Quad }
+
+export interface ILayoutChange extends ITypedEvent<"layout">
+{
+    layout: EQuadViewLayout;
+}
 
 export default class RenderQuadView extends RenderView
 {
@@ -23,6 +29,7 @@ export default class RenderQuadView extends RenderView
     constructor(system: RenderSystem, canvas: HTMLCanvasElement, overlay: HTMLElement)
     {
         super(system, canvas, overlay);
+        this.addEvent("layout");
 
         this.addViewports(4);
 
@@ -38,10 +45,11 @@ export default class RenderQuadView extends RenderView
         this.layout = EQuadViewLayout.Single;
     }
 
-    set layout(value: EQuadViewLayout) {
-        if (this._layout !== value) {
-            this._layout = value;
+    set layout(layout: EQuadViewLayout) {
+        if (this._layout !== layout) {
+            this._layout = layout;
             this.updateConfiguration();
+            this.emit<ILayoutChange>({ type: "layout", layout });
         }
     }
 

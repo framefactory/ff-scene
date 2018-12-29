@@ -20,7 +20,7 @@ import RenderView, { Viewport } from "./RenderView";
 
 import Scene from "./components/Scene";
 import Camera from "./components/Camera";
-import Main from "./components/Main";
+
 import { ITypedEvent } from "@ff/core/Publisher";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,13 +45,19 @@ export interface IActiveCameraEvent extends ITypedEvent<"active-camera">
     next: Camera;
 }
 
+/**
+ * Establishes an node-component system which renders 3D graphics to a canvas.
+ * The [[RenderSystem]] class extends the base [[System]] by adding an animation loop,
+ * management of [[RenderView]] viewports and the notion of an active camera and scene.
+ * It also adds support for picking 3D objects.
+ */
 export default class RenderSystem extends System
 {
     protected pulse: Pulse;
     protected animHandler: number;
-    protected views: RenderView[];
     protected objects: Dictionary<THREE.Object3D>;
 
+    private _views: RenderView[];
     private _activeCamera: Camera;
     private _activeScene: Scene;
 
@@ -63,8 +69,12 @@ export default class RenderSystem extends System
 
         this.pulse = new Pulse();
         this.animHandler = 0;
-        this.views = [];
+        this._views = [];
         this.objects = {};
+    }
+
+    get views(): Readonly<RenderView[]> {
+        return this._views;
     }
 
     set activeSceneComponent(scene: Scene) {
@@ -116,17 +126,17 @@ export default class RenderSystem extends System
 
     attachView(view: RenderView)
     {
-        this.views.push(view);
+        this._views.push(view);
         //console.log("RenderSystem.attachView - total views: %s", this.views.length);
     }
 
     detachView(view: RenderView)
     {
-        const index = this.views.indexOf(view);
+        const index = this._views.indexOf(view);
         if (index < 0) {
             throw new Error("render view not found");
         }
-        this.views.splice(index, 1);
+        this._views.splice(index, 1);
         //console.log("RenderSystem.detachView - total views: %s", this.views.length);
     }
 
@@ -177,7 +187,7 @@ export default class RenderSystem extends System
         const camera = this.activeCamera;
 
         // this in turn calls preRender() and postRender() for each view and viewport
-        this.views.forEach(view => view.render(scene, camera));
+        this._views.forEach(view => view.render(scene, camera));
     }
 
     protected onAnimationFrame()

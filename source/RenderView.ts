@@ -7,6 +7,7 @@
 
 import * as THREE from "three";
 
+import Publisher from "@ff/core/Publisher";
 import Node from "@ff/graph/Node";
 import Component from "@ff/graph/Component";
 
@@ -39,7 +40,7 @@ interface IBaseEvent extends IViewportBaseEvent
 export interface IPointerEvent extends IManipPointerEvent, IBaseEvent { }
 export interface ITriggerEvent extends IManipTriggerEvent, IBaseEvent { }
 
-export default class RenderView implements IManip
+export default class RenderView extends Publisher implements IManip
 {
     readonly system: RenderSystem;
     readonly renderer: THREE.WebGLRenderer;
@@ -57,6 +58,8 @@ export default class RenderView implements IManip
 
     constructor(system: RenderSystem, canvas: HTMLCanvasElement, overlay: HTMLElement)
     {
+        super();
+
         this.system = system;
         this.canvas = canvas;
         this.overlay = overlay;
