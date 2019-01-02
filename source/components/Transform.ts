@@ -16,7 +16,7 @@ import RenderSystem from "../RenderSystem";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const _vec3 = new THREE.Vector3();
+const _vec3a = new THREE.Vector3();
 const _vec3b = new THREE.Vector3();
 const _quat = new THREE.Quaternion();
 const _euler = new THREE.Euler();
@@ -95,9 +95,9 @@ export default class Transform extends Hierarchy
         const { matrix } = this.outs;
 
         object3D.position.fromArray(position.value);
-        _vec3.fromArray(rotation.value).multiplyScalar(math.DEG2RAD);
+        _vec3a.fromArray(rotation.value).multiplyScalar(math.DEG2RAD);
         const orderName = types.getEnumName(ERotationOrder, order.value);
-        object3D.rotation.setFromVector3(_vec3, orderName);
+        object3D.rotation.setFromVector3(_vec3a, orderName);
         object3D.scale.fromArray(scale.value);
         object3D.updateMatrix();
 
@@ -126,13 +126,13 @@ export default class Transform extends Hierarchy
     {
         const { position, rotation, order, scale } = this.ins;
 
-        matrix.decompose(_vec3, _quat, _vec3b);
-        _vec3.toArray(position.value);
+        matrix.decompose(_vec3a, _quat, _vec3b);
+        _vec3a.toArray(position.value);
 
         const orderName = types.getEnumName(ERotationOrder, order.value);
         _euler.setFromQuaternion(_quat, orderName);
-        _euler.toVector3(_vec3);
-        _vec3.multiplyScalar(math.RAD2DEG).toArray(rotation.value);
+        _euler.toVector3(_vec3a);
+        _vec3a.multiplyScalar(math.RAD2DEG).toArray(rotation.value);
 
         _vec3b.toArray(scale.value);
 
