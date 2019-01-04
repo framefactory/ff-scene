@@ -8,7 +8,7 @@
 import Commander from "@ff/core/Commander";
 import Registry from "@ff/graph/Registry";
 
-import Selection, { INodeEvent, IComponentEvent } from "./Selection";
+import SelectionController, { INodeEvent, IComponentEvent } from "./SelectionController";
 import RenderSystem from "./RenderSystem";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -20,12 +20,12 @@ export { INodeEvent, IComponentEvent };
  */
 export default class EditorSystem extends RenderSystem
 {
-    readonly selection: Selection;
+    readonly selectionController: SelectionController;
 
     constructor(commander: Commander, registry?: Registry)
     {
         super(registry);
 
-        this.selection = new Selection(this, commander);
+        this.selectionController = new SelectionController(this, commander);
     }
 }

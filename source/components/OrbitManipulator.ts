@@ -11,11 +11,11 @@ import ObjectManipulator from "@ff/three/ObjectManipulator";
 
 import Main from "./Main";
 import { IPointerEvent, ITriggerEvent } from "../RenderView";
-import Component from "../Component";
+import RenderComponent from "../RenderComponent";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class OrbitManipulator extends Component
+export default class OrbitManipulator extends RenderComponent
 {
     static readonly type: string = "OrbitManipulator";
 

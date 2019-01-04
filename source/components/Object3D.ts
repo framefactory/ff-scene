@@ -11,7 +11,7 @@ import { ITypedEvent } from "@ff/core/Publisher";
 import Node from "@ff/graph/Node";
 
 import Transform from "./Transform";
-import Component from "../Component";
+import RenderComponent from "../RenderComponent";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -26,7 +26,7 @@ export interface IObject3DObjectEvent extends ITypedEvent<"object">
  * If component is added to a node together with a [[Transform]] component,
  * it is automatically added as a child to the transform.
  */
-export default class Object3D extends Component
+export default class Object3D extends RenderComponent
 {
     static readonly type: string = "Object3D";
 

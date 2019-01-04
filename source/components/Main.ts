@@ -7,17 +7,16 @@
 
 import * as THREE from "three";
 
-import Property, { IPropertyChangeEvent } from "@ff/graph/Property";
 import { types } from "@ff/graph/propertyTypes";
 import { IComponentEvent } from "@ff/graph/System"
 
-import Component from "../Component";
+import RenderComponent from "../RenderComponent";
 import Scene from "./Scene";
 import Camera from "./Camera";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class Main extends Component
+export default class Main extends RenderComponent
 {
     static readonly type: string = "Main";
 

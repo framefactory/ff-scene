@@ -9,7 +9,7 @@ import Commander from "@ff/core/Commander";
 import Component from "@ff/graph/Component";
 import Node from "@ff/graph/Node";
 
-import SelectionBase, { INodeEvent, IComponentEvent } from "@ff/graph/Selection";
+import SelectionControllerBase, { INodeEvent, IComponentEvent } from "@ff/graph/SelectionController";
 
 import Bracket from "@ff/three/Bracket";
 import Transform from "./components/Transform";
@@ -22,7 +22,7 @@ import RenderSystem from "./RenderSystem";
 
 export { INodeEvent, IComponentEvent };
 
-export default class Selection extends SelectionBase
+export default class SelectionController extends SelectionControllerBase
 {
     protected startX = 0;
     protected startY = 0;
