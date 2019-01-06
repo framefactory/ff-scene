@@ -33,10 +33,10 @@ export default class Transform extends Hierarchy
     static readonly type: string = "Transform";
 
     ins = this.ins.append({
-        position: types.Vector3("Transform.Position"),
-        rotation: types.Vector3("Transform.Rotation"),
-        order: types.Enum("Transform.Order", ERotationOrder),
-        scale: types.Vector3("Transform.Scale", [ 1, 1, 1 ])
+        position: types.Vector3("Position"),
+        rotation: types.Vector3("Rotation"),
+        order: types.Enum("Order", ERotationOrder),
+        scale: types.Vector3("Scale", [ 1, 1, 1 ])
     });
 
     outs = this.outs.append({

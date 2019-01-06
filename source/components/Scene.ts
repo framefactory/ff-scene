@@ -18,9 +18,9 @@ export default class Scene extends Transform
 {
     static readonly type: string = "Scene";
 
-    ins = this.ins.prepend({
-        activate: types.Event("Activate"),
-        autoActivate: types.Boolean_true("AutoActivate"),
+    ins = this.ins.append({
+        activate: types.Event("Scene.Activate"),
+        autoActivate: types.Boolean_true("Scene.AutoActivate"),
     });
 
     get scene(): THREE.Scene {
