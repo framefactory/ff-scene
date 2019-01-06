@@ -24,6 +24,8 @@ export { INodeEvent, IComponentEvent };
 
 export default class SelectionController extends SelectionControllerBase
 {
+    readonly system: RenderSystem;
+
     protected startX = 0;
     protected startY = 0;
 
@@ -65,14 +67,17 @@ export default class SelectionController extends SelectionControllerBase
     protected bracketSelection(object3D: THREE.Object3D, selected: boolean)
     {
         if (selected) {
-            const bracket = new Bracket(object3D);
-            this.brackets.set(object3D, bracket);
-            object3D.add(bracket);
+            const sceneComponent = this.system.activeSceneComponent;
+            if (sceneComponent) {
+                const bracket = new Bracket(object3D);
+                this.brackets.set(object3D, bracket);
+                sceneComponent.scene.add(bracket);
+            }
         }
         else {
             const bracket = this.brackets.get(object3D);
             this.brackets.delete(object3D);
-            object3D.remove(bracket);
+            bracket.dispose();
         }
     }
 
