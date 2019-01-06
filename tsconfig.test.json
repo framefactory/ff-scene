@@ -9,12 +9,12 @@
         "sourceMap": true,
 
         "rootDir": "test",
-        "outDir": "../node_modules/@ff/test/scene"
+        "outDir": "../../node_modules/@ff/test/scene"
     },
     "include": [
         "test/**/*"
     ],
     "references": [{
-        "path": "../source"
+        "path": "tsconfig.module.json"
     }]
 }
