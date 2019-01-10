@@ -8,9 +8,10 @@
 import * as THREE from "three";
 
 import { ITypedEvent } from "@ff/core/Publisher";
+import { types } from "@ff/graph/propertyTypes";
 import Node from "@ff/graph/Node";
 
-import Transform from "./Transform";
+import Transform, { IObject3D } from "./Transform";
 import RenderComponent from "../RenderComponent";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -26,9 +27,10 @@ export interface IObject3DObjectEvent extends ITypedEvent<"object">
  * If component is added to a node together with a [[Transform]] component,
  * it is automatically added as a child to the transform.
  */
-export default class Object3D extends RenderComponent
+export default class Object3D extends RenderComponent implements IObject3D
 {
     static readonly type: string = "Object3D";
+
 
     private _object3D: THREE.Object3D = null;
 
