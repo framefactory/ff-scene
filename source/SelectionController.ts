@@ -29,7 +29,7 @@ export default class SelectionController extends SelectionControllerBase
     protected startX = 0;
     protected startY = 0;
 
-    protected brackets = new WeakMap<THREE.Object3D, Bracket>();
+    protected brackets = new Map<Component, Bracket>();
 
     constructor(system: RenderSystem, commander: Commander)
     {
@@ -51,7 +51,7 @@ export default class SelectionController extends SelectionControllerBase
 
         const hierarchy = node.hierarchy;
         if (hierarchy && hierarchy instanceof Transform) {
-            this.bracketSelection(hierarchy.object3D, selected);
+            this.bracketSelection(hierarchy, selected);
         }
     }
 
@@ -60,24 +60,30 @@ export default class SelectionController extends SelectionControllerBase
         super.onSelectComponent(component, selected);
 
         if (component instanceof Object3D || component instanceof Transform) {
-            this.bracketSelection(component.object3D, selected);
+            this.bracketSelection(component, selected);
         }
     }
 
-    protected bracketSelection(object3D: THREE.Object3D, selected: boolean)
+    protected bracketSelection(component: Transform | Object3D, selected: boolean)
     {
+        if (!component) {
+            return;
+        }
+
         if (selected) {
             const sceneComponent = this.system.activeSceneComponent;
             if (sceneComponent) {
-                const bracket = new Bracket(object3D);
-                this.brackets.set(object3D, bracket);
+                const bracket = new Bracket(component.object3D);
+                this.brackets.set(component, bracket);
                 sceneComponent.scene.add(bracket);
             }
         }
         else {
-            const bracket = this.brackets.get(object3D);
-            this.brackets.delete(object3D);
-            bracket.dispose();
+            const bracket = this.brackets.get(component);
+            if (bracket) {
+                this.brackets.delete(component);
+                bracket.dispose();
+            }
         }
     }
 

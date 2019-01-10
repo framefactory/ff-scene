@@ -188,6 +188,8 @@ export default class RenderSystem extends System
 
         // this in turn calls preRender() and postRender() for each view and viewport
         this._views.forEach(view => view.render(scene, camera));
+
+        this.lateUpdate(pulse);
     }
 
     protected onAnimationFrame()

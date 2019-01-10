@@ -7,7 +7,7 @@
 
 import { types } from "@ff/graph/propertyTypes";
 
-import ObjectManipulator from "@ff/three/ObjectManipulator";
+import OrbitManip from "@ff/three/OrbitManipulator";
 
 import Main from "./Main";
 import { IPointerEvent, ITriggerEvent } from "../RenderView";
@@ -21,23 +21,21 @@ export default class OrbitManipulator extends RenderComponent
 
     ins = this.ins.append({
         enabled: types.Boolean("Enabled", true),
-        overPush: types.Event("Override.Push"),
-        overEnabled: types.Boolean("Override.Enabled", false),
-        overOrientation: types.Vector3("Override.Orientation", [ 0, 0, 0 ]),
-        overOffset: types.Vector3("Override.Offset", [ 0, 0, 50 ]),
-        minOrientation: types.Vector3("Min.Orientation", [ -90, NaN, NaN ]),
+        orbit: types.Vector3("Orbit", [ 0, 0, 0 ]),
+        offset: types.Vector3("Offset", [ 0, 0, 50 ]),
+        minOrbit: types.Vector3("Min.Orbit", [ -90, NaN, NaN ]),
         minOffset: types.Vector3("Min.Offset", [ NaN, NaN, 0.1 ]),
-        maxOrientation: types.Vector3("Max.Orientation", [ 90, NaN, NaN ]),
+        maxOrbit: types.Vector3("Max.Orbit", [ 90, NaN, NaN ]),
         maxOffset: types.Vector3("Max.Offset", [ NaN, NaN, 100 ])
     });
 
     outs = this.outs.append({
-        orientation: types.Vector3("Orientation"),
+        orbit: types.Vector3("Orbit"),
         offset: types.Vector3("Offset"),
         size: types.Number("Size")
     });
 
-    protected manip = new ObjectManipulator();
+    protected manip = new OrbitManip();
     protected main = this.trackComponent(Main);
 
     create()
@@ -63,18 +61,19 @@ export default class OrbitManipulator extends RenderComponent
         const manip = this.manip;
         const ins = this.ins;
 
-        const { minOrientation, minOffset, maxOrientation, maxOffset } = ins;
-        if (minOrientation.changed || minOffset.changed || maxOrientation.changed || maxOffset.changed) {
-            manip.minOrientation.fromArray(minOrientation.value);
+        const { minOrbit, minOffset, maxOrbit, maxOffset } = ins;
+        if (minOrbit.changed || minOffset.changed || maxOrbit.changed || maxOffset.changed) {
+            manip.minOrbit.fromArray(minOrbit.value);
             manip.minOffset.fromArray(minOffset.value);
-            manip.maxOrientation.fromArray(maxOrientation.value);
+            manip.maxOrbit.fromArray(maxOrbit.value);
             manip.maxOffset.fromArray(maxOffset.value);
         }
 
-        const { overPush, overEnabled, overOrientation, overOffset } = ins;
-        if (overPush.changed || overEnabled.value) {
-            manip.orientation.fromArray(overOrientation.value);
-            manip.offset.fromArray(overOffset.value);
+        if (ins.orbit.changed) {
+            manip.orbit.fromArray(ins.orbit.value);
+        }
+        if (ins.offset.changed) {
+            manip.offset.fromArray(ins.offset.value);
         }
 
         return true;
@@ -84,13 +83,13 @@ export default class OrbitManipulator extends RenderComponent
     {
         const manip = this.manip;
         const { enabled } = this.ins;
-        const { orientation, offset, size } = this.outs;
+        const { orbit, offset, size } = this.outs;
 
         if (enabled.value) {
             manip.update();
 
-            manip.orientation.toArray(orientation.value);
-            orientation.set();
+            manip.orbit.toArray(orbit.value);
+            orbit.set();
             manip.offset.toArray(offset.value);
             offset.set();
             size.setValue(manip.size);

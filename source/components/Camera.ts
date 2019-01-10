@@ -20,8 +20,7 @@ export default class Camera extends Object3D
 
     ins = this.ins.append({
         activate: types.Event("Activate"),
-        autoActivate: types.Boolean_true("AutoActivate"),
-        offset: types.Vector3("Transform.Offset"),
+        position: types.Vector3("Transform.Position"),
         rotation: types.Vector3("Transform.Rotation"),
         projection: types.Enum("Projection.Type", EProjectionType, EProjectionType.Perspective),
         fov: types.Number("Projection.FovY", 52),
@@ -43,22 +42,16 @@ export default class Camera extends Object3D
 
     update()
     {
-        const { activate, autoActivate } = this.ins;
+        const { activate, position, rotation, projection, fov, size, zoom, near, far } = this.ins;
 
-        if (autoActivate.changed && autoActivate.value) {
-            if (!this.system.activeCameraComponent) {
-                this.system.activeCameraComponent = this;
-            }
-        }
         if (activate.value) {
             this.system.activeCameraComponent = this;
         }
 
-        const { offset, rotation, projection, fov, size, zoom, near, far } = this.ins;
         const camera = this.camera;
 
-        if (offset.changed || rotation.changed) {
-            camera.position.fromArray(offset.value);
+        if (position.changed || rotation.changed) {
+            camera.position.fromArray(position.value);
             camera.rotation.fromArray(rotation.value);
             camera.updateMatrix();
         }

@@ -88,7 +88,7 @@ export default class Transform extends Hierarchy
         return this._object3D.matrix;
     }
 
-    update()
+    update(context)
     {
         const object3D = this._object3D;
         const { position, rotation, order, scale } = this.ins;
