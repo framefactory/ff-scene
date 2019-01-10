@@ -9,11 +9,11 @@ import Commander from "@ff/core/Commander";
 import Registry from "@ff/graph/Registry";
 
 import SelectionController, { INodeEvent, IComponentEvent } from "./SelectionController";
-import RenderSystem from "./RenderSystem";
+import RenderSystem, { IRenderContext } from "./RenderSystem";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { INodeEvent, IComponentEvent };
+export { IRenderContext, INodeEvent, IComponentEvent };
 
 /**
  * Extension of [[RenderSystem]]. Adds a selection controller.

@@ -16,7 +16,7 @@ import Transform from "./components/Transform";
 import Object3D from "./components/Object3D";
 
 import { IPointerEvent } from "./RenderView";
-import RenderSystem from "./RenderSystem";
+import EditorSystem, { IRenderContext } from "./EditorSystem";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -24,14 +24,14 @@ export { INodeEvent, IComponentEvent };
 
 export default class SelectionController extends SelectionControllerBase
 {
-    readonly system: RenderSystem;
+    readonly system: EditorSystem;
 
     protected startX = 0;
     protected startY = 0;
 
     protected brackets = new Map<Component, Bracket>();
 
-    constructor(system: RenderSystem, commander: Commander)
+    constructor(system: EditorSystem, commander: Commander)
     {
         super(system, commander);
         system.on<IPointerEvent>("pointer-down", this.onPointerDown, this);
@@ -43,6 +43,13 @@ export default class SelectionController extends SelectionControllerBase
         super.dispose();
         this.system.off<IPointerEvent>("pointer-down", this.onPointerDown, this);
         this.system.off<IPointerEvent>("pointer-up", this.onPointerUp, this);
+    }
+
+    render(renderer, scene, camera)
+    {
+        for (let entry of this.brackets) {
+            renderer.render(entry[1], camera);
+        }
     }
 
     protected onSelectNode(node: Node, selected: boolean)
@@ -75,7 +82,6 @@ export default class SelectionController extends SelectionControllerBase
             if (sceneComponent) {
                 const bracket = new Bracket(component.object3D);
                 this.brackets.set(component, bracket);
-                sceneComponent.scene.add(bracket);
             }
         }
         else {
