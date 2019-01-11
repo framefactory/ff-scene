@@ -8,10 +8,12 @@
 import { EViewPreset, EProjectionType } from "@ff/three/UniversalCamera";
 
 import RenderSystem from "./RenderSystem";
-import RenderView from "./RenderView";
+import RenderView, { IPointerEvent, ITriggerEvent } from "./RenderView";
 import { ITypedEvent } from "@ff/core/Publisher";
 
 ////////////////////////////////////////////////////////////////////////////////
+
+export { IPointerEvent, ITriggerEvent };
 
 export enum EQuadViewLayout { Single, HorizontalSplit, VerticalSplit, Quad }
 

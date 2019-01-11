@@ -8,6 +8,7 @@
 import BasicMaterial from "./BasicMaterial";
 import Box from "./Box";
 import Camera from "./Camera";
+import CPickSelection from "./CPickSelection";
 import DirectionalLight from "./DirectionalLight";
 import Geometry from "./Geometry";
 import Grid from "./Grid";
@@ -30,6 +31,7 @@ export {
     BasicMaterial,
     Box,
     Camera,
+    CPickSelection,
     DirectionalLight,
     Geometry,
     Grid,
@@ -51,6 +53,7 @@ export const componentTypes = [
     BasicMaterial,
     Box,
     Camera,
+    CPickSelection,
     DirectionalLight,
     Grid,
     Main,

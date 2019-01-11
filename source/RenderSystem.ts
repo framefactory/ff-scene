@@ -66,13 +66,14 @@ export default class RenderSystem extends System
         super(registry);
 
         this.onAnimationFrame = this.onAnimationFrame.bind(this);
-        this.onBeforeRender = this.onBeforeRender.bind(this);
-        this.onAfterRender = this.onAfterRender.bind(this);
 
         this.pulse = new Pulse();
         this.animHandler = 0;
-        this._views = [];
         this.objects = {};
+
+        this._views = [];
+        this._activeCamera = null;
+        this._activeScene = null;
     }
 
     get views(): Readonly<RenderView[]> {
@@ -80,20 +81,11 @@ export default class RenderSystem extends System
     }
 
     set activeSceneComponent(scene: Scene) {
-        const activeScene = this._activeScene;
-        if (scene !== activeScene) {
-            if (activeScene) {
-                activeScene.scene.onBeforeRender = null;
-                activeScene.scene.onAfterRender = null;
-            }
-
-            this.emit<IActiveSceneEvent>({ type: "active-scene", previous: activeScene, next: scene });
+        if (scene !== this._activeScene) {
+            const previous = this._activeScene;
             this._activeScene = scene;
 
-            if (scene) {
-                scene.scene.onBeforeRender = this.onBeforeRender;
-                scene.scene.onAfterRender = this.onAfterRender;
-            }
+            this.emit<IActiveSceneEvent>({ type: "active-scene", previous, next: scene });
         }
     }
 
@@ -103,8 +95,10 @@ export default class RenderSystem extends System
 
     set activeCameraComponent(camera: Camera) {
         if (camera !== this._activeCamera) {
-            this.emit<IActiveCameraEvent>({ type: "active-camera", previous: this._activeCamera, next: camera });
+            const previous = this._activeCamera;
             this._activeCamera = camera;
+
+            this.emit<IActiveCameraEvent>({ type: "active-camera", previous, next: camera });
         }
     }
 
@@ -209,13 +203,5 @@ export default class RenderSystem extends System
     {
         this.renderFrame();
         this.animHandler = window.requestAnimationFrame(this.onAnimationFrame);
-    }
-
-    protected onBeforeRender(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera)
-    {
-    }
-
-    protected onAfterRender(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera)
-    {
     }
 }
