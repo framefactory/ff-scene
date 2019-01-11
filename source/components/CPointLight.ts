@@ -9,13 +9,13 @@ import * as THREE from "three";
 
 import { types } from "@ff/graph/propertyTypes";
 
-import Light from "./Light";
+import CLight from "./CLight";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class PointLight extends Light
+export default class CPointLight extends CLight
 {
-    static readonly type: string = "PointLight";
+    static readonly type: string = "CPointLight";
 
     ins = this.ins.append({
         distance: types.Number("Distance"),

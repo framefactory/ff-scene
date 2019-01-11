@@ -11,31 +11,31 @@ import { types } from "@ff/graph/propertyTypes";
 import { IComponentEvent } from "@ff/graph/System"
 
 import RenderComponent from "../RenderComponent";
-import Scene from "./Scene";
-import Camera from "./Camera";
+import CScene from "./CScene";
+import CCamera from "./CCamera";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class Main extends RenderComponent
+export default class CMain extends RenderComponent
 {
-    static readonly type: string = "Main";
+    static readonly type: string = "CMain";
 
-    protected scenes: Scene[] = [];
-    protected cameras: Camera[] = [];
+    protected scenes: CScene[] = [];
+    protected cameras: CCamera[] = [];
 
-    protected selectedScene: Scene = null;
-    protected selectedCamera: Camera = null;
+    protected selectedScene: CScene = null;
+    protected selectedCamera: CCamera = null;
 
     ins = this.ins.append({
         scene: types.Option("Scene"),
         camera: types.Option("Camera")
     });
 
-    get sceneComponent(): Scene | null {
+    get sceneComponent(): CScene | null {
         return this.selectedScene;
     }
 
-    get cameraComponent(): Camera | null {
+    get cameraComponent(): CCamera | null {
         return this.selectedCamera;
     }
 
@@ -49,11 +49,11 @@ export default class Main extends RenderComponent
 
     create()
     {
-        this.scenes = this.system.components.cloneArray(Scene);
-        this.system.components.on(Scene, this.onSceneComponent, this);
+        this.scenes = this.system.components.cloneArray(CScene);
+        this.system.components.on(CScene, this.onSceneComponent, this);
 
-        this.cameras = this.system.components.cloneArray(Camera);
-        this.system.components.on(Camera, this.onCameraComponent, this);
+        this.cameras = this.system.components.cloneArray(CCamera);
+        this.system.components.on(CCamera, this.onCameraComponent, this);
 
         this.updateOptions();
     }
@@ -76,11 +76,11 @@ export default class Main extends RenderComponent
 
     dispose()
     {
-        this.system.components.off(Scene, this.onSceneComponent, this);
-        this.system.components.off(Camera, this.onCameraComponent, this);
+        this.system.components.off(CScene, this.onSceneComponent, this);
+        this.system.components.off(CCamera, this.onCameraComponent, this);
     }
 
-    protected onSceneComponent(event: IComponentEvent<Scene>)
+    protected onSceneComponent(event: IComponentEvent<CScene>)
     {
         const inScene = this.ins.scene;
 
@@ -102,7 +102,7 @@ export default class Main extends RenderComponent
         inScene.set();
     }
 
-    protected onCameraComponent(event: IComponentEvent<Camera>)
+    protected onCameraComponent(event: IComponentEvent<CCamera>)
     {
         const inCamera = this.ins.camera;
 

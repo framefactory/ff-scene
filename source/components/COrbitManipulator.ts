@@ -9,15 +9,14 @@ import { types } from "@ff/graph/propertyTypes";
 
 import OrbitManip from "@ff/three/OrbitManipulator";
 
-import Main from "./Main";
 import { IPointerEvent, ITriggerEvent } from "../RenderView";
 import RenderComponent from "../RenderComponent";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class OrbitManipulator extends RenderComponent
+export default class COrbitManipulator extends RenderComponent
 {
-    static readonly type: string = "OrbitManipulator";
+    static readonly type: string = "COrbitManipulator";
 
     ins = this.ins.append({
         enabled: types.Boolean("Enabled", true),
@@ -36,7 +35,6 @@ export default class OrbitManipulator extends RenderComponent
     });
 
     protected manip = new OrbitManip();
-    protected main = this.trackComponent(Main);
 
     create()
     {
@@ -95,8 +93,7 @@ export default class OrbitManipulator extends RenderComponent
             size.setValue(manip.size);
 
 
-            const main = this.main.component;
-            const cameraComponent = main ? main.cameraComponent : null;
+            const cameraComponent = this.system.activeCameraComponent;
 
             if (cameraComponent) {
                 const transformComponent = cameraComponent.transform;
@@ -120,7 +117,7 @@ export default class OrbitManipulator extends RenderComponent
 
     protected onPointer(event: IPointerEvent)
     {
-        if (this.ins.enabled.value && this.main.component) {
+        if (this.ins.enabled.value && this.system.activeCameraComponent) {
             const viewport = event.viewport;
             this.manip.setViewportSize(viewport.width, viewport.height);
             this.manip.onPointer(event);
@@ -130,7 +127,7 @@ export default class OrbitManipulator extends RenderComponent
 
     protected onTrigger(event: ITriggerEvent)
     {
-        if (this.ins.enabled.value && this.main.component) {
+        if (this.ins.enabled.value && this.system.activeCameraComponent) {
             const viewport = event.viewport;
             this.manip.setViewportSize(viewport.width, viewport.height);
             this.manip.onTrigger(event);

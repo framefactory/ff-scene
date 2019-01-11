@@ -11,8 +11,8 @@ import CSelection from "@ff/graph/components/CSelection";
 
 import Bracket from "@ff/three/Bracket";
 
-import Transform from "./Transform";
-import Object3D from "./Object3D";
+import CTransform from "./CTransform";
+import CObject3D from "./CObject3D";
 
 import { IActiveSceneEvent } from "../RenderSystem";
 import { IPointerEvent } from "../RenderView";
@@ -52,7 +52,7 @@ export default class CPickSelection extends CSelection
         super.onSelectNode(node, selected);
 
         const hierarchy = node.hierarchy;
-        if (hierarchy && hierarchy instanceof Transform) {
+        if (hierarchy && hierarchy instanceof CTransform) {
             this.updateBracket(hierarchy, selected);
         }
     }
@@ -61,7 +61,7 @@ export default class CPickSelection extends CSelection
     {
         super.onSelectComponent(component, selected);
 
-        if (component instanceof Object3D || component instanceof Transform) {
+        if (component instanceof CObject3D || component instanceof CTransform) {
             this.updateBracket(component, selected);
         }
     }
@@ -102,7 +102,7 @@ export default class CPickSelection extends CSelection
         }
     }
 
-    protected updateBracket(component: Transform | Object3D, selected: boolean)
+    protected updateBracket(component: CTransform | CObject3D, selected: boolean)
     {
         if (!component) {
             return;

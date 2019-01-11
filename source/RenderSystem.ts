@@ -18,8 +18,8 @@ import IndexShader from "@ff/three/shaders/IndexShader";
 
 import RenderView, { Viewport } from "./RenderView";
 
-import Scene from "./components/Scene";
-import Camera from "./components/Camera";
+import CScene from "./components/CScene";
+import CCamera from "./components/CCamera";
 
 import { ITypedEvent } from "@ff/core/Publisher";
 
@@ -35,14 +35,14 @@ export interface IRenderContext
 
 export interface IActiveSceneEvent extends ITypedEvent<"active-scene">
 {
-    previous: Scene;
-    next: Scene;
+    previous: CScene;
+    next: CScene;
 }
 
 export interface IActiveCameraEvent extends ITypedEvent<"active-camera">
 {
-    previous: Camera;
-    next: Camera;
+    previous: CCamera;
+    next: CCamera;
 }
 
 /**
@@ -58,8 +58,8 @@ export default class RenderSystem extends System
     protected objects: Dictionary<THREE.Object3D>;
 
     private _views: RenderView[];
-    private _activeCamera: Camera;
-    private _activeScene: Scene;
+    private _activeCamera: CCamera;
+    private _activeScene: CScene;
 
     constructor(registry?: Registry)
     {
@@ -80,7 +80,7 @@ export default class RenderSystem extends System
         return this._views;
     }
 
-    set activeSceneComponent(scene: Scene) {
+    set activeSceneComponent(scene: CScene) {
         if (scene !== this._activeScene) {
             const previous = this._activeScene;
             this._activeScene = scene;
@@ -89,11 +89,11 @@ export default class RenderSystem extends System
         }
     }
 
-    get activeSceneComponent(): Scene | null {
+    get activeSceneComponent(): CScene | null {
         return this._activeScene;
     }
 
-    set activeCameraComponent(camera: Camera) {
+    set activeCameraComponent(camera: CCamera) {
         if (camera !== this._activeCamera) {
             const previous = this._activeCamera;
             this._activeCamera = camera;

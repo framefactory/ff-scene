@@ -8,13 +8,13 @@
 import * as THREE from "three";
 
 import { types } from "@ff/graph/propertyTypes";
-import Material from "./Material";
+import CMaterial from "./CMaterial";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class PhongMaterial extends Material
+export default class CPhongMaterial extends CMaterial
 {
-    static readonly type: string = "PhongMaterial";
+    static readonly type: string = "CPhongMaterial";
 
     ins = this.ins.append({
         color: types.ColorRGB("Color")

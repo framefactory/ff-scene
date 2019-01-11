@@ -7,7 +7,7 @@
 
 import Component from "@ff/graph/Component";
 
-import Transform from "./components/Transform";
+import CTransform from "./components/CTransform";
 import RenderSystem from "./RenderSystem";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@ export default class RenderComponent extends Component
     static readonly type: string = "Component";
 
     get transform() {
-        return this.node.components.get(Transform);
+        return this.node.components.get(CTransform);
     }
 
     get system(): RenderSystem {

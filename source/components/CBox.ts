@@ -9,13 +9,13 @@ import * as THREE from "three";
 
 import { types } from "@ff/graph/propertyTypes";
 import { IPointerEvent } from "../RenderView";
-import Geometry from "./Geometry";
+import CGeometry from "./CGeometry";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class Box extends Geometry
+export default class CBox extends CGeometry
 {
-    static readonly type: string = "Box";
+    static readonly type: string = "CBox";
 
     ins = this.ins.append({
         size: types.Vector3("Size", [ 10, 10, 10 ]),

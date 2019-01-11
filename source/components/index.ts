@@ -5,64 +5,64 @@
  * License: MIT
  */
 
-import BasicMaterial from "./BasicMaterial";
-import Box from "./Box";
-import Camera from "./Camera";
+import CBasicMaterial from "./CBasicMaterial";
+import CBox from "./CBox";
+import CCamera from "./CCamera";
+import CDirectionalLight from "./CDirectionalLight";
+import CGeometry from "./CGeometry";
+import CGrid from "./CGrid";
+import CLight from "./CLight";
+import CMain from "./CMain";
+import CMaterial from "./CMaterial";
+import CMesh from "./CMesh";
+import CObject3D from "./CObject3D";
+import COrbitManipulator from "./COrbitManipulator";
+import CPhongMaterial from "./CPhongMaterial";
 import CPickSelection from "./CPickSelection";
-import DirectionalLight from "./DirectionalLight";
-import Geometry from "./Geometry";
-import Grid from "./Grid";
-import Light from "./Light";
-import Main from "./Main";
-import Material from "./Material";
-import Mesh from "./Mesh";
-import Object3D from "./Object3D";
-import OrbitManipulator from "./OrbitManipulator";
-import PhongMaterial from "./PhongMaterial";
-import PointLight from "./PointLight";
-import Scene from "./Scene";
-import SpotLight from "./SpotLight";
-import Torus from "./Torus";
-import Transform from "./Transform";
+import CPointLight from "./CPointLight";
+import CScene from "./CScene";
+import CSpotLight from "./CSpotLight";
+import CTorus from "./CTorus";
+import CTransform from "./CTransform";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export {
-    BasicMaterial,
-    Box,
-    Camera,
+    CBasicMaterial,
+    CBox,
+    CCamera,
+    CDirectionalLight,
+    CGeometry,
+    CGrid,
+    CLight,
+    CMain,
+    CMaterial,
+    CMesh,
+    CObject3D,
+    COrbitManipulator,
+    CPhongMaterial,
     CPickSelection,
-    DirectionalLight,
-    Geometry,
-    Grid,
-    Light,
-    Main,
-    Material,
-    Mesh,
-    Object3D,
-    OrbitManipulator,
-    PhongMaterial,
-    PointLight,
-    Scene,
-    SpotLight,
-    Torus,
-    Transform
+    CPointLight,
+    CScene,
+    CSpotLight,
+    CTorus,
+    CTransform
 };
 
 export const componentTypes = [
-    BasicMaterial,
-    Box,
-    Camera,
+    CBasicMaterial,
+    CBox,
+    CCamera,
     CPickSelection,
-    DirectionalLight,
-    Grid,
-    Main,
-    Mesh,
-    OrbitManipulator,
-    PhongMaterial,
-    PointLight,
-    Scene,
-    SpotLight,
-    Torus,
-    Transform
+    CDirectionalLight,
+    CGrid,
+    CMain,
+    CMesh,
+    COrbitManipulator,
+    CPhongMaterial,
+    CPointLight,
+    CScene,
+    CSpotLight,
+    CTorus,
+    CTransform
 ];

@@ -9,18 +9,18 @@ import * as THREE from "three";
 
 import { ComponentTracker } from "@ff/graph/Component";
 
-import Geometry from "./Geometry";
-import Material from "./Material";
-import Object3D from "./Object3D";
+import CGeometry from "./CGeometry";
+import CMaterial from "./CMaterial";
+import CObject3D from "./CObject3D";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class Mesh extends Object3D
+export default class CMesh extends CObject3D
 {
-    static readonly type: string = "Mesh";
+    static readonly type: string = "CMesh";
 
-    protected geometryTracker: ComponentTracker<Geometry>;
-    protected materialTracker: ComponentTracker<Material>;
+    protected geometryTracker: ComponentTracker<CGeometry>;
+    protected materialTracker: ComponentTracker<CMaterial>;
 
 
     get mesh() {
@@ -34,7 +34,7 @@ export default class Mesh extends Object3D
         this.object3D = new THREE.Mesh();
         this.object3D.visible = false;
 
-        this.geometryTracker = this.trackComponent(Geometry, component => {
+        this.geometryTracker = this.trackComponent(CGeometry, component => {
             this.mesh.geometry = component.geometry;
             component.on("geometry", this.updateGeometry, this);
         }, component => {
@@ -42,7 +42,7 @@ export default class Mesh extends Object3D
             component.off("geometry", this.updateGeometry, this);
         });
 
-        this.materialTracker = this.trackComponent(Material, component => {
+        this.materialTracker = this.trackComponent(CMaterial, component => {
             this.mesh.material = component.material;
             component.on("material", this.updateMaterial, this);
         }, component => {

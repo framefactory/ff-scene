@@ -10,7 +10,7 @@ import * as THREE from "three";
 import math from "@ff/core/math";
 
 import { types } from "@ff/graph/propertyTypes";
-import Hierarchy from "@ff/graph/Hierarchy";
+import CHierarchy from "@ff/graph/components/CHierarchy";
 import Node from "@ff/graph/Node";
 
 import RenderComponent from "../RenderComponent";
@@ -28,7 +28,7 @@ export interface IObject3D extends RenderComponent
     object3D: THREE.Object3D;
 
     readonly system: RenderSystem;
-    readonly transform: Transform;
+    readonly transform: CTransform;
 }
 
 export enum ERotationOrder { XYZ, YZX, ZXY, XZY, YXZ, ZYX }
@@ -38,9 +38,9 @@ export enum ERotationOrder { XYZ, YZX, ZXY, XZY, YXZ, ZYX }
  * contains a transformation which affects its children as well as other components which
  * are part of the same entity.
  */
-export default class Transform extends Hierarchy implements IObject3D
+export default class CTransform extends CHierarchy implements IObject3D
 {
-    static readonly type: string = "Transform";
+    static readonly type: string = "CTransform";
 
     ins = this.ins.append({
         position: types.Vector3("Position"),
@@ -63,8 +63,8 @@ export default class Transform extends Hierarchy implements IObject3D
         this._object3D.matrixAutoUpdate = false;
     }
 
-    get transform() {
-        return this.node.components.get(Transform);
+    get transform(): CTransform {
+        return this;
     }
 
     get system(): RenderSystem {
@@ -73,7 +73,6 @@ export default class Transform extends Hierarchy implements IObject3D
 
     /**
      * Returns the three.js renderable object wrapped in this component.
-     * @returns {Object3D}
      */
     get object3D(): THREE.Object3D
     {
@@ -82,16 +81,14 @@ export default class Transform extends Hierarchy implements IObject3D
 
     /**
      * Returns an array of child components of this.
-     * @returns {Readonly<Hierarchy[]>}
      */
-    get children(): Readonly<Transform[]>
+    get children(): Readonly<CTransform[]>
     {
-        return this._children as Transform[] || [];
+        return this._children as CTransform[] || [];
     }
 
     /**
      * Returns a reference to the local transformation matrix.
-     * @returns {THREE.Matrix4}
      */
     get matrix(): Readonly<THREE.Matrix4>
     {
@@ -153,29 +150,29 @@ export default class Transform extends Hierarchy implements IObject3D
 
 
     /**
-     * Adds a child [[HierarchyComponent]] or [[TransformComponent]] to this.
-     * @param {Transform} component
+     * Adds the given transform component as a children to this.
+     * @param component
      */
-    addChild(component: Transform)
+    addChild(component: CTransform)
     {
         super.addChild(component);
         this._object3D.add(component._object3D);
     }
 
     /**
-     * Removes a child [[HierarchyComponent]] or [[TransformComponent]] from this.
-     * @param {Transform} component
+     * Removes the given transform component from the list of children of this.
+     * @param component
      */
-    removeChild(component: Transform)
+    removeChild(component: CTransform)
     {
         this._object3D.remove(component._object3D);
         super.removeChild(component);
     }
 
     /**
-     * Called by [[Object3DComponent]] to attach its three.js renderable object to the transform component.
+     * Called by [[CObject3D]] to attach its three.js renderable object to the transform component.
      * Do not call this directly.
-     * @param {Object3D} object
+     * @param object
      */
     addObject3D(object: THREE.Object3D)
     {
@@ -183,9 +180,9 @@ export default class Transform extends Hierarchy implements IObject3D
     }
 
     /**
-     * Called by [[Object3DComponent]] to detach its three.js renderable object from the transform component.
+     * Called by [[CObject3D]] to detach its three.js renderable object from the transform component.
      * Do not call this directly.
-     * @param {Object3D} object
+     * @param object
      */
     removeObject3D(object: THREE.Object3D)
     {

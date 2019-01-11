@@ -10,9 +10,9 @@ import RenderComponent from "../RenderComponent";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class Geometry extends RenderComponent
+export default class CGeometry extends RenderComponent
 {
-    static readonly type: string = "Geometry";
+    static readonly type: string = "CGeometry";
 
     private _geometry: THREE.BufferGeometry = null;
 

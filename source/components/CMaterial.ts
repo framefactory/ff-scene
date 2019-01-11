@@ -10,9 +10,9 @@ import RenderComponent from "../RenderComponent";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class Material extends RenderComponent
+export default class CMaterial extends RenderComponent
 {
-    static readonly type: string = "Material";
+    static readonly type: string = "CMaterial";
 
 
     private _material: THREE.Material = null;

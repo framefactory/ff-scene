@@ -6,14 +6,16 @@
  */
 
 import * as THREE from "three";
+
 import{ types } from "@ff/graph/propertyTypes";
-import Geometry from "./Geometry";
+
+import CGeometry from "./CGeometry";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class Torus extends Geometry
+export default class CTorus extends CGeometry
 {
-    static readonly type: string = "Torus";
+    static readonly type: string = "CTorus";
 
     ins = this.ins.append({
         radius: types.Number("Radius", 10),

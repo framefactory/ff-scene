@@ -8,15 +8,15 @@
 import { types } from "@ff/graph/propertyTypes";
 
 import UniversalCamera, { EProjectionType } from "@ff/three/UniversalCamera";
-import Object3D from "./Object3D";
+import CObject3D from "./CObject3D";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export { EProjectionType };
 
-export default class Camera extends Object3D
+export default class CCamera extends CObject3D
 {
-    static readonly type: string = "Camera";
+    static readonly type: string = "CCamera";
 
     ins = this.ins.append({
         activate: types.Event("Activate"),

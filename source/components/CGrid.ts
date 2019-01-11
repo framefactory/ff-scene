@@ -9,7 +9,7 @@ import * as THREE from "three";
 
 import math from "@ff/core/math";
 import { types } from "@ff/graph/propertyTypes";
-import Object3D from "./Object3D";
+import CObject3D from "./CObject3D";
 
 import ThreeGrid, { IGridProps } from "@ff/three/Grid";
 
@@ -18,9 +18,9 @@ import ThreeGrid, { IGridProps } from "@ff/three/Grid";
 const _vec3a = new THREE.Vector3();
 const _vec3b = new THREE.Vector3();
 
-export default class Grid extends Object3D
+export default class CGrid extends CObject3D
 {
-    static readonly type: string = "Grid";
+    static readonly type: string = "CGrid";
 
     ins = this.ins.append({
         position: types.Vector3("Transform.Position"),

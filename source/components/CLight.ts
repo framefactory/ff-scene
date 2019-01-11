@@ -6,13 +6,13 @@
  */
 
 import { types } from "@ff/graph/propertyTypes";
-import Object3D from "./Object3D";
+import CObject3D from "./CObject3D";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class Light extends Object3D
+export default class CLight extends CObject3D
 {
-    static readonly type: string = "Light";
+    static readonly type: string = "CLight";
 
     ins = this.ins.append({
         color: types.ColorRGB("Color"),

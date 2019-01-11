@@ -7,7 +7,7 @@
 
 import Node from "@ff/graph/Node";
 
-import Transform from "./components/Transform";
+import CTransform from "./components/CTransform";
 import RenderSystem from "./RenderSystem";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -19,6 +19,6 @@ export default class RenderNode extends Node
     readonly system: RenderSystem;
 
     get transform() {
-        return this.components.get(Transform);
+        return this.components.get(CTransform);
     }
 }

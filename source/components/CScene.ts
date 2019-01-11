@@ -8,13 +8,13 @@
 import * as THREE from "three";
 
 import { types } from "@ff/graph/propertyTypes";
-import Transform from "./Transform";
+import CTransform from "./CTransform";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class Scene extends Transform
+export default class CScene extends CTransform
 {
-    static readonly type: string = "Scene";
+    static readonly type: string = "CScene";
 
     ins = this.ins.append({
         activate: types.Event("Activate")

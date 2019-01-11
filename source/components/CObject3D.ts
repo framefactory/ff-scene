@@ -11,7 +11,7 @@ import { ITypedEvent } from "@ff/core/Publisher";
 import { types } from "@ff/graph/propertyTypes";
 import Node from "@ff/graph/Node";
 
-import Transform, { IObject3D } from "./Transform";
+import CTransform, { IObject3D } from "./CTransform";
 import RenderComponent from "../RenderComponent";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -27,9 +27,9 @@ export interface IObject3DObjectEvent extends ITypedEvent<"object">
  * If component is added to a node together with a [[Transform]] component,
  * it is automatically added as a child to the transform.
  */
-export default class Object3D extends RenderComponent implements IObject3D
+export default class CObject3D extends RenderComponent implements IObject3D
 {
-    static readonly type: string = "Object3D";
+    static readonly type: string = "CObject3D";
 
 
     private _object3D: THREE.Object3D = null;
@@ -74,7 +74,7 @@ export default class Object3D extends RenderComponent implements IObject3D
 
     create()
     {
-        this.trackComponent(Transform, transform => {
+        this.trackComponent(CTransform, transform => {
             if (this._object3D) {
                 transform.addObject3D(this._object3D);
             }
