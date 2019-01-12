@@ -24,6 +24,15 @@ export default class CScene extends CTransform
         return this.object3D as THREE.Scene;
     }
 
+    create()
+    {
+        super.create();
+
+        if (!this.system.activeSceneComponent) {
+            this.system.activeSceneComponent = this;
+        }
+    }
+
     update(context)
     {
         super.update(context);

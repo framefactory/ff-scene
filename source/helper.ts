@@ -7,86 +7,87 @@
 
 import Node from "@ff/graph/Node";
 import Graph from "@ff/graph/Graph";
-import Hierarchy from "@ff/graph/Hierarchy";
+
+import CHierarchy from "@ff/graph/components/CHierarchy";
 
 import {
-    Box,
-    Camera,
-    DirectionalLight,
-    Mesh,
-    PhongMaterial,
-    PointLight,
-    Scene,
-    SpotLight,
-    Torus,
-    Transform
+    CBox,
+    CCamera,
+    CDirectionalLight,
+    CMesh,
+    CPhongMaterial,
+    CPointLight,
+    CScene,
+    CSpotLight,
+    CTorus,
+    CTransform
 } from "./components";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 const createScene = function(graph: Graph, name?: string): Node
 {
-    const entity = graph.createNode(Node, name);
-    entity.createComponent(Scene);
-    return entity;
+    const node = graph.createNode(Node, name);
+    node.createComponent(CScene);
+    return node;
 };
 
 const createTransform = function(parent: Node, name?: string): Node
 {
-    const hierarchy = parent.components.get(Hierarchy);
+    const hierarchy = parent.components.get(CHierarchy);
     if (!hierarchy) {
         throw new Error("can't attach to parent; missing a hierarchy component");
     }
 
-    const entity = parent.graph.createNode(Node, name);
-    hierarchy.addChild(entity.createComponent(Transform));
-    return entity;
+    const node = parent.graph.createNode(Node, name);
+    hierarchy.addChild(node.createComponent(CTransform));
+    return node;
 };
 
 const createCamera = function(parent: Node, name?: string): Node
 {
-    const entity = createTransform(parent, name);
-    entity.createComponent(Camera);
-    return entity;
+    const node = createTransform(parent, name);
+    node.createComponent(CCamera);
+    return node;
 };
 
 const createDirectionalLight = function(parent: Node, name?: string): Node
 {
-    const entity = createTransform(parent, name);
-    entity.createComponent(DirectionalLight);
-    return entity;
+    const node = createTransform(parent, name);
+    node.createComponent(CDirectionalLight);
+    return node;
 };
 
 const createPointLight = function(parent: Node, name?: string): Node
 {
-    const entity = createTransform(parent, name);
-    entity.createComponent(PointLight);
-    return entity;
+    const node = createTransform(parent, name);
+    node.createComponent(CPointLight);
+    return node;
 };
 
 const createSpotLight = function(parent: Node, name?: string): Node
 {
-    const entity = createTransform(parent, name);
-    entity.createComponent(SpotLight);
-    return entity;
+    const node = createTransform(parent, name);
+    node.createComponent(CSpotLight);
+    return node;
 };
 
 const createBox = function(parent: Node, name?: string): Node
 {
-    const entity = createTransform(parent, name);
-    entity.createComponent(Mesh);
-    entity.createComponent(Box);
-    entity.createComponent(PhongMaterial);
-    return entity;
+    const node = createTransform(parent, name);
+    node.createComponent(CMesh);
+    node.createComponent(CBox);
+    node.createComponent(CPhongMaterial);
+    return node;
 };
 
 const createTorus = function(parent: Node, name?: string): Node
 {
-    const entity = createTransform(parent, name);
-    entity.createComponent(Mesh);
-    entity.createComponent(Torus);
-    entity.createComponent(PhongMaterial);
-    return entity;
+    const node = createTransform(parent, name);
+    node.createComponent(CMesh);
+    node.createComponent(CTorus);
+    node.createComponent(CPhongMaterial);
+    return node;
 };
 
 export {

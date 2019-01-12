@@ -38,13 +38,17 @@ export default class CCamera extends CObject3D
     {
         super.create();
         this.object3D = new UniversalCamera();
+
+        if (!this.system.activeCameraComponent) {
+            this.system.activeCameraComponent = this;
+        }
     }
 
     update()
     {
         const { activate, position, rotation, projection, fov, size, zoom, near, far } = this.ins;
 
-        if (activate.value) {
+        if (activate.changed) {
             this.system.activeCameraComponent = this;
         }
 
