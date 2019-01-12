@@ -7,12 +7,12 @@
 
 import { types } from "@ff/graph/propertyTypes";
 
-import UniversalCamera, { EProjectionType } from "@ff/three/UniversalCamera";
+import UniversalCamera, { EProjection } from "@ff/three/UniversalCamera";
 import CObject3D from "./CObject3D";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { EProjectionType };
+export { EProjection };
 
 export default class CCamera extends CObject3D
 {
@@ -22,7 +22,7 @@ export default class CCamera extends CObject3D
         activate: types.Event("Activate"),
         position: types.Vector3("Transform.Position"),
         rotation: types.Vector3("Transform.Rotation"),
-        projection: types.Enum("Projection.Type", EProjectionType, EProjectionType.Perspective),
+        projection: types.Enum("Projection.Type", EProjection, EProjection.Perspective),
         fov: types.Number("Projection.FovY", 52),
         size: types.Number("Projection.Size", 20),
         zoom: types.Number("Projection.Zoom", 1),
@@ -61,7 +61,7 @@ export default class CCamera extends CObject3D
         }
 
         if (projection.changed) {
-            camera.setProjection(types.getEnumIndex(EProjectionType, projection.value));
+            camera.setProjection(types.getEnumIndex(EProjection, projection.value));
         }
 
         camera.fov = fov.value;
