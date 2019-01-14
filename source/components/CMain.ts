@@ -16,6 +16,11 @@ import CCamera from "./CCamera";
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const ins = {
+    scene: types.Option("Scene", []),
+    camera: types.Option("Camera", [])
+};
+
 export default class CMain extends RenderComponent
 {
     static readonly type: string = "CMain";
@@ -26,10 +31,7 @@ export default class CMain extends RenderComponent
     protected selectedScene: CScene = null;
     protected selectedCamera: CCamera = null;
 
-    ins = this.ins.append({
-        scene: types.Option("Scene"),
-        camera: types.Option("Camera")
-    });
+    ins = this.addInputs(ins);
 
     get sceneComponent(): CScene | null {
         return this.selectedScene;
@@ -63,11 +65,11 @@ export default class CMain extends RenderComponent
         const ins = this.ins;
 
         if (ins.scene.changed) {
-            const index = ins.scene.getOptionIndex();
+            const index = ins.scene.getValidatedValue();
             this.selectedScene = index >= 0 ? this.scenes[index] : null;
         }
         if (ins.camera.changed) {
-            const index = ins.camera.getOptionIndex();
+            const index = ins.camera.getValidatedValue();
             this.selectedCamera = index >= 0 ? this.cameras[index] : null;
         }
 

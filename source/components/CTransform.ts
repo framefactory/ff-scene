@@ -33,6 +33,17 @@ export interface IObject3D extends RenderComponent
 
 export enum ERotationOrder { XYZ, YZX, ZXY, XZY, YXZ, ZYX }
 
+const ins = {
+    position: types.Vector3("Position"),
+    rotation: types.Vector3("Rotation"),
+    order: types.Enum("Order", ERotationOrder),
+    scale: types.Vector3("Scale", [ 1, 1, 1 ])
+};
+
+const outs = {
+    matrix: types.Matrix4("Matrix")
+};
+
 /**
  * Allows arranging components in a hierarchical structure. Each [[TransformComponent]]
  * contains a transformation which affects its children as well as other components which
@@ -42,16 +53,8 @@ export default class CTransform extends CHierarchy implements IObject3D
 {
     static readonly type: string = "CTransform";
 
-    ins = this.ins.append({
-        position: types.Vector3("Position"),
-        rotation: types.Vector3("Rotation"),
-        order: types.Enum("Order", ERotationOrder),
-        scale: types.Vector3("Scale", [ 1, 1, 1 ])
-    });
-
-    outs = this.outs.append({
-        matrix: types.Matrix4("Matrix")
-    });
+    ins = this.addInputs(ins);
+    outs = this.addOutputs(outs);
 
     private _object3D: THREE.Object3D;
 
@@ -103,7 +106,7 @@ export default class CTransform extends CHierarchy implements IObject3D
 
         object3D.position.fromArray(position.value);
         _vec3a.fromArray(rotation.value).multiplyScalar(math.DEG2RAD);
-        const orderName = types.getEnumName(ERotationOrder, order.value);
+        const orderName = order.getOptionText();
         object3D.rotation.setFromVector3(_vec3a, orderName);
         object3D.scale.fromArray(scale.value);
         object3D.updateMatrix();
@@ -136,7 +139,7 @@ export default class CTransform extends CHierarchy implements IObject3D
         matrix.decompose(_vec3a, _quat, _vec3b);
         _vec3a.toArray(position.value);
 
-        const orderName = types.getEnumName(ERotationOrder, order.value);
+        const orderName = order.getOptionText();
         _euler.setFromQuaternion(_quat, orderName);
         _euler.toVector3(_vec3a);
         _vec3a.multiplyScalar(math.RAD2DEG).toArray(rotation.value);

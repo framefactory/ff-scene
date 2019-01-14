@@ -18,20 +18,22 @@ import ThreeGrid, { IGridProps } from "@ff/three/Grid";
 const _vec3a = new THREE.Vector3();
 const _vec3b = new THREE.Vector3();
 
+const ins = {
+    position: types.Vector3("Transform.Position"),
+    rotation: types.Vector3("Transform.Rotation"),
+    scale: types.Scale3("Transform.Scale"),
+    size: types.Number("Grid.Size", 20),
+    mainDivs: types.Number("Grid.Main.Divisions", 2),
+    mainColor: types.ColorRGB("Grid.Main.Color", [ 1, 1, 1 ]),
+    subDivs: types.Number("Grid.Sub.Divisions", 10),
+    subColor: types.ColorRGB("Grid.Sub.Color", [ 0.5, 0.5, 0.5 ])
+};
+
 export default class CGrid extends CObject3D
 {
     static readonly type: string = "CGrid";
 
-    ins = this.ins.append({
-        position: types.Vector3("Transform.Position"),
-        rotation: types.Vector3("Transform.Rotation"),
-        scale: types.Vector3_ones("Transform.Scale"),
-        size: types.Number("Grid.Size", 20),
-        mainDivs: types.Number("Grid.Main.Divisions", 2),
-        mainColor: types.ColorRGB("Grid.Main.Color", [ 1, 1, 1 ]),
-        subDivs: types.Number("Grid.Sub.Divisions", 10),
-        subColor: types.ColorRGB("Grid.Sub.Color", [ 0.5, 0.5, 0.5 ])
-    });
+    ins = this.addInputs(ins);
 
     update(): boolean
     {

@@ -8,7 +8,6 @@
 import * as THREE from "three";
 
 import { ITypedEvent } from "@ff/core/Publisher";
-import { types } from "@ff/graph/propertyTypes";
 import Node from "@ff/graph/Node";
 
 import CTransform, { IObject3D } from "./CTransform";

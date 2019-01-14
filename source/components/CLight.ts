@@ -10,14 +10,16 @@ import CObject3D from "./CObject3D";
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const ins = {
+    color: types.ColorRGB("Color"),
+    intensity: types.Number("Intensity", 1)
+};
+
 export default class CLight extends CObject3D
 {
     static readonly type: string = "CLight";
 
-    ins = this.ins.append({
-        color: types.ColorRGB("Color"),
-        intensity: types.Number("Intensity", 1)
-    });
+    ins = this.addInputs(ins);
 
     get light(): THREE.Light
     {

@@ -12,13 +12,15 @@ import CTransform from "./CTransform";
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const ins = {
+    activate: types.Event("Activate")
+};
+
 export default class CScene extends CTransform
 {
     static readonly type: string = "CScene";
 
-    ins = this.ins.append({
-        activate: types.Event("Activate")
-    });
+    ins = this.addInputs<CTransform, typeof ins>(ins);
 
     get scene(): THREE.Scene {
         return this.object3D as THREE.Scene;
@@ -37,9 +39,7 @@ export default class CScene extends CTransform
     {
         super.update(context);
 
-        const ins = this.ins;
-
-        if (ins.activate.changed) {
+        if (this.ins.activate.changed) {
             this.system.activeSceneComponent = this;
         }
 

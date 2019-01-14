@@ -12,13 +12,15 @@ import CMaterial from "./CMaterial";
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const ins = {
+    color: types.ColorRGB("Color")
+};
+
 export default class CBasicMaterial extends CMaterial
 {
     static readonly type: string = "CBasicMaterial";
 
-    ins = this.ins.append({
-        color: types.ColorRGB("Color")
-    });
+    ins = this.addInputs(ins);
 
     create()
     {

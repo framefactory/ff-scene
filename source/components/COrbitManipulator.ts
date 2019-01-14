@@ -14,25 +14,28 @@ import RenderComponent from "../RenderComponent";
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const ins = {
+    enabled: types.Boolean("Enabled", true),
+    orbit: types.Vector3("Orbit", [ 0, 0, 0 ]),
+    offset: types.Vector3("Offset", [ 0, 0, 50 ]),
+    minOrbit: types.Vector3("Min.Orbit", [ -90, NaN, NaN ]),
+    minOffset: types.Vector3("Min.Offset", [ NaN, NaN, 0.1 ]),
+    maxOrbit: types.Vector3("Max.Orbit", [ 90, NaN, NaN ]),
+    maxOffset: types.Vector3("Max.Offset", [ NaN, NaN, 100 ])
+};
+
+const outs = {
+    orbit: types.Vector3("Orbit"),
+    offset: types.Vector3("Offset"),
+    size: types.Number("Size")
+};
+
 export default class COrbitManipulator extends RenderComponent
 {
     static readonly type: string = "COrbitManipulator";
 
-    ins = this.ins.append({
-        enabled: types.Boolean("Enabled", true),
-        orbit: types.Vector3("Orbit", [ 0, 0, 0 ]),
-        offset: types.Vector3("Offset", [ 0, 0, 50 ]),
-        minOrbit: types.Vector3("Min.Orbit", [ -90, NaN, NaN ]),
-        minOffset: types.Vector3("Min.Offset", [ NaN, NaN, 0.1 ]),
-        maxOrbit: types.Vector3("Max.Orbit", [ 90, NaN, NaN ]),
-        maxOffset: types.Vector3("Max.Offset", [ NaN, NaN, 100 ])
-    });
-
-    outs = this.outs.append({
-        orbit: types.Vector3("Orbit"),
-        offset: types.Vector3("Offset"),
-        size: types.Number("Size")
-    });
+    ins = this.addInputs(ins);
+    outs = this.addOutputs(outs);
 
     protected manip = new OrbitManip();
 

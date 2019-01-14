@@ -14,21 +14,23 @@ import CObject3D from "./CObject3D";
 
 export { EProjection };
 
+const ins = {
+    activate: types.Event("Activate"),
+    position: types.Vector3("Transform.Position"),
+    rotation: types.Vector3("Transform.Rotation"),
+    projection: types.Enum("Projection.Type", EProjection, EProjection.Perspective),
+    fov: types.Number("Projection.FovY", 52),
+    size: types.Number("Projection.Size", 20),
+    zoom: types.Number("Projection.Zoom", 1),
+    near: types.Number("Frustum.ZNear", 0.01),
+    far: types.Number("Frustum.ZFar", 10000)
+};
+
 export default class CCamera extends CObject3D
 {
     static readonly type: string = "CCamera";
 
-    ins = this.ins.append({
-        activate: types.Event("Activate"),
-        position: types.Vector3("Transform.Position"),
-        rotation: types.Vector3("Transform.Rotation"),
-        projection: types.Enum("Projection.Type", EProjection, EProjection.Perspective),
-        fov: types.Number("Projection.FovY", 52),
-        size: types.Number("Projection.Size", 20),
-        zoom: types.Number("Projection.Zoom", 1),
-        near: types.Number("Frustum.ZNear", 0.01),
-        far: types.Number("Frustum.ZFar", 10000)
-    });
+    ins = this.addInputs(ins);
 
     get camera() {
         return this.object3D as UniversalCamera;
@@ -61,7 +63,7 @@ export default class CCamera extends CObject3D
         }
 
         if (projection.changed) {
-            camera.setProjection(types.getEnumIndex(EProjection, projection.value));
+            camera.setProjection(projection.getValidatedValue());
         }
 
         camera.fov = fov.value;

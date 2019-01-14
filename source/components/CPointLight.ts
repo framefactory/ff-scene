@@ -13,14 +13,16 @@ import CLight from "./CLight";
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const ins = {
+    distance: types.Number("Distance"),
+    decay: types.Number("Decay", 1)
+};
+
 export default class CPointLight extends CLight
 {
     static readonly type: string = "CPointLight";
 
-    ins = this.ins.append({
-        distance: types.Number("Distance"),
-        decay: types.Number("Decay", 1)
-    });
+    ins = this.addInputs<CLight, typeof ins>(ins);
 
     get light(): THREE.PointLight
     {

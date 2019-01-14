@@ -13,16 +13,18 @@ import CGeometry from "./CGeometry";
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const ins = {
+    radius: types.Number("Radius", 10),
+    tube: types.Number("Tube", 3),
+    angle: types.Number("Angle", 360),
+    segments: types.Vector2("Segments", [ 24, 12 ])
+};
+
 export default class CTorus extends CGeometry
 {
     static readonly type: string = "CTorus";
 
-    ins = this.ins.append({
-        radius: types.Number("Radius", 10),
-        tube: types.Number("Tube", 3),
-        angle: types.Number("Angle", 360),
-        segments: types.Vector2("Segments", [ 24, 12 ])
-    });
+    ins = this.addInputs(ins);
 
     update()
     {

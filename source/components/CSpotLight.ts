@@ -13,16 +13,18 @@ import CLight from "./CLight";
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const ins = {
+    distance: types.Number("Distance"),
+    decay: types.Number("Decay", 1),
+    angle: types.Number("Angle", 45),
+    penumbra: types.Number("Penumbra", 0.5)
+};
+
 export default class CSpotLight extends CLight
 {
     static readonly type: string = "CSpotLight";
 
-    ins = this.ins.append({
-        distance: types.Number("Distance"),
-        decay: types.Number("Decay", 1),
-        angle: types.Number("Angle", 45),
-        penumbra: types.Number("Penumbra", 0.5)
-    });
+    ins = this.addInputs<CLight, typeof ins>(ins);
 
     get light(): THREE.SpotLight
     {
