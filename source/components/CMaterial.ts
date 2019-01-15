@@ -6,11 +6,11 @@
  */
 
 import Node from "@ff/graph/Node";
-import RenderComponent from "../RenderComponent";
+import Component from "@ff/graph/Component";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CMaterial extends RenderComponent
+export default class CMaterial extends Component
 {
     static readonly type: string = "CMaterial";
 

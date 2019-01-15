@@ -19,17 +19,19 @@ export default class CRenderGraph extends CGraph
     set root(root: CHierarchy)
     {
         if (root.is(CTransform)) {
-            const parentTransform = this.components.get(CTransform);
+            const parent = this.components.get(CTransform);
             const previous = this.root as CTransform;
+            const next = root as CTransform;
 
-            if (previous) {
-                parentTransform.removeChild(previous);
+            if (parent && previous) {
+                parent.removeObject3D(previous.object3D);
             }
 
-            this.root = root as CTransform;
 
-            if (root) {
-                parentTransform.addChild(root as CTransform);
+            super.root = next;
+
+            if (parent && next) {
+                parent.addObject3D(next.object3D);
             }
         }
     }

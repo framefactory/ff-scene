@@ -8,12 +8,44 @@
 import * as THREE from "three";
 
 import { ITypedEvent } from "@ff/core/Publisher";
+import Component from "@ff/graph/Component";
 import Node from "@ff/graph/Node";
 
-import CTransform, { IObject3D } from "./CTransform";
-import RenderComponent from "../RenderComponent";
+import RenderView, { Viewport } from "../RenderView";
+import CTransform from "./CTransform";
+import IndexShader from "@ff/three/shaders/IndexShader";
 
 ////////////////////////////////////////////////////////////////////////////////
+
+const _context: IRenderContext = {
+    view: null,
+    viewport: null,
+    renderer: null,
+    scene: null,
+    camera: null,
+    geometry: null,
+    material: null,
+    group: null
+};
+
+const _hookObject3D = function(object: THREE.Object3D)
+{
+    if ((object as any).material) {
+        object.onBeforeRender = function(r, s, c, g, material: IndexShader) {
+            if (material.isIndexShader) {
+                //console.log("setIndex #%s for %s", object.id, object);
+                material.setIndex(object.id);
+            }
+        }
+    }
+};
+
+const _unhookObject3D = function(object: THREE.Object3D)
+{
+    if ((object as any).material) {
+        object.onBeforeRender = null;
+    }
+};
 
 export interface IObject3DObjectEvent extends ITypedEvent<"object">
 {
@@ -21,12 +53,24 @@ export interface IObject3DObjectEvent extends ITypedEvent<"object">
     next: THREE.Object3D;
 }
 
+export interface IRenderContext
+{
+    view: RenderView;
+    viewport: Viewport;
+    renderer: THREE.WebGLRenderer;
+    scene: THREE.Scene;
+    camera: THREE.Camera;
+    geometry: THREE.Geometry;
+    material: THREE.Material;
+    group: any;
+}
+
 /**
  * Base component for Three.js renderable objects.
  * If component is added to a node together with a [[Transform]] component,
  * it is automatically added as a child to the transform.
  */
-export default class CObject3D extends RenderComponent implements IObject3D
+export default class CObject3D extends Component
 {
     static readonly type: string = "CObject3D";
 
@@ -40,6 +84,10 @@ export default class CObject3D extends RenderComponent implements IObject3D
         this.addEvent("object");
     }
 
+    get transform() {
+        return this.node.components.get(CTransform);
+    }
+
     get object3D(): THREE.Object3D | null
     {
         return this._object3D;
@@ -51,7 +99,11 @@ export default class CObject3D extends RenderComponent implements IObject3D
         const currentObject = this._object3D;
 
         if (currentObject) {
-            this.system.unregisterObject3D(currentObject);
+            object.userData["component"] = null;
+            currentObject.onBeforeRender = null;
+            currentObject.onAfterRender = null;
+
+            this.unregisterPickableObject3D(currentObject, true);
 
             if (transform) {
                 transform.removeObject3D(currentObject);
@@ -62,8 +114,15 @@ export default class CObject3D extends RenderComponent implements IObject3D
         this._object3D = object;
 
         if (object) {
+            object.userData["component"] = this;
             object.matrixAutoUpdate = false;
-            this.system.registerObject3D(object, this);
+
+            object.onBeforeRender = this._onBeforeRender.bind(this);
+            if (this.afterRender) {
+                object.onAfterRender = this._onAfterRender.bind(this);
+            }
+
+            this.registerPickableObject3D(object, true);
 
             if (transform) {
                 transform.addObject3D(object);
@@ -97,50 +156,129 @@ export default class CObject3D extends RenderComponent implements IObject3D
         super.dispose();
     }
 
-    toString()
+    /**
+     * For renderable components, this is called right before the component is rendered.
+     * Override to make adjustments specific to the renderer, view or viewport.
+     * @param context
+     */
+    beforeRender(context: IRenderContext)
     {
-        return super.toString() + (this._object3D ? ` - type: ${this._object3D.type}` : " - (null)");
     }
 
     /**
-     * Adds a Three.js Object3D (subtree) as a child to the root Object3D of this component
-     * and registers it with the picking service. Must also call [[removeChildObject3D]] when removing the object.
-     * @param subtree
+     * For renderable components, this is called right after the component is rendered.
+     * Override to make adjustments specific to the renderer, view or viewport.
+     * @param context
      */
-    protected addChild(subtree: THREE.Object3D)
+    afterRender(context: IRenderContext)
     {
-        this.object3D.add(subtree);
-        this.system.registerObject3D(subtree);
     }
 
-    /**
-     * Removes a Three.js Object3D (subtree) child from the root Object3D of this component
-     * and unregisters it from the picking service.
-     * @param subtree
-     */
-    protected removeChild(subtree: THREE.Object3D)
+    addObject3D(object: THREE.Object3D)
     {
-        this.object3D.remove(subtree);
-        this.system.unregisterObject3D(subtree);
+        this._object3D.add(object);
+        this.registerPickableObject3D(object, true);
+    }
+
+    removeObject3D(object: THREE.Object3D)
+    {
+        this._object3D.remove(object);
+        this.unregisterPickableObject3D(object, true);
     }
 
     /**
      * This should be called after an external change to this component's Object3D subtree.
      * It registers newly added mesh objects with the picking service.
-     * @param subtree
+     * @param object
+     * @param recursive
      */
-    protected registerSubtree(subtree: THREE.Object3D)
+    registerPickableObject3D(object: THREE.Object3D, recursive: boolean = false)
     {
-        this.system.registerObject3D(subtree);
+        if (recursive && object === this._object3D) {
+            object.children.forEach(child => child.traverse(object => _hookObject3D(object)));
+        }
+        else if (recursive) {
+            object.traverse(object => _hookObject3D(object));
+        }
+        else if (object !== this._object3D) {
+            _hookObject3D(object);
+        }
     }
 
     /**
      * This should be called before an external change to this component's Object3D subtree.
      * It unregisters the mesh objects in the subtree from the picking service.
-     * @param subtree
+     * @param object
+     * @param recursive
      */
-    protected unregisterSubtree(subtree: THREE.Object3D)
+    unregisterPickableObject3D(object: THREE.Object3D, recursive: boolean = false)
     {
-        this.system.unregisterObject3D(subtree);
+        if (recursive && object === this._object3D) {
+            object.children.forEach(child => child.traverse(object => _unhookObject3D(object)));
+        }
+        else if (recursive) {
+            object.traverse(object => _unhookObject3D(object));
+        }
+        else if (object !== this._object3D) {
+            _unhookObject3D(object);
+        }
+    }
+
+    /**
+     * Returns a text representation.
+     */
+    toString()
+    {
+        return super.toString() + (this._object3D ? ` - type: ${this._object3D.type}` : " - (null)");
+    }
+
+    private _onBeforeRender(
+        renderer: THREE.WebGLRenderer,
+        scene: THREE.Scene,
+        camera: THREE.Camera,
+        geometry: THREE.Geometry,
+        material: any,
+        group: any)
+    {
+        // index rendering for picking: set shader index uniform to object index
+        if (material.isIndexShader) {
+            material.setIndex(this.object3D.id);
+        }
+
+        if (this.beforeRender) {
+            _context.view = renderer["__view"];
+            _context.viewport = renderer["__viewport"];
+            _context.renderer = renderer;
+            _context.scene = scene;
+            _context.camera = camera;
+            _context.geometry = geometry;
+            _context.material = material;
+            _context.group = group;
+
+            this.beforeRender(_context);
+        }
+    }
+
+    private _onAfterRender(
+        renderer: THREE.WebGLRenderer,
+        scene: THREE.Scene,
+        camera: THREE.Camera,
+        geometry: THREE.Geometry,
+        material: THREE.Material,
+        group: any)
+    {
+        _context.view = renderer["__view"];
+        _context.viewport = renderer["__viewport"];
+        _context.renderer = renderer;
+        _context.scene = scene;
+        _context.camera = camera;
+        _context.geometry = geometry;
+        _context.material = material;
+        _context.group = group;
+
+        this.afterRender(_context);
     }
 }
+
+CObject3D.prototype.beforeRender = null;
+CObject3D.prototype.afterRender = null;

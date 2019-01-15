@@ -5,17 +5,20 @@
  * License: MIT
  */
 
+import * as THREE from "three";
+
 import Node from "@ff/graph/Node";
 import Component from "@ff/graph/Component";
+import ComponentTracker from "@ff/graph/ComponentTracker";
 import CSelection from "@ff/graph/components/CSelection";
 
 import Bracket from "@ff/three/Bracket";
 
-import CTransform from "./CTransform";
-import CObject3D from "./CObject3D";
-
-import { IActiveSceneEvent } from "../RenderSystem";
 import { IPointerEvent } from "../RenderView";
+
+import CObject3D from "./CObject3D";
+import CTransform from "./CTransform";
+import CScene, { ISceneAfterRenderEvent } from "./CScene";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -26,8 +29,8 @@ export default class CPickSelection extends CSelection
     protected startX = 0;
     protected startY = 0;
 
-    protected brackets = new Map<Component, Bracket>();
-    protected onAfterRender = null;
+    private _brackets = new Map<Component, Bracket>();
+    private _sceneTracker: ComponentTracker<CScene>;
 
     create()
     {
@@ -35,14 +38,20 @@ export default class CPickSelection extends CSelection
 
         this.system.on<IPointerEvent>("pointer-down", this.onPointerDown, this);
         this.system.on<IPointerEvent>("pointer-up", this.onPointerUp, this);
-        this.system.on<IActiveSceneEvent>("active-scene", this.onActiveScene, this);
+
+        this._sceneTracker = new ComponentTracker(this.graph.components, CScene, component => {
+            component.on<ISceneAfterRenderEvent>("after-render", this.onSceneAfterRender, this);
+        }, component => {
+            component.off<ISceneAfterRenderEvent>("after-render", this.onSceneAfterRender, this);
+        });
     }
 
     dispose()
     {
         this.system.off<IPointerEvent>("pointer-down", this.onPointerDown, this);
         this.system.off<IPointerEvent>("pointer-up", this.onPointerUp, this);
-        this.system.off<IActiveSceneEvent>("active-scene", this.onActiveScene, this);
+
+        this._sceneTracker.dispose();
 
         super.dispose();
     }
@@ -85,20 +94,13 @@ export default class CPickSelection extends CSelection
         }
     }
 
-    protected onActiveScene(event: IActiveSceneEvent)
+    protected onSceneAfterRender(event: ISceneAfterRenderEvent)
     {
-        if (event.previous) {
-            event.previous.scene.onAfterRender = this.onAfterRender;
-        }
+        const renderer = event.context.renderer;
+        const camera = event.context.camera;
 
-        if (event.next) {
-            const scene = event.next.scene;
-            this.onAfterRender = scene.onAfterRender;
-
-            scene.onAfterRender = (renderer, scene, camera) => {
-                this.renderBrackets(renderer, scene, camera);
-                this.onAfterRender && this.onAfterRender();
-            };
+        for (let entry of this._brackets) {
+            renderer.render(entry[1] as any, camera);
         }
     }
 
@@ -112,22 +114,15 @@ export default class CPickSelection extends CSelection
             const object3D = component.object3D;
             if (object3D) {
                 const bracket = new Bracket(component.object3D);
-                this.brackets.set(component, bracket);
+                this._brackets.set(component, bracket);
             }
         }
         else {
-            const bracket = this.brackets.get(component);
+            const bracket = this._brackets.get(component);
             if (bracket) {
-                this.brackets.delete(component);
+                this._brackets.delete(component);
                 bracket.dispose();
             }
-        }
-    }
-
-    protected renderBrackets(renderer, scene, camera)
-    {
-        for (let entry of this.brackets) {
-            renderer.render(entry[1], camera);
         }
     }
 }

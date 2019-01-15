@@ -5,12 +5,12 @@
  * License: MIT
  */
 
+import Component from "@ff/graph/Component";
 import Node from "@ff/graph/Node";
-import RenderComponent from "../RenderComponent";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CGeometry extends RenderComponent
+export default class CGeometry extends Component
 {
     static readonly type: string = "CGeometry";
 

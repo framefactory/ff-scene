@@ -13,9 +13,6 @@ import { types } from "@ff/graph/propertyTypes";
 import CHierarchy from "@ff/graph/components/CHierarchy";
 import Node from "@ff/graph/Node";
 
-import RenderComponent from "../RenderComponent";
-import RenderSystem from "../RenderSystem";
-
 ////////////////////////////////////////////////////////////////////////////////
 
 const _vec3a = new THREE.Vector3();
@@ -23,13 +20,6 @@ const _vec3b = new THREE.Vector3();
 const _quat = new THREE.Quaternion();
 const _euler = new THREE.Euler();
 
-export interface IObject3D extends RenderComponent
-{
-    object3D: THREE.Object3D;
-
-    readonly system: RenderSystem;
-    readonly transform: CTransform;
-}
 
 export enum ERotationOrder { XYZ, YZX, ZXY, XZY, YXZ, ZYX }
 
@@ -49,7 +39,7 @@ const outs = {
  * contains a transformation which affects its children as well as other components which
  * are part of the same entity.
  */
-export default class CTransform extends CHierarchy implements IObject3D
+export default class CTransform extends CHierarchy
 {
     static readonly type: string = "CTransform";
 
@@ -68,10 +58,6 @@ export default class CTransform extends CHierarchy implements IObject3D
 
     get transform(): CTransform {
         return this;
-    }
-
-    get system(): RenderSystem {
-        return this.node.system as RenderSystem;
     }
 
     /**

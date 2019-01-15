@@ -20,6 +20,7 @@ import COrbitManipulator from "./COrbitManipulator";
 import CPhongMaterial from "./CPhongMaterial";
 import CPickSelection from "./CPickSelection";
 import CPointLight from "./CPointLight";
+import CRenderer from "./CRenderer";
 import CScene from "./CScene";
 import CSpotLight from "./CSpotLight";
 import CTorus from "./CTorus";
@@ -43,6 +44,7 @@ export {
     CPhongMaterial,
     CPickSelection,
     CPointLight,
+    CRenderer,
     CScene,
     CSpotLight,
     CTorus,
@@ -61,6 +63,7 @@ export const componentTypes = [
     COrbitManipulator,
     CPhongMaterial,
     CPointLight,
+    CRenderer,
     CScene,
     CSpotLight,
     CTorus,

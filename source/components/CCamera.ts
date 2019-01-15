@@ -9,6 +9,7 @@ import { types } from "@ff/graph/propertyTypes";
 
 import UniversalCamera, { EProjection } from "@ff/three/UniversalCamera";
 import CObject3D from "./CObject3D";
+import CScene from "./CScene";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -41,8 +42,9 @@ export default class CCamera extends CObject3D
         super.create();
         this.object3D = new UniversalCamera();
 
-        if (!this.system.activeCameraComponent) {
-            this.system.activeCameraComponent = this;
+        const sceneComponent = this.graph.components.get(CScene);
+        if (sceneComponent && !sceneComponent.activeCameraComponent) {
+            sceneComponent.activeCameraComponent = this;
         }
     }
 
@@ -51,7 +53,10 @@ export default class CCamera extends CObject3D
         const { activate, position, rotation, projection, fov, size, zoom, near, far } = this.ins;
 
         if (activate.changed) {
-            this.system.activeCameraComponent = this;
+            const sceneComponent = this.graph.components.get(CScene);
+            if (sceneComponent) {
+                sceneComponent.activeCameraComponent = this;
+            }
         }
 
         const camera = this.camera;

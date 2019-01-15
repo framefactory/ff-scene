@@ -8,8 +8,10 @@
 import * as THREE from "three";
 
 import Publisher from "@ff/core/Publisher";
-import Node from "@ff/graph/Node";
 import Component from "@ff/graph/Component";
+import ComponentTracker from "@ff/graph/ComponentTracker";
+import System from "@ff/graph/System";
+
 
 import {
     IManip,
@@ -22,7 +24,8 @@ import Viewport, {
     IBaseEvent as IViewportBaseEvent
 } from "@ff/three/Viewport";
 
-import RenderSystem, { IRenderContext } from "./RenderSystem";
+import CRenderer from "./components/CRenderer";
+import CScene from "./components/CScene";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -33,7 +36,6 @@ interface IBaseEvent extends IViewportBaseEvent
     view: RenderView;
     object3D: THREE.Object3D;
     component: Component;
-    node: Node;
     stopPropagation: boolean;
 }
 
@@ -42,21 +44,21 @@ export interface ITriggerEvent extends IManipTriggerEvent, IBaseEvent { }
 
 export default class RenderView extends Publisher implements IManip
 {
-    readonly system: RenderSystem;
+    readonly system: System;
     readonly renderer: THREE.WebGLRenderer;
     readonly canvas: HTMLCanvasElement;
     readonly overlay: HTMLElement;
     readonly viewports: Viewport[] = [];
 
+    protected sceneTracker: ComponentTracker<CScene>;
     protected activeViewport: Viewport = null;
     protected activeObject3D: THREE.Object3D = null;
     protected activeComponent: Component = null;
 
     protected shouldResize = false;
-    protected context: IRenderContext;
     protected picker: GPUPicker;
 
-    constructor(system: RenderSystem, canvas: HTMLCanvasElement, overlay: HTMLElement)
+    constructor(system: System, canvas: HTMLCanvasElement, overlay: HTMLElement)
     {
         super();
 
@@ -72,19 +74,14 @@ export default class RenderView extends Publisher implements IManip
         this.renderer.autoClear = false;
         this.renderer.setClearColor("#0090c0");
 
+        this.sceneTracker = new ComponentTracker(this.system.graph.components, CScene);
         this.picker = new GPUPicker(this.renderer);
-
-        this.context = {
-            view: this,
-            viewport: null,
-            scene: null,
-            camera: null
-        };
     }
 
     dispose()
     {
         this.renderer.dispose();
+        this.sceneTracker.dispose();
     }
 
     get canvasWidth()
@@ -105,19 +102,31 @@ export default class RenderView extends Publisher implements IManip
         this.viewports.forEach(viewport => viewport.setCanvasSize(width, height));
         this.renderer.setSize(width, height, false);
 
-        this.system.attachView(this);
+        const renderer = this.system.components.safeGet(CRenderer);
+        renderer.attachView(this);
     }
 
     detach()
     {
-        this.system.detachView(this);
+        const renderer = this.system.components.safeGet(CRenderer);
+        renderer.detachView(this);
     }
 
-    render(scene: THREE.Scene, camera: THREE.Camera)
+    render()
     {
+        const sceneComponent = this.sceneTracker.component;
+        if (!sceneComponent) {
+            return;
+        }
+
+        const scene = sceneComponent.scene;
+        const camera = sceneComponent.activeCamera;
+
         if (!scene || !camera) {
             return;
         }
+
+        const renderer = this.renderer;
 
         if (this.shouldResize) {
             this.shouldResize = false;
@@ -126,32 +135,21 @@ export default class RenderView extends Publisher implements IManip
             const height = this.canvas.height = this.canvas.clientHeight;
 
             this.viewports.forEach(viewport => viewport.setCanvasSize(width, height));
-
-            if (this.renderer) {
-                this.renderer.setSize(width, height, false);
-            }
-
+            renderer.setSize(width, height, false);
         }
 
-        const context = this.context;
-        context.scene = scene;
-        context.camera = camera;
-
-        this.renderer.clear();
+        renderer.clear();
+        renderer["__view"] = this;
 
         const viewports = this.viewports;
         for (let i = 0, n = viewports.length; i < n; ++i) {
             const viewport = viewports[i];
 
             if (viewport.enabled) {
-                context.viewport = viewport;
-                this.system.preRender(context);
-
+                renderer["__viewport"] = viewport;
                 const viewportCamera = viewport.updateCamera(camera);
                 viewport.applyViewport(this.renderer);
-                this.renderer.render(scene, viewportCamera);
-
-                this.system.postRender(context);
+                renderer.render(scene, viewportCamera);
             }
         }
     }
@@ -296,18 +294,19 @@ export default class RenderView extends Publisher implements IManip
 
         // perform 3D pick
         if (doPick) {
-            const scene = this.system.activeScene;
-            const camera = this.system.activeCamera;
+            const sceneComponent = this.sceneTracker.component;
+            const scene = sceneComponent && sceneComponent.scene;
+            const camera = sceneComponent &&sceneComponent.activeCamera;
+
             object3D = null;
             component = null;
 
             if (scene && camera) {
-                const index = this.picker.pickIndex(scene, camera, event);
-                if (index === 0) {
-                    console.log("Pick Index - #0 Background");
+                let object3D = this.picker.pickObject(scene, camera, event);
+                if (object3D === undefined) {
+                    console.log("Pick Index - Background");
                 }
                 else {
-                    object3D = this.system.getObjectByIndex(index);
                     while(object3D && !component) {
                         component = object3D.userData["component"];
                         if (!component) {
@@ -315,11 +314,10 @@ export default class RenderView extends Publisher implements IManip
                         }
                     }
                     if (component) {
-                        component = object3D.userData["component"];
-                        console.log("Pick Index - #%s Component: %s", index, component.type);
+                        console.log("Pick Index - Component: %s", component.type);
                     }
                     else {
-                        console.warn("Pick Index - #%s Background");
+                        console.warn("Pick Index - Object without component");
                     }
                 }
             }
@@ -327,7 +325,6 @@ export default class RenderView extends Publisher implements IManip
 
         viewEvent.object3D = object3D;
         viewEvent.component = component;
-        viewEvent.node = component ? component.node : null;
 
         this.activeViewport = viewport;
         this.activeObject3D = object3D;

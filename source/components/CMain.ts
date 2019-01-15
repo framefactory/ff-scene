@@ -7,10 +7,9 @@
 
 import * as THREE from "three";
 
-import { types } from "@ff/graph/propertyTypes";
+import Component, { types } from "@ff/graph/Component";
 import { IComponentEvent } from "@ff/graph/System"
 
-import RenderComponent from "../RenderComponent";
 import CScene from "./CScene";
 import CCamera from "./CCamera";
 
@@ -21,7 +20,7 @@ const ins = {
     camera: types.Option("Camera", [])
 };
 
-export default class CMain extends RenderComponent
+export default class CMain extends Component
 {
     static readonly type: string = "CMain";
 

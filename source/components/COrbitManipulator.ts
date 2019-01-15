@@ -6,11 +6,13 @@
  */
 
 import { types } from "@ff/graph/propertyTypes";
+import Component from "@ff/graph/Component";
 
 import OrbitManip from "@ff/three/OrbitManipulator";
+import CScene, { IActiveCameraEvent } from "./CScene";
+import CCamera from "./CCamera";
 
 import { IPointerEvent, ITriggerEvent } from "../RenderView";
-import RenderComponent from "../RenderComponent";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -30,23 +32,31 @@ const outs = {
     size: types.Number("Size")
 };
 
-export default class COrbitManipulator extends RenderComponent
+export default class COrbitManipulator extends Component
 {
     static readonly type: string = "COrbitManipulator";
 
     ins = this.addInputs(ins);
     outs = this.addOutputs(outs);
 
-    protected manip = new OrbitManip();
+    private _manip = new OrbitManip();
+    private _activeCameraComponent: CCamera;
 
     create()
     {
         super.create();
 
-        this.manip.cameraMode = true;
+        this._manip.cameraMode = true;
 
         this.system.on(["pointer-down", "pointer-up", "pointer-move"], this.onPointer, this);
         this.system.on("wheel", this.onTrigger, this);
+
+        this.trackComponent(CScene, component => {
+            component.on<IActiveCameraEvent>("active-camera", this.onActiveCamera, this);
+        }, component => {
+            component.off<IActiveCameraEvent>("active-camera", this.onActiveCamera, this);
+        });
+
     }
 
     dispose()
@@ -59,7 +69,7 @@ export default class COrbitManipulator extends RenderComponent
 
     update()
     {
-        const manip = this.manip;
+        const manip = this._manip;
         const ins = this.ins;
 
         const { minOrbit, minOffset, maxOrbit, maxOffset } = ins;
@@ -82,7 +92,7 @@ export default class COrbitManipulator extends RenderComponent
 
     tick()
     {
-        const manip = this.manip;
+        const manip = this._manip;
         const { enabled } = this.ins;
         const { orbit, offset, size } = this.outs;
 
@@ -96,19 +106,19 @@ export default class COrbitManipulator extends RenderComponent
             size.setValue(manip.size);
 
 
-            const cameraComponent = this.system.activeCameraComponent;
+            const cameraComponent = this._activeCameraComponent;
 
             if (cameraComponent) {
                 const transformComponent = cameraComponent.transform;
                 if (transformComponent) {
-                    this.manip.toObject(transformComponent.object3D);
+                    this._manip.toObject(transformComponent.object3D);
                 }
                 else {
-                    this.manip.toObject(cameraComponent.object3D);
+                    this._manip.toObject(cameraComponent.object3D);
                 }
 
                 if (cameraComponent.camera.isOrthographicCamera) {
-                    cameraComponent.camera.size = this.manip.size;
+                    cameraComponent.camera.size = this._manip.size;
                 }
 
                 return true;
@@ -120,21 +130,26 @@ export default class COrbitManipulator extends RenderComponent
 
     protected onPointer(event: IPointerEvent)
     {
-        if (this.ins.enabled.value && this.system.activeCameraComponent) {
+        if (this.ins.enabled.value && this._activeCameraComponent) {
             const viewport = event.viewport;
-            this.manip.setViewportSize(viewport.width, viewport.height);
-            this.manip.onPointer(event);
+            this._manip.setViewportSize(viewport.width, viewport.height);
+            this._manip.onPointer(event);
             event.stopPropagation = true;
         }
     }
 
     protected onTrigger(event: ITriggerEvent)
     {
-        if (this.ins.enabled.value && this.system.activeCameraComponent) {
+        if (this.ins.enabled.value && this._activeCameraComponent) {
             const viewport = event.viewport;
-            this.manip.setViewportSize(viewport.width, viewport.height);
-            this.manip.onTrigger(event);
+            this._manip.setViewportSize(viewport.width, viewport.height);
+            this._manip.onTrigger(event);
             event.stopPropagation = true;
         }
+    }
+
+    protected onActiveCamera(event: IActiveCameraEvent)
+    {
+        this._activeCameraComponent = event.next;
     }
 }

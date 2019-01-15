@@ -5,11 +5,12 @@
  * License: MIT
  */
 
+import { ITypedEvent } from "@ff/core/Publisher";
+import System from "@ff/graph/System";
+
 import { EViewPreset, EProjection } from "@ff/three/UniversalCamera";
 
-import RenderSystem from "./RenderSystem";
 import RenderView, { IPointerEvent, ITriggerEvent } from "./RenderView";
-import { ITypedEvent } from "@ff/core/Publisher";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +29,7 @@ export default class RenderQuadView extends RenderView
     protected _verticalSplit = 0.5;
     protected _layout: EQuadViewLayout = EQuadViewLayout.Quad;
 
-    constructor(system: RenderSystem, canvas: HTMLCanvasElement, overlay: HTMLElement)
+    constructor(system: System, canvas: HTMLCanvasElement, overlay: HTMLElement)
     {
         super(system, canvas, overlay);
         this.addEvent("layout");
