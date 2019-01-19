@@ -5,12 +5,21 @@
  * License: MIT
  */
 
+import { ITypedEvent } from "@ff/core/Publisher";
+
 import Component from "@ff/graph/Component";
 import CPulse from "@ff/graph/components/CPulse";
 
 import RenderView from "../RenderView";
+import CScene from "./CScene";
 
 ////////////////////////////////////////////////////////////////////////////////
+
+export interface IActiveSceneEvent extends ITypedEvent<"active-scene">
+{
+    previous: CScene;
+    next: CScene;
+}
 
 export default class CRenderer extends Component
 {
@@ -18,6 +27,31 @@ export default class CRenderer extends Component
     static readonly isSystemSingleton: boolean = true;
 
     readonly views: RenderView[] = [];
+
+    private _activeSceneComponent: CScene = null;
+
+
+    constructor(id?: string)
+    {
+        super(id);
+        this.addEvents("active-scene");
+    }
+
+    get activeSceneComponent() {
+        return this._activeSceneComponent;
+    }
+    set activeSceneComponent(component: CScene) {
+        if (component !== this._activeSceneComponent) {
+            const previous = this._activeSceneComponent;
+            this._activeSceneComponent = component;
+
+            this.emit<IActiveSceneEvent>({ type: "active-scene", previous, next: component });
+        }
+    }
+
+    get activeScene() {
+        return this._activeSceneComponent ? this._activeSceneComponent.scene : null;
+    }
 
     create()
     {

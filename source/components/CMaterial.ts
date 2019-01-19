@@ -5,7 +5,6 @@
  * License: MIT
  */
 
-import Node from "@ff/graph/Node";
 import Component from "@ff/graph/Component";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -17,9 +16,9 @@ export default class CMaterial extends Component
 
     private _material: THREE.Material = null;
 
-    constructor(node: Node, id?: string)
+    constructor(id?: string)
     {
-        super(node, id);
+        super(id);
         this.addEvent("material");
     }
 

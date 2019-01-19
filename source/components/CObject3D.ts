@@ -9,7 +9,6 @@ import * as THREE from "three";
 
 import { ITypedEvent } from "@ff/core/Publisher";
 import Component from "@ff/graph/Component";
-import Node from "@ff/graph/Node";
 
 import RenderView, { Viewport } from "../RenderView";
 import CTransform from "./CTransform";
@@ -78,9 +77,9 @@ export default class CObject3D extends Component
     private _object3D: THREE.Object3D = null;
 
 
-    constructor(node: Node, id?: string)
+    constructor(id?: string)
     {
-        super(node, id);
+        super(id);
         this.addEvent("object");
     }
 

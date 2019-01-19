@@ -9,7 +9,6 @@ import * as THREE from "three";
 
 import Publisher from "@ff/core/Publisher";
 import Component from "@ff/graph/Component";
-import ComponentTracker from "@ff/graph/ComponentTracker";
 import System from "@ff/graph/System";
 
 
@@ -25,7 +24,6 @@ import Viewport, {
 } from "@ff/three/Viewport";
 
 import CRenderer from "./components/CRenderer";
-import CScene from "./components/CScene";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -50,7 +48,7 @@ export default class RenderView extends Publisher implements IManip
     readonly overlay: HTMLElement;
     readonly viewports: Viewport[] = [];
 
-    protected sceneTracker: ComponentTracker<CScene>;
+    protected rendererComponent: CRenderer = null;
     protected activeViewport: Viewport = null;
     protected activeObject3D: THREE.Object3D = null;
     protected activeComponent: Component = null;
@@ -74,14 +72,12 @@ export default class RenderView extends Publisher implements IManip
         this.renderer.autoClear = false;
         this.renderer.setClearColor("#0090c0");
 
-        this.sceneTracker = new ComponentTracker(this.system.graph.components, CScene);
         this.picker = new GPUPicker(this.renderer);
     }
 
     dispose()
     {
         this.renderer.dispose();
-        this.sceneTracker.dispose();
     }
 
     get canvasWidth()
@@ -102,19 +98,20 @@ export default class RenderView extends Publisher implements IManip
         this.viewports.forEach(viewport => viewport.setCanvasSize(width, height));
         this.renderer.setSize(width, height, false);
 
-        const renderer = this.system.components.safeGet(CRenderer);
-        renderer.attachView(this);
+        this.rendererComponent = this.system.components.safeGet(CRenderer);
+        this.rendererComponent.attachView(this);
     }
 
     detach()
     {
-        const renderer = this.system.components.safeGet(CRenderer);
-        renderer.detachView(this);
+        this.rendererComponent = this.system.components.safeGet(CRenderer);
+        this.rendererComponent.detachView(this);
+        this.rendererComponent = null;
     }
 
     render()
     {
-        const sceneComponent = this.sceneTracker.component;
+        const sceneComponent = this.rendererComponent.activeSceneComponent;
         if (!sceneComponent) {
             return;
         }
@@ -294,7 +291,7 @@ export default class RenderView extends Publisher implements IManip
 
         // perform 3D pick
         if (doPick) {
-            const sceneComponent = this.sceneTracker.component;
+            const sceneComponent = this.rendererComponent.activeSceneComponent;
             const scene = sceneComponent && sceneComponent.scene;
             const camera = sceneComponent &&sceneComponent.activeCamera;
 

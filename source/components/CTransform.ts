@@ -11,7 +11,6 @@ import math from "@ff/core/math";
 
 import { types } from "@ff/graph/propertyTypes";
 import CHierarchy from "@ff/graph/components/CHierarchy";
-import Node from "@ff/graph/Node";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -48,9 +47,9 @@ export default class CTransform extends CHierarchy
 
     private _object3D: THREE.Object3D;
 
-    constructor(node: Node, id?: string)
+    constructor(id?: string)
     {
-        super(node, id);
+        super(id);
 
         this._object3D = this.createObject3D();
         this._object3D.matrixAutoUpdate = false;

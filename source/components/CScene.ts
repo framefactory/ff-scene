@@ -8,9 +8,11 @@
 import * as THREE from "three";
 
 import { ITypedEvent } from "@ff/core/Publisher";
-import Node from "@ff/graph/Node";
+
+import { types } from "@ff/graph/propertyTypes";
 
 import RenderView, { Viewport } from "../RenderView";
+import CRenderer from "./CRenderer";
 import CTransform from "./CTransform";
 import CCamera from "./CCamera";
 
@@ -60,6 +62,10 @@ export interface IActiveCameraEvent extends ITypedEvent<"active-camera">
     next: CCamera;
 }
 
+const ins = {
+    activate: types.Event("Activate")
+};
+
 export default class CScene extends CTransform
 {
     static readonly type: string = "CScene";
@@ -67,9 +73,11 @@ export default class CScene extends CTransform
 
     private _activeCameraComponent: CCamera = null;
 
-    constructor(node: Node, id?: string)
+    ins = this.addInputs<CTransform, typeof ins>(ins, 0);
+
+    constructor(id?: string)
     {
-        super(node, id);
+        super(id);
         this.addEvents("before-render", "after-render", "active-camera");
     }
 
@@ -91,6 +99,30 @@ export default class CScene extends CTransform
 
     get activeCamera() {
         return this._activeCameraComponent ? this._activeCameraComponent.camera : null;
+    }
+
+    create()
+    {
+        super.create();
+
+        const renderer = this.system.components.get(CRenderer);
+        if (renderer && !renderer.activeSceneComponent) {
+            renderer.activeSceneComponent = this;
+        }
+    }
+
+    update(context)
+    {
+        const updated = super.update(context);
+
+        if (this.ins.activate.changed) {
+            const renderer = this.system.components.get(CRenderer);
+            if (renderer) {
+                renderer.activeSceneComponent = this;
+            }
+        }
+
+        return updated;
     }
 
     beforeRender(context: IRenderSceneContext)

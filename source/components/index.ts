@@ -21,6 +21,7 @@ import CPhongMaterial from "./CPhongMaterial";
 import CPickSelection from "./CPickSelection";
 import CPointLight from "./CPointLight";
 import CRenderer from "./CRenderer";
+import CRenderGraph from "./CRenderGraph";
 import CScene from "./CScene";
 import CSpotLight from "./CSpotLight";
 import CTorus from "./CTorus";
@@ -45,6 +46,7 @@ export {
     CPickSelection,
     CPointLight,
     CRenderer,
+    CRenderGraph,
     CScene,
     CSpotLight,
     CTorus,
@@ -64,6 +66,7 @@ export const componentTypes = [
     CPhongMaterial,
     CPointLight,
     CRenderer,
+    CRenderGraph,
     CScene,
     CSpotLight,
     CTorus,

@@ -6,7 +6,6 @@
  */
 
 import Component from "@ff/graph/Component";
-import Node from "@ff/graph/Node";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -16,9 +15,9 @@ export default class CGeometry extends Component
 
     private _geometry: THREE.BufferGeometry = null;
 
-    constructor(node: Node, id?: string)
+    constructor(id?: string)
     {
-        super(node, id);
+        super(id);
         this.addEvent("geometry");
     }
 
