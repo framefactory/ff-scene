@@ -47,7 +47,7 @@ export default class CTransform extends CHierarchy
 
     private _object3D: THREE.Object3D;
 
-    constructor(id?: string)
+    constructor(id: string)
     {
         super(id);
 

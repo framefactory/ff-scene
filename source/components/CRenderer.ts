@@ -5,9 +5,7 @@
  * License: MIT
  */
 
-import { ITypedEvent } from "@ff/core/Publisher";
-
-import Component from "@ff/graph/Component";
+import Component, { ITypedEvent } from "@ff/graph/Component";
 import CPulse from "@ff/graph/components/CPulse";
 
 import RenderView from "../RenderView";
@@ -31,10 +29,14 @@ export default class CRenderer extends Component
     private _activeSceneComponent: CScene = null;
 
 
-    constructor(id?: string)
+    constructor(id: string)
     {
         super(id);
         this.addEvents("active-scene");
+    }
+
+    get activeSceneGraph() {
+        return this._activeSceneComponent ? this._activeSceneComponent.graph : null;
     }
 
     get activeSceneComponent() {
@@ -45,7 +47,9 @@ export default class CRenderer extends Component
             const previous = this._activeSceneComponent;
             this._activeSceneComponent = component;
 
-            this.emit<IActiveSceneEvent>({ type: "active-scene", previous, next: component });
+            const event: IActiveSceneEvent = { type: "active-scene", previous, next: component };
+            this.emit(event);
+            this.system.emit(event);
         }
     }
 

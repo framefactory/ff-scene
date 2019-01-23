@@ -12,11 +12,13 @@ import { ITypedEvent } from "@ff/core/Publisher";
 import { types } from "@ff/graph/propertyTypes";
 
 import RenderView, { Viewport } from "../RenderView";
-import CRenderer from "./CRenderer";
+import CRenderer, { IActiveSceneEvent } from "./CRenderer";
 import CTransform from "./CTransform";
 import CCamera from "./CCamera";
 
 ////////////////////////////////////////////////////////////////////////////////
+
+export { IActiveSceneEvent };
 
 const _context: IRenderSceneContext = {
     view: null,
@@ -47,14 +49,14 @@ export interface IRenderSceneContext
     camera: THREE.Camera;
 }
 
-interface ISceneEvent<T extends string> extends ITypedEvent<T>
+interface ISceneRenderEvent<T extends string> extends ITypedEvent<T>
 {
     component: CScene;
     context: IRenderSceneContext;
 }
 
-export interface ISceneBeforeRenderEvent extends ISceneEvent<"before-render"> { }
-export interface ISceneAfterRenderEvent extends ISceneEvent<"after-render"> { }
+export interface ISceneBeforeRenderEvent extends ISceneRenderEvent<"before-render"> { }
+export interface ISceneAfterRenderEvent extends ISceneRenderEvent<"after-render"> { }
 
 export interface IActiveCameraEvent extends ITypedEvent<"active-camera">
 {
@@ -75,7 +77,7 @@ export default class CScene extends CTransform
 
     ins = this.addInputs<CTransform, typeof ins>(ins, 0);
 
-    constructor(id?: string)
+    constructor(id: string)
     {
         super(id);
         this.addEvents("before-render", "after-render", "active-camera");

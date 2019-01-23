@@ -16,7 +16,7 @@ export default class CMaterial extends Component
 
     private _material: THREE.Material = null;
 
-    constructor(id?: string)
+    constructor(id: string)
     {
         super(id);
         this.addEvent("material");

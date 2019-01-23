@@ -77,7 +77,7 @@ export default class CObject3D extends Component
     private _object3D: THREE.Object3D = null;
 
 
-    constructor(id?: string)
+    constructor(id: string)
     {
         super(id);
         this.addEvent("object");

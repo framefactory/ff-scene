@@ -15,7 +15,7 @@ export default class CGeometry extends Component
 
     private _geometry: THREE.BufferGeometry = null;
 
-    constructor(id?: string)
+    constructor(id: string)
     {
         super(id);
         this.addEvent("geometry");

@@ -53,9 +53,9 @@ export default class CPickSelection extends CSelection
     {
         super.onSelectNode(node, selected);
 
-        const hierarchy = node.hierarchy;
-        if (hierarchy && hierarchy instanceof CTransform) {
-            this.updateBracket(hierarchy, selected);
+        const transform = node.components.get(CTransform);
+        if (transform) {
+            this.updateBracket(transform, selected);
         }
     }
 
