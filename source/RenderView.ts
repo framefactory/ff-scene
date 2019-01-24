@@ -144,9 +144,9 @@ export default class RenderView extends Publisher implements IManip
 
             if (viewport.enabled) {
                 renderer["__viewport"] = viewport;
-                const viewportCamera = viewport.updateCamera(camera);
+                const currentCamera = viewport.updateCamera(camera);
                 viewport.applyViewport(this.renderer);
-                renderer.render(scene, viewportCamera);
+                renderer.render(scene, currentCamera);
             }
         }
     }

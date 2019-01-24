@@ -27,7 +27,7 @@ import {
 
 const createScene = function(graph: Graph, name?: string): Node
 {
-    const node = graph.createNode(Node, name);
+    const node = graph.createNode(name);
     node.createComponent(CScene);
     return node;
 };
@@ -39,7 +39,7 @@ const createTransform = function(parent: Node, name?: string): Node
         throw new Error("can't attach to parent; missing a hierarchy component");
     }
 
-    const node = parent.graph.createNode(Node, name);
+    const node = parent.graph.createNode(name);
     hierarchy.addChild(node.createComponent(CTransform));
     return node;
 };
