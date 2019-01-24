@@ -109,6 +109,19 @@ export default class RenderView extends Publisher implements IManip
         this.rendererComponent = null;
     }
 
+    renderImage(width: number, height: number, format: string, quality: number)
+    {
+        const canvasWidth = this.canvas.width;
+        const canvasHeight = this.canvas.height;
+
+        this.setRenderSize(width, height);
+        this.render();
+        const dataURL = this.canvas.toDataURL(format, quality);
+        this.setRenderSize(canvasWidth, canvasHeight);
+
+        return dataURL;
+    }
+
     render()
     {
         const sceneComponent = this.rendererComponent.activeSceneComponent;
@@ -127,12 +140,7 @@ export default class RenderView extends Publisher implements IManip
 
         if (this.shouldResize) {
             this.shouldResize = false;
-
-            const width = this.canvas.width = this.canvas.clientWidth;
-            const height = this.canvas.height = this.canvas.clientHeight;
-
-            this.viewports.forEach(viewport => viewport.setCanvasSize(width, height));
-            renderer.setSize(width, height, false);
+            this.setRenderSize(this.canvas.clientWidth, this.canvas.clientHeight);
         }
 
         renderer.clear();
@@ -149,6 +157,15 @@ export default class RenderView extends Publisher implements IManip
                 renderer.render(scene, currentCamera);
             }
         }
+    }
+
+    protected setRenderSize(width: number, height: number)
+    {
+        this.canvas.width = width;
+        this.canvas.height = height;
+
+        this.viewports.forEach(viewport => viewport.setCanvasSize(width, height));
+        this.renderer.setSize(width, height, false);
     }
 
     resize()

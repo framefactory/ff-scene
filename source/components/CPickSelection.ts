@@ -5,9 +5,9 @@
  * License: MIT
  */
 
-import Node from "@ff/graph/Node";
-import Component from "@ff/graph/Component";
+import Component, { types } from "@ff/graph/Component";
 import ComponentTracker from "@ff/graph/ComponentTracker";
+import Node from "@ff/graph/Node";
 import Graph from "@ff/graph/Graph";
 import CSelection from "@ff/graph/components/CSelection";
 
@@ -21,9 +21,15 @@ import CScene, { ISceneAfterRenderEvent } from "./CScene";
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const inputs = {
+    bracketsVisible: types.Boolean("Brackets.Visible", true)
+};
+
 export default class CPickSelection extends CSelection
 {
     static readonly type: string = "CPickSelection";
+
+    ins = this.addInputs(inputs);
 
     protected startX = 0;
     protected startY = 0;
@@ -47,6 +53,11 @@ export default class CPickSelection extends CSelection
         this._sceneTracker.dispose();
 
         super.dispose();
+    }
+
+    update()
+    {
+        return true;
     }
 
     protected onSelectNode(node: Node, selected: boolean)
@@ -111,8 +122,10 @@ export default class CPickSelection extends CSelection
         const renderer = event.context.renderer;
         const camera = event.context.camera;
 
-        for (let entry of this._brackets) {
-            renderer.render(entry[1] as any, camera);
+        if (this.ins.bracketsVisible.value) {
+            for (let entry of this._brackets) {
+                renderer.render(entry[1] as any, camera);
+            }
         }
     }
 
