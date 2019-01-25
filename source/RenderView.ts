@@ -111,6 +111,9 @@ export default class RenderView extends Publisher implements IManip
 
     renderImage(width: number, height: number, format: string, quality: number)
     {
+        console.log("RenderView.renderImage - width: %s, height: %s, format: %s, quality: %s",
+            width, height, format, quality);
+
         const canvasWidth = this.canvas.width;
         const canvasHeight = this.canvas.height;
 
