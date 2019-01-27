@@ -95,7 +95,13 @@ export default class CScene extends CTransform
             const previous = this._activeCameraComponent;
             this._activeCameraComponent = component;
 
-            this.emit<IActiveCameraEvent>({ type: "active-camera", previous, next: component });
+            const event: IActiveCameraEvent = { type: "active-camera", previous, next: component };
+            this.emit(event);
+
+            const renderer = this.renderer;
+            if (renderer) {
+                this.renderer.emit(event);
+            }
         }
     }
 
@@ -103,11 +109,15 @@ export default class CScene extends CTransform
         return this._activeCameraComponent ? this._activeCameraComponent.camera : null;
     }
 
+    protected get renderer(): CRenderer {
+        return this.system.graph.components.get(CRenderer);
+    }
+
     create()
     {
         super.create();
 
-        const renderer = this.system.components.get(CRenderer);
+        const renderer = this.renderer;
         if (renderer && !renderer.activeSceneComponent) {
             renderer.activeSceneComponent = this;
         }
@@ -118,13 +128,23 @@ export default class CScene extends CTransform
         const updated = super.update(context);
 
         if (this.ins.activate.changed) {
-            const renderer = this.system.components.get(CRenderer);
+            const renderer = this.renderer;
             if (renderer) {
                 renderer.activeSceneComponent = this;
             }
         }
 
         return updated;
+    }
+
+    dispose()
+    {
+        const renderer = this.renderer;
+        if (renderer && renderer.activeSceneComponent === this) {
+            renderer.activeSceneComponent = null;
+        }
+
+        super.dispose();
     }
 
     beforeRender(context: IRenderSceneContext)

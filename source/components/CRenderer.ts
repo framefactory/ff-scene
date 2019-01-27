@@ -9,7 +9,7 @@ import Component, { ITypedEvent } from "@ff/graph/Component";
 import CPulse from "@ff/graph/components/CPulse";
 
 import RenderView from "../RenderView";
-import CScene from "./CScene";
+import CScene, { IActiveCameraEvent } from "./CScene";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -32,11 +32,7 @@ export default class CRenderer extends Component
     constructor(id: string)
     {
         super(id);
-        this.addEvents("active-scene");
-    }
-
-    get activeSceneGraph() {
-        return this._activeSceneComponent ? this._activeSceneComponent.graph : null;
+        this.addEvents("active-scene", "active-camera");
     }
 
     get activeSceneComponent() {
@@ -44,17 +40,41 @@ export default class CRenderer extends Component
     }
     set activeSceneComponent(component: CScene) {
         if (component !== this._activeSceneComponent) {
-            const previous = this._activeSceneComponent;
-            this._activeSceneComponent = component;
+            const previousScene = this._activeSceneComponent;
+            const previousCamera = this.activeCameraComponent;
 
-            const event: IActiveSceneEvent = { type: "active-scene", previous, next: component };
-            this.emit(event);
-            this.system.emit(event);
+            if (previousScene) {
+                previousScene.off<IActiveCameraEvent>("active-camera", this.onActiveCamera, this);
+            }
+
+            if (component) {
+                component.on<IActiveCameraEvent>("active-camera", this.onActiveCamera, this);
+            }
+
+            this._activeSceneComponent = component;
+            const nextCamera = this.activeCameraComponent;
+
+            const sceneEvent: IActiveSceneEvent = { type: "active-scene", previous: previousScene, next: component };
+            this.emit(sceneEvent);
+
+            const cameraEvent: IActiveCameraEvent = { type: "active-camera", previous: previousCamera, next: nextCamera };
+            this.emit(cameraEvent);
         }
     }
 
+    get activeSceneGraph() {
+        return this._activeSceneComponent ? this._activeSceneComponent.graph : null;
+    }
     get activeScene() {
         return this._activeSceneComponent ? this._activeSceneComponent.scene : null;
+    }
+
+    get activeCameraComponent() {
+        return this._activeSceneComponent ? this._activeSceneComponent.activeCameraComponent : null;
+    }
+    get activeCamera() {
+        const component = this._activeSceneComponent ? this._activeSceneComponent.activeCameraComponent : null;
+        return component ? component.camera : null;
     }
 
     create()
@@ -87,5 +107,10 @@ export default class CRenderer extends Component
         this.views.forEach(view => {
             view.render();
         });
+    }
+
+    protected onActiveCamera(event: IActiveCameraEvent)
+    {
+        this.emit<IActiveCameraEvent>(event);
     }
 }

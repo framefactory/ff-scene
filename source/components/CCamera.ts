@@ -37,14 +37,18 @@ export default class CCamera extends CObject3D
         return this.object3D as UniversalCamera;
     }
 
+    protected get scene() {
+        return this.graph.components.get(CScene)
+    }
+
     create()
     {
         super.create();
         this.object3D = new UniversalCamera();
 
-        const sceneComponent = this.graph.components.get(CScene);
-        if (sceneComponent && !sceneComponent.activeCameraComponent) {
-            sceneComponent.activeCameraComponent = this;
+        const scene = this.scene;
+        if (scene && !scene.activeCameraComponent) {
+            scene.activeCameraComponent = this;
         }
     }
 
@@ -53,9 +57,9 @@ export default class CCamera extends CObject3D
         const { activate, position, rotation, projection, fov, size, zoom, near, far } = this.ins;
 
         if (activate.changed) {
-            const sceneComponent = this.graph.components.get(CScene);
-            if (sceneComponent) {
-                sceneComponent.activeCameraComponent = this;
+            const scene = this.scene;
+            if (scene) {
+                scene.activeCameraComponent = this;
             }
         }
 
@@ -79,5 +83,15 @@ export default class CCamera extends CObject3D
 
         camera.updateProjectionMatrix();
         return true;
+    }
+
+    dispose()
+    {
+        const scene = this.scene;
+        if (scene && scene.activeCameraComponent === this) {
+            scene.activeCameraComponent = null;
+        }
+
+        super.dispose();
     }
 }
