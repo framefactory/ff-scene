@@ -99,13 +99,13 @@ export default class RenderView extends Publisher implements IManip
         this.viewports.forEach(viewport => viewport.setCanvasSize(width, height));
         this.renderer.setSize(width, height, false);
 
-        this.rendererComponent = this.system.components.safeGet(CRenderer);
+        this.rendererComponent = this.system.getComponent(CRenderer, true);
         this.rendererComponent.attachView(this);
     }
 
     detach()
     {
-        this.rendererComponent = this.system.components.safeGet(CRenderer);
+        this.rendererComponent = this.system.getComponent(CRenderer, true);
         this.rendererComponent.detachView(this);
         this.rendererComponent = null;
     }
@@ -317,7 +317,7 @@ export default class RenderView extends Publisher implements IManip
                         }
                     }
                     if (component) {
-                        console.log("Pick Index - Component: %s", component.type);
+                        console.log("Pick Index - Component: %s", component.className);
                     }
                     else {
                         console.warn("Pick Index - Object without component");

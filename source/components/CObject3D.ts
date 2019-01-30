@@ -7,12 +7,14 @@
 
 import * as THREE from "three";
 
+import { ClassOf } from "@ff/core/types";
 import { ITypedEvent } from "@ff/core/Publisher";
-import Component, { ComponentType } from "@ff/graph/Component";
+
+import Component from "@ff/graph/Component";
+import IndexShader from "@ff/three/shaders/IndexShader";
 
 import RenderView, { Viewport } from "../RenderView";
 import CTransform from "./CTransform";
-import IndexShader from "@ff/three/shaders/IndexShader";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -79,7 +81,7 @@ export default class CObject3D extends Component implements ICObject3D
     static readonly type: string = "CObject3D";
 
     /** The component type whose object3D is the parent of this component's object3D. */
-    protected static readonly parentComponentType: ComponentType<ICObject3D> = CTransform;
+    protected static readonly parentComponentClass: ClassOf<ICObject3D> = CTransform;
 
     private _object3D: THREE.Object3D = null;
 
@@ -94,11 +96,11 @@ export default class CObject3D extends Component implements ICObject3D
     //    return this.node.components.get(CTransform);
     //}
 
-    get parentComponentType(): ComponentType<ICObject3D> {
-        return (this.constructor as any).parentComponentType;
+    get parentComponentClass(): ClassOf<ICObject3D> {
+        return (this.constructor as any).parentComponentClass;
     }
     get parentComponent(): ICObject3D {
-        return this.node.components.get(this.parentComponentType);
+        return this.node.components.get(this.parentComponentClass);
     }
 
     get object3D(): THREE.Object3D | null
@@ -145,7 +147,7 @@ export default class CObject3D extends Component implements ICObject3D
 
     create()
     {
-        this.trackComponent(this.parentComponentType, component => {
+        this.trackComponent(this.parentComponentClass, component => {
             if (this._object3D) {
                 component.object3D.add(this._object3D);
             }

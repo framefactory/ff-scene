@@ -55,7 +55,7 @@ export default class CMesh extends CObject3D
     {
         const geo = this.mesh.geometry;
         const mat = this.mesh.material as THREE.Material;
-        return `${this.type} - Geometry: '${geo ? geo.type : "N/A"}', Material: '${mat ? mat.type : "N/A"}'`
+        return `${this.className} - Geometry: '${geo ? geo.type : "N/A"}', Material: '${mat ? mat.type : "N/A"}'`
     }
 
     protected updateGeometry(geometry: THREE.BufferGeometry)

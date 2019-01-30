@@ -86,11 +86,11 @@ export default class CMain extends Component
         const inScene = this.ins.scene;
 
         if (event.add) {
-            this.scenes.push(event.component);
+            this.scenes.push(event.object);
             this.updateOptions();
         }
         else {
-            const index = this.scenes.indexOf(event.component);
+            const index = this.scenes.indexOf(event.object);
             this.scenes.splice(index, 1);
 
             this.updateOptions();
@@ -108,11 +108,11 @@ export default class CMain extends Component
         const inCamera = this.ins.camera;
 
         if (event.add) {
-            this.cameras.push(event.component);
+            this.cameras.push(event.object);
             this.updateOptions();
         }
         else {
-            const index = this.cameras.indexOf(event.component);
+            const index = this.cameras.indexOf(event.object);
             this.cameras.splice(index, 1);
 
             this.updateOptions();
@@ -130,14 +130,14 @@ export default class CMain extends Component
         const { scene, camera } = this.ins;
 
         if (this.scenes.length > 0) {
-            scene.setOptions(this.scenes.map(scene => scene.name || scene.type));
+            scene.setOptions(this.scenes.map(scene => scene.name || scene.className));
         }
         else {
             scene.setOptions([ "N/A" ]);
         }
 
         if (this.cameras.length > 0) {
-            camera.setOptions(this.cameras.map(camera => camera.name || camera.type));
+            camera.setOptions(this.cameras.map(camera => camera.name || camera.className));
         }
         else {
             camera.setOptions([ "N/A" ]);
