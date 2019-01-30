@@ -78,6 +78,7 @@ export default class RenderView extends Publisher implements IManip
     dispose()
     {
         this.renderer.dispose();
+        this.viewports.forEach(viewport => viewport.dispose());
     }
 
     get canvasWidth()
@@ -150,15 +151,14 @@ export default class RenderView extends Publisher implements IManip
         renderer["__view"] = this;
 
         const viewports = this.viewports;
+
         for (let i = 0, n = viewports.length; i < n; ++i) {
             const viewport = viewports[i];
 
-            if (viewport.enabled) {
-                renderer["__viewport"] = viewport;
-                const currentCamera = viewport.updateCamera(camera);
-                viewport.applyViewport(this.renderer);
-                renderer.render(scene, currentCamera);
-            }
+            renderer["__viewport"] = viewport;
+            const currentCamera = viewport.updateCamera(camera);
+            viewport.applyViewport(this.renderer);
+            renderer.render(scene, currentCamera);
         }
     }
 
@@ -176,33 +176,19 @@ export default class RenderView extends Publisher implements IManip
         this.shouldResize = true;
     }
 
-    addViewport(): Viewport
+    setViewportCount(count: number)
     {
-        const viewport = new Viewport();
-        this.viewports.push(viewport);
-        return viewport;
-    }
+        const viewports = this.viewports;
 
-    addViewports(count: number)
-    {
-        for (let i = 0; i < count; ++i) {
-            this.viewports.push(new Viewport());
+        for (let i = count; i < viewports.length; ++i) {
+            viewports[i].dispose();
         }
-    }
-
-    removeViewport(viewport: Viewport)
-    {
-        const index = this.viewports.indexOf(viewport);
-        if (index < 0) {
-            throw new Error("viewport not found");
+        for (let i = viewports.length; i < count; ++i) {
+            viewports[i] = new Viewport();
+            viewports[i].setCanvasSize(this.canvasWidth, this.canvasHeight);
         }
 
-        this.viewports.slice(index, 1);
-    }
-
-    enableViewport(index: number, enabled: boolean)
-    {
-        this.viewports[index].enabled = enabled;
+        viewports.length = count;
     }
 
     getViewportCount()
@@ -289,7 +275,7 @@ export default class RenderView extends Publisher implements IManip
             const viewports = this.viewports;
             for (let i = 0, n = viewports.length; i < n; ++i) {
                 const vp = viewports[i];
-                if (vp.enabled && vp.isPointInside(event.localX, event.localY)) {
+                if (vp.isPointInside(event.localX, event.localY)) {
                     viewport = vp;
                     break;
                 }

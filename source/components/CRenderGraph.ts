@@ -24,14 +24,14 @@ export default class CRenderGraph extends CGraph
             const next = root as CTransform;
 
             if (parent && previous) {
-                parent.removeObject3D(previous.object3D);
+                parent.object3D.remove(previous.object3D);
             }
 
 
             super.innerRoot = next;
 
             if (parent && next) {
-                parent.addObject3D(next.object3D);
+                parent.object3D.add(next.object3D);
             }
         }
     }

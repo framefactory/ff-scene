@@ -8,6 +8,7 @@
 import { ITypedEvent } from "@ff/core/Publisher";
 import System from "@ff/graph/System";
 
+import Viewport from "@ff/three/Viewport";
 import { EViewPreset, EProjection } from "@ff/three/UniversalCamera";
 
 import RenderView, { IPointerEvent, ITriggerEvent } from "./RenderView";
@@ -25,35 +26,60 @@ export interface ILayoutChange extends ITypedEvent<"layout">
 
 export default class RenderQuadView extends RenderView
 {
-    protected _horizontalSplit = 0.5;
-    protected _verticalSplit = 0.5;
-    protected _layout: EQuadViewLayout = EQuadViewLayout.Quad;
+    private _layout: EQuadViewLayout = EQuadViewLayout.Quad;
+    private _horizontalSplit = 0.5;
+    private _verticalSplit = 0.5;
 
     constructor(system: System, canvas: HTMLCanvasElement, overlay: HTMLElement)
     {
         super(system, canvas, overlay);
         this.addEvent("layout");
 
-        this.addViewports(4);
-
-        this.viewports[1].setBuiltInCamera(EProjection.Orthographic, EViewPreset.Top);
-        this.viewports[1].enableCameraManip(true).orientationEnabled = false;
-
-        this.viewports[2].setBuiltInCamera(EProjection.Orthographic, EViewPreset.Left);
-        this.viewports[2].enableCameraManip(true).orientationEnabled = false;
-
-        this.viewports[3].setBuiltInCamera(EProjection.Orthographic, EViewPreset.Front);
-        this.viewports[3].enableCameraManip(true).orientationEnabled = false;
-
         this.layout = EQuadViewLayout.Single;
     }
 
     set layout(layout: EQuadViewLayout) {
-        if (this._layout !== layout) {
-            this._layout = layout;
-            this.updateConfiguration();
-            this.emit<ILayoutChange>({ type: "layout", layout });
+
+        if (layout === this._layout) {
+            return;
         }
+
+        this._layout = layout;
+        const viewports = this.viewports;
+
+        switch (this._layout) {
+            case EQuadViewLayout.Single:
+                this.setViewportCount(1);
+                break;
+
+            case EQuadViewLayout.HorizontalSplit:
+            case EQuadViewLayout.VerticalSplit:
+                this.setViewportCount(2);
+                break;
+
+            case EQuadViewLayout.Quad:
+                this.setViewportCount(4);
+                break;
+        }
+
+        this.updateSplitPositions();
+
+        if (viewports[1]) {
+            viewports[1].setBuiltInCamera(EProjection.Orthographic, EViewPreset.Top);
+            viewports[1].enableCameraManip(true).orientationEnabled = false;
+        }
+
+        if (viewports[2]) {
+            viewports[2].setBuiltInCamera(EProjection.Orthographic, EViewPreset.Left);
+            viewports[2].enableCameraManip(true).orientationEnabled = false;
+        }
+
+        if (viewports[3]) {
+            viewports[3].setBuiltInCamera(EProjection.Orthographic, EViewPreset.Front);
+            viewports[3].enableCameraManip(true).orientationEnabled = false;
+        }
+
+        this.emit<ILayoutChange>({ type: "layout", layout });
     }
 
     get layout() {
@@ -78,31 +104,6 @@ export default class RenderQuadView extends RenderView
         return this._verticalSplit;
     }
 
-    protected updateConfiguration()
-    {
-        this.updateSplitPositions();
-        this.viewports[0].enabled = true;
-
-        switch (this._layout) {
-            case EQuadViewLayout.Single:
-                this.viewports[1].enabled = false;
-                this.viewports[2].enabled = false;
-                this.viewports[3].enabled = false;
-                break;
-            case EQuadViewLayout.HorizontalSplit:
-            case EQuadViewLayout.VerticalSplit:
-                this.viewports[1].enabled = true;
-                this.viewports[2].enabled = false;
-                this.viewports[3].enabled = false;
-                break;
-            case EQuadViewLayout.Quad:
-                this.viewports[1].enabled = true;
-                this.viewports[2].enabled = true;
-                this.viewports[3].enabled = true;
-                break;
-        }
-    }
-
     protected updateSplitPositions()
     {
         const h = this._horizontalSplit;
@@ -112,14 +113,17 @@ export default class RenderQuadView extends RenderView
             case EQuadViewLayout.Single:
                 this.viewports[0].setSize(0, 0, 1, 1);
                 break;
+
             case EQuadViewLayout.HorizontalSplit:
                 this.viewports[0].setSize(0, 0, h, 1);
                 this.viewports[1].setSize(h, 0, 1-h, 1);
                 break;
+
             case EQuadViewLayout.VerticalSplit:
                 this.viewports[0].setSize(0, 0, 1, v);
                 this.viewports[1].setSize(0, v, 1, 1-v);
                 break;
+
             case EQuadViewLayout.Quad:
                 this.viewports[0].setSize(0, 0, h, v);
                 this.viewports[1].setSize(h, 0, 1-h, v);

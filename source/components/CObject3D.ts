@@ -8,7 +8,7 @@
 import * as THREE from "three";
 
 import { ITypedEvent } from "@ff/core/Publisher";
-import Component from "@ff/graph/Component";
+import Component, { ComponentType } from "@ff/graph/Component";
 
 import RenderView, { Viewport } from "../RenderView";
 import CTransform from "./CTransform";
@@ -46,6 +46,11 @@ const _unhookObject3D = function(object: THREE.Object3D)
     }
 };
 
+export interface ICObject3D extends Component
+{
+    object3D: THREE.Object3D;
+}
+
 export interface IObject3DObjectEvent extends ITypedEvent<"object">
 {
     current: THREE.Object3D;
@@ -69,10 +74,12 @@ export interface IRenderContext
  * If component is added to a node together with a [[Transform]] component,
  * it is automatically added as a child to the transform.
  */
-export default class CObject3D extends Component
+export default class CObject3D extends Component implements ICObject3D
 {
     static readonly type: string = "CObject3D";
 
+    /** The component type whose object3D is the parent of this component's object3D. */
+    protected static readonly parentComponentType: ComponentType<ICObject3D> = CTransform;
 
     private _object3D: THREE.Object3D = null;
 
@@ -83,8 +90,15 @@ export default class CObject3D extends Component
         this.addEvent("object");
     }
 
-    get transform() {
-        return this.node.components.get(CTransform);
+    //get transform() {
+    //    return this.node.components.get(CTransform);
+    //}
+
+    get parentComponentType(): ComponentType<ICObject3D> {
+        return (this.constructor as any).parentComponentType;
+    }
+    get parentComponent(): ICObject3D {
+        return this.node.components.get(this.parentComponentType);
     }
 
     get object3D(): THREE.Object3D | null
@@ -94,8 +108,8 @@ export default class CObject3D extends Component
 
     set object3D(object: THREE.Object3D)
     {
-        const transform = this.transform;
         const currentObject = this._object3D;
+        const parentComponent = this.parentComponent;
 
         if (currentObject) {
             object.userData["component"] = null;
@@ -104,8 +118,8 @@ export default class CObject3D extends Component
 
             this.unregisterPickableObject3D(currentObject, true);
 
-            if (transform) {
-                transform.removeObject3D(currentObject);
+            if (parentComponent) {
+                parentComponent.object3D.remove(currentObject);
             }
         }
 
@@ -123,21 +137,21 @@ export default class CObject3D extends Component
 
             this.registerPickableObject3D(object, true);
 
-            if (transform) {
-                transform.addObject3D(object);
+            if (parentComponent) {
+                parentComponent.object3D.add(object);
             }
         }
     }
 
     create()
     {
-        this.trackComponent(CTransform, transform => {
+        this.trackComponent(this.parentComponentType, component => {
             if (this._object3D) {
-                transform.addObject3D(this._object3D);
+                component.object3D.add(this._object3D);
             }
-        }, transform => {
+        }, component => {
             if (this._object3D) {
-                transform.removeObject3D(this._object3D);
+                component.object3D.remove(this._object3D);
             }
         });
     }
@@ -145,10 +159,10 @@ export default class CObject3D extends Component
     dispose()
     {
         if (this._object3D) {
-            const transform = this.transform;
+            const component = this.parentComponent;
 
-            if (transform) {
-                transform.removeObject3D(this._object3D);
+            if (component) {
+                component.object3D.remove(this._object3D);
             }
         }
 

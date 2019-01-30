@@ -11,6 +11,7 @@ import math from "@ff/core/math";
 
 import { types } from "@ff/graph/propertyTypes";
 import CHierarchy from "@ff/graph/components/CHierarchy";
+import Component from "@ff/graph/Component";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -21,6 +22,11 @@ const _euler = new THREE.Euler();
 
 
 export enum ERotationOrder { XYZ, YZX, ZXY, XZY, YXZ, ZYX }
+
+export interface ICObject3D extends Component
+{
+    object3D: THREE.Object3D;
+}
 
 const ins = {
     position: types.Vector3("Position"),
@@ -38,7 +44,7 @@ const outs = {
  * contains a transformation which affects its children as well as other components which
  * are part of the same entity.
  */
-export default class CTransform extends CHierarchy
+export default class CTransform extends CHierarchy implements ICObject3D
 {
     static readonly type: string = "CTransform";
 
@@ -157,25 +163,25 @@ export default class CTransform extends CHierarchy
         super.removeChild(component);
     }
 
-    /**
-     * Called by [[CObject3D]] to attach its three.js renderable object to the transform component.
-     * Do not call this directly.
-     * @param object
-     */
-    addObject3D(object: THREE.Object3D)
-    {
-        this._object3D.add(object);
-    }
-
-    /**
-     * Called by [[CObject3D]] to detach its three.js renderable object from the transform component.
-     * Do not call this directly.
-     * @param object
-     */
-    removeObject3D(object: THREE.Object3D)
-    {
-        this._object3D.remove(object);
-    }
+    // /**
+    //  * Called by [[CObject3D]] to attach its three.js renderable object to the transform component.
+    //  * Do not call this directly.
+    //  * @param object
+    //  */
+    // addObject3D(object: THREE.Object3D)
+    // {
+    //     this._object3D.add(object);
+    // }
+    //
+    // /**
+    //  * Called by [[CObject3D]] to detach its three.js renderable object from the transform component.
+    //  * Do not call this directly.
+    //  * @param object
+    //  */
+    // removeObject3D(object: THREE.Object3D)
+    // {
+    //     this._object3D.remove(object);
+    // }
 
     protected createObject3D()
     {

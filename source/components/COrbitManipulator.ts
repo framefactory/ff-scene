@@ -109,9 +109,9 @@ export default class COrbitManipulator extends Component
             const cameraComponent = this._activeCameraComponent;
 
             if (cameraComponent) {
-                const transformComponent = cameraComponent.transform;
-                if (transformComponent) {
-                    this._manip.toObject(transformComponent.object3D);
+                const parent = cameraComponent.parentComponent;
+                if (parent) {
+                    this._manip.toObject(parent.object3D);
                 }
                 else {
                     this._manip.toObject(cameraComponent.object3D);
