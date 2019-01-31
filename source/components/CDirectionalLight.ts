@@ -13,16 +13,14 @@ import CLight from "./CLight";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const ins = {
-    position: types.Vector3("Position", [ 0, 1, 0 ]),
-    target: types.Vector3("Target")
+const _inputs = {
+    position: types.Vector3("Light.Position", [ 0, 1, 0 ]),
+    target: types.Vector3("Light.Target")
 };
 
 export default class CDirectionalLight extends CLight
 {
-    static readonly type: string = "CDirectionalLight";
-
-    ins = this.addInputs<CLight, typeof ins>(ins);
+    ins = this.addInputs<CLight, typeof _inputs>(_inputs);
 
     get light(): THREE.DirectionalLight
     {

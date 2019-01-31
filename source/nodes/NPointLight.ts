@@ -12,8 +12,6 @@ import CPointLight from "../components/CPointLight";
 
 export default class NPointLight extends NLight
 {
-    static readonly type: string = "NPointLight";
-
     get light() {
         return this.components.get(CPointLight);
     }

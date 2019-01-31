@@ -10,7 +10,7 @@ import * as THREE from "three";
 import { ClassOf } from "@ff/core/types";
 import { ITypedEvent } from "@ff/core/Publisher";
 
-import Component from "@ff/graph/Component";
+import Component, { types } from "@ff/graph/Component";
 import IndexShader from "@ff/three/shaders/IndexShader";
 
 import RenderView, { Viewport } from "../RenderView";
@@ -71,6 +71,17 @@ export interface IRenderContext
     group: any;
 }
 
+const _inputs = {
+    visible: types.Boolean("Object.Visible", true),
+    pickable: types.Boolean("Object.Pickable", true),
+};
+
+const _outputs = {
+    pointerDown: types.Event("Picking.PointerDown"),
+    pointerUp: types.Event("Picking.PointerUp"),
+    pointerActive: types.Event("Picking.PointerActive")
+};
+
 /**
  * Base component for Three.js renderable objects.
  * If component is added to a node together with a [[Transform]] component,
@@ -78,10 +89,12 @@ export interface IRenderContext
  */
 export default class CObject3D extends Component implements ICObject3D
 {
-    static readonly type: string = "CObject3D";
-
     /** The component type whose object3D is the parent of this component's object3D. */
     protected static readonly parentComponentClass: ClassOf<ICObject3D> = CTransform;
+
+    ins = this.addInputs(_inputs);
+    outs = this.addOutputs(_outputs);
+
 
     private _object3D: THREE.Object3D = null;
 
@@ -92,22 +105,24 @@ export default class CObject3D extends Component implements ICObject3D
         this.addEvent("object");
     }
 
-    //get transform() {
-    //    return this.node.components.get(CTransform);
-    //}
-
+    /** The class of a component in the same node this component uses as parent transform. */
     get parentComponentClass(): ClassOf<ICObject3D> {
         return (this.constructor as any).parentComponentClass;
     }
+    /** The transform parent of this object. */
     get parentComponent(): ICObject3D {
         return this.node.components.get(this.parentComponentClass);
     }
-
-    get object3D(): THREE.Object3D | null
-    {
+    /** The underlying [[THREE.Object3D]] of this component. */
+    get object3D(): THREE.Object3D | null {
         return this._object3D;
     }
 
+    /**
+     * Assigns a [[THREE.Object3D]] to this component. The object automatically becomes a child
+     * of the parent component's object.
+     * @param object
+     */
     set object3D(object: THREE.Object3D)
     {
         const currentObject = this._object3D;
@@ -131,6 +146,7 @@ export default class CObject3D extends Component implements ICObject3D
         if (object) {
             object.userData["component"] = this;
             object.matrixAutoUpdate = false;
+            object.visible = this.ins.visible.value;
 
             object.onBeforeRender = this._onBeforeRender.bind(this);
             if (this.afterRender) {
@@ -158,6 +174,17 @@ export default class CObject3D extends Component implements ICObject3D
         });
     }
 
+    update(context): boolean
+    {
+        const ins = this.ins;
+
+        if (ins.visible.changed && this._object3D) {
+            this._object3D.visible = ins.visible.value;
+        }
+
+        return true;
+    }
+
     dispose()
     {
         if (this._object3D) {
@@ -172,7 +199,7 @@ export default class CObject3D extends Component implements ICObject3D
     }
 
     /**
-     * For renderable components, this is called right before the component is rendered.
+     * This is called right before the component's 3D object is rendered.
      * Override to make adjustments specific to the renderer, view or viewport.
      * @param context
      */
@@ -181,7 +208,7 @@ export default class CObject3D extends Component implements ICObject3D
     }
 
     /**
-     * For renderable components, this is called right after the component is rendered.
+     * This is called right after the component's 3D object has been rendered.
      * Override to make adjustments specific to the renderer, view or viewport.
      * @param context
      */
@@ -189,12 +216,22 @@ export default class CObject3D extends Component implements ICObject3D
     {
     }
 
+    /**
+     * Adds a [[THREE.Object3D]] as a child to this component's object.
+     * Registers the object with the picking service to make it pickable.
+     * @param object
+     */
     addObject3D(object: THREE.Object3D)
     {
         this._object3D.add(object);
         this.registerPickableObject3D(object, true);
     }
 
+    /**
+     * Removes a [[THREE.Object3D]] child from this component's object.
+     * Also unregisters the object from the picking service.
+     * @param object
+     */
     removeObject3D(object: THREE.Object3D)
     {
         this._object3D.remove(object);
@@ -247,6 +284,10 @@ export default class CObject3D extends Component implements ICObject3D
         return super.toString() + (this._object3D ? ` - type: ${this._object3D.type}` : " - (null)");
     }
 
+    /**
+     * Three.js event handler called before the object is rendered.
+     * @private
+     */
     private _onBeforeRender(
         renderer: THREE.WebGLRenderer,
         scene: THREE.Scene,
@@ -255,8 +296,8 @@ export default class CObject3D extends Component implements ICObject3D
         material: any,
         group: any)
     {
-        // index rendering for picking: set shader index uniform to object index
-        if (material.isIndexShader) {
+        // index rendering for picking: set shader index uniform to the object's id
+        if (material.isIndexShader && this.ins.pickable.value) {
             material.setIndex(this.object3D.id);
         }
 
@@ -274,6 +315,10 @@ export default class CObject3D extends Component implements ICObject3D
         }
     }
 
+    /**
+     * Three.js event handler called after the object has been rendered.
+     * @private
+     */
     private _onAfterRender(
         renderer: THREE.WebGLRenderer,
         scene: THREE.Scene,

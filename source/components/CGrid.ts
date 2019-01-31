@@ -18,7 +18,7 @@ import ThreeGrid, { IGridProps } from "@ff/three/Grid";
 const _vec3a = new THREE.Vector3();
 const _vec3b = new THREE.Vector3();
 
-const ins = {
+const _inputs = {
     position: types.Vector3("Transform.Position"),
     rotation: types.Vector3("Transform.Rotation"),
     scale: types.Scale3("Transform.Scale"),
@@ -31,9 +31,8 @@ const ins = {
 
 export default class CGrid extends CObject3D
 {
-    static readonly type: string = "CGrid";
+    ins = this.addInputs<CObject3D, typeof _inputs>(_inputs);
 
-    ins = this.addInputs(ins);
 
     update(): boolean
     {

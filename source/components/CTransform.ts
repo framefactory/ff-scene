@@ -28,15 +28,15 @@ export interface ICObject3D extends Component
     object3D: THREE.Object3D;
 }
 
-const ins = {
-    position: types.Vector3("Position"),
-    rotation: types.Vector3("Rotation"),
-    order: types.Enum("Order", ERotationOrder),
-    scale: types.Vector3("Scale", [ 1, 1, 1 ])
+const _inputs = {
+    position: types.Vector3("Transform.Position"),
+    rotation: types.Vector3("Transform.Rotation"),
+    order: types.Enum("Transform.Order", ERotationOrder),
+    scale: types.Vector3("Transform.Scale", [ 1, 1, 1 ])
 };
 
-const outs = {
-    matrix: types.Matrix4("Matrix")
+const _outputs = {
+    matrix: types.Matrix4("Transform.Matrix")
 };
 
 /**
@@ -46,10 +46,8 @@ const outs = {
  */
 export default class CTransform extends CHierarchy implements ICObject3D
 {
-    static readonly type: string = "CTransform";
-
-    ins = this.addInputs(ins);
-    outs = this.addOutputs(outs);
+    ins = this.addInputs<CHierarchy, typeof _inputs>(_inputs);
+    outs = this.addOutputs<CHierarchy, typeof _outputs>(_outputs);
 
     private _object3D: THREE.Object3D;
 

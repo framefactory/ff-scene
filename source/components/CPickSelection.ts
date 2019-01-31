@@ -21,21 +21,20 @@ import CScene, { ISceneAfterRenderEvent } from "./CScene";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const inputs = {
+const _inputs = {
     bracketsVisible: types.Boolean("Brackets.Visible", true)
 };
 
 export default class CPickSelection extends CSelection
 {
-    static readonly type: string = "CPickSelection";
-
-    ins = this.addInputs(inputs);
+    ins = this.addInputs(_inputs);
 
     protected startX = 0;
     protected startY = 0;
 
     private _brackets = new Map<Component, Bracket>();
     private _sceneTracker: ComponentTracker<CScene> = null;
+
 
     create()
     {

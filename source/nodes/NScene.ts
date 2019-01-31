@@ -12,8 +12,6 @@ import CScene from "../components/CScene";
 
 export default class NScene extends NTransform
 {
-    static readonly type: string = "NScene";
-
     get scene() {
         return this.components.get(CScene);
     }

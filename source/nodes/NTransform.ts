@@ -12,8 +12,6 @@ import CTransform from "../components/CTransform";
 
 export default class NTransform extends NHierarchy
 {
-    static readonly type: string = "NTransform";
-
     get transform() {
         return this.components.get(CTransform);
     }

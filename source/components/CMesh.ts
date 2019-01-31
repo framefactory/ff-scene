@@ -17,8 +17,6 @@ import CObject3D from "./CObject3D";
 
 export default class CMesh extends CObject3D
 {
-    static readonly type: string = "CMesh";
-
     protected geometryTracker: ComponentTracker<CGeometry>;
     protected materialTracker: ComponentTracker<CMaterial>;
 

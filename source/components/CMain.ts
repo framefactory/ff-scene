@@ -22,8 +22,6 @@ const ins = {
 
 export default class CMain extends Component
 {
-    static readonly type: string = "CMain";
-
     protected scenes: CScene[] = [];
     protected cameras: CCamera[] = [];
 

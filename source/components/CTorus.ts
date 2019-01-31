@@ -13,7 +13,7 @@ import CGeometry from "./CGeometry";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const ins = {
+const _inputs = {
     radius: types.Number("Radius", 10),
     tube: types.Number("Tube", 3),
     angle: types.Number("Angle", 360),
@@ -22,9 +22,7 @@ const ins = {
 
 export default class CTorus extends CGeometry
 {
-    static readonly type: string = "CTorus";
-
-    ins = this.addInputs(ins);
+    ins = this.addInputs<CGeometry, typeof _inputs>(_inputs);
 
     update()
     {

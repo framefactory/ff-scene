@@ -12,8 +12,6 @@ import CSpotLight from "../components/CSpotLight";
 
 export default class NSpotLight extends NLight
 {
-    static readonly type: string = "NSpotLight";
-
     get light() {
         return this.components.get(CSpotLight);
     }

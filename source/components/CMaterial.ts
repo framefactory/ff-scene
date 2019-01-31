@@ -11,10 +11,8 @@ import Component from "@ff/graph/Component";
 
 export default class CMaterial extends Component
 {
-    static readonly type: string = "CMaterial";
-
-
     private _material: THREE.Material = null;
+
 
     constructor(id: string)
     {

@@ -14,8 +14,6 @@ import CTransform from "./CTransform";
 
 export default class CRenderGraph extends CGraph
 {
-    static readonly type: string = "CRenderGraph";
-
     set innerRoot(root: CHierarchy)
     {
         if (root.is(CTransform)) {
@@ -26,7 +24,6 @@ export default class CRenderGraph extends CGraph
             if (parent && previous) {
                 parent.object3D.remove(previous.object3D);
             }
-
 
             super.innerRoot = next;
 

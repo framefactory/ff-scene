@@ -21,7 +21,6 @@ export interface IActiveSceneEvent extends ITypedEvent<"active-scene">
 
 export default class CRenderer extends Component
 {
-    static readonly type: string = "CRenderer";
     static readonly isSystemSingleton: boolean = true;
 
     readonly views: RenderView[] = [];

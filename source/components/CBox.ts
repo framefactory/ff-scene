@@ -13,16 +13,15 @@ import CGeometry from "./CGeometry";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const ins = {
+const _inputs = {
     size: types.Vector3("Size", [ 10, 10, 10 ]),
     segments: types.Vector3("Segments", [ 1, 1, 1])
 };
 
 export default class CBox extends CGeometry
 {
-    static readonly type: string = "CBox";
+    ins = this.addInputs<CGeometry, typeof _inputs>(_inputs);
 
-    ins = this.addInputs(ins);
 
     create()
     {

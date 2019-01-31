@@ -15,8 +15,8 @@ import CScene from "./CScene";
 
 export { EProjection };
 
-const ins = {
-    activate: types.Event("Activate"),
+const _inputs = {
+    activate: types.Event("Camera.Activate"),
     position: types.Vector3("Transform.Position"),
     rotation: types.Vector3("Transform.Rotation"),
     projection: types.Enum("Projection.Type", EProjection, EProjection.Perspective),
@@ -29,9 +29,8 @@ const ins = {
 
 export default class CCamera extends CObject3D
 {
-    static readonly type: string = "CCamera";
+    ins = this.addInputs<CObject3D, typeof _inputs>(_inputs);
 
-    ins = this.addInputs(ins);
 
     get camera() {
         return this.object3D as UniversalCamera;

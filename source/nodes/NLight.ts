@@ -12,8 +12,6 @@ import CLight from "../components/CLight";
 
 export default class NLight extends NTransform
 {
-    static readonly type: string = "NLight";
-
     get light() {
         return this.components.get(CLight);
     }

@@ -64,18 +64,17 @@ export interface IActiveCameraEvent extends ITypedEvent<"active-camera">
     next: CCamera;
 }
 
-const ins = {
-    activate: types.Event("Activate")
+const _inputs = {
+    activate: types.Event("Scene.Activate")
 };
 
 export default class CScene extends CTransform
 {
-    static readonly type: string = "CScene";
     static readonly isGraphSingleton = true;
 
     private _activeCameraComponent: CCamera = null;
 
-    ins = this.addInputs<CTransform, typeof ins>(ins, 0);
+    ins = this.addInputs<CTransform, typeof _inputs>(_inputs, 0);
 
     constructor(id: string)
     {

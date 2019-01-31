@@ -11,10 +11,9 @@ import Component from "@ff/graph/Component";
 
 export default class CGeometry extends Component
 {
-    static readonly type: string = "CGeometry";
-
     private _geometry: THREE.BufferGeometry = null;
 
+    
     constructor(id: string)
     {
         super(id);

@@ -16,7 +16,7 @@ import { IPointerEvent, ITriggerEvent } from "../RenderView";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const ins = {
+const _inputs = {
     enabled: types.Boolean("Enabled", true),
     orbit: types.Vector3("Orbit", [ 0, 0, 0 ]),
     offset: types.Vector3("Offset", [ 0, 0, 50 ]),
@@ -26,7 +26,7 @@ const ins = {
     maxOffset: types.Vector3("Max.Offset", [ NaN, NaN, 100 ])
 };
 
-const outs = {
+const _outputs = {
     orbit: types.Vector3("Orbit"),
     offset: types.Vector3("Offset"),
     size: types.Number("Size")
@@ -34,10 +34,8 @@ const outs = {
 
 export default class COrbitManipulator extends Component
 {
-    static readonly type: string = "COrbitManipulator";
-
-    ins = this.addInputs(ins);
-    outs = this.addOutputs(outs);
+    ins = this.addInputs(_inputs);
+    outs = this.addOutputs(_outputs);
 
     private _manip = new OrbitManip();
     private _activeCameraComponent: CCamera;

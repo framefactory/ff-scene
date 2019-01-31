@@ -12,15 +12,14 @@ import CMaterial from "./CMaterial";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const ins = {
+const _inputs = {
     color: types.ColorRGB("Color")
 };
 
 export default class CPhongMaterial extends CMaterial
 {
-    static readonly type: string = "CPhongMaterial";
+    ins = this.addInputs(_inputs);
 
-    ins = this.addInputs(ins);
 
     create()
     {
