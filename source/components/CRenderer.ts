@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import Component, { ITypedEvent } from "@ff/graph/Component";
+import Component, { ITypedEvent, types } from "@ff/graph/Component";
 import CPulse from "@ff/graph/components/CPulse";
 
 import RenderView from "../RenderView";
@@ -19,9 +19,20 @@ export interface IActiveSceneEvent extends ITypedEvent<"active-scene">
     next: CScene;
 }
 
+const _inputs = {
+};
+
+const _outputs = {
+    maxTextureSize: types.Integer("Caps.MaxTextureSize"),
+    maxCubemapSize: types.Integer("Caps.MaxCubemapSize"),
+};
+
 export default class CRenderer extends Component
 {
     static readonly isSystemSingleton: boolean = true;
+
+    ins = this.addInputs(_inputs);
+    outs = this.addOutputs(_outputs);
 
     readonly views: RenderView[] = [];
 
@@ -85,8 +96,20 @@ export default class CRenderer extends Component
         });
     }
 
+    update()
+    {
+        return false;
+    }
+
     attachView(view: RenderView)
     {
+        // set WebGL caps if it's the first view attached
+        if (!this.views.length) {
+            const renderer = view.renderer;
+            this.outs.maxTextureSize.setValue(renderer.capabilities.maxTextureSize);
+            this.outs.maxCubemapSize.setValue(renderer.capabilities.maxCubemapSize);
+        }
+
         this.views.push(view);
         //console.log("RenderSystem.attachView - total views: %s", this.views.length);
     }

@@ -49,9 +49,12 @@ export default class RenderView extends Publisher implements IManip
     readonly viewports: Viewport[] = [];
 
     protected rendererComponent: CRenderer = null;
-    protected activeViewport: Viewport = null;
-    protected activeObject3D: THREE.Object3D = null;
-    protected activeComponent: Component = null;
+
+    protected targetViewport: Viewport = null;
+    protected targetObject3D: THREE.Object3D = null;
+    protected targetComponent: Component = null;
+    protected targetScene: THREE.Scene = null;
+    protected targetCamera: THREE.Camera = null;
 
     protected shouldResize = false;
     protected picker: GPUPicker;
@@ -184,8 +187,14 @@ export default class RenderView extends Publisher implements IManip
             viewports[i].dispose();
         }
         for (let i = viewports.length; i < count; ++i) {
+
+            const overlay = document.createElement("div");
+            overlay.classList.add("ff-viewport-overlay");
+            this.overlay.appendChild(overlay);
+
             viewports[i] = new Viewport();
             viewports[i].setCanvasSize(this.canvasWidth, this.canvasHeight);
+            viewports[i].overlay = overlay;
         }
 
         viewports.length = count;
@@ -261,13 +270,23 @@ export default class RenderView extends Publisher implements IManip
         return false;
     }
 
+    pickPosition(event: IPointerEvent, range?: THREE.Box3, result?: THREE.Vector3)
+    {
+        return this.picker.pickPosition(this.targetScene, this.targetCamera, event, range, result);
+    }
+
+    pickNormal(event: IPointerEvent, result?: THREE.Vector3)
+    {
+        return this.picker.pickNormal(this.targetScene, this.targetCamera, event, result);
+    }
+
     protected routeEvent(event: IPointerEvent, doHitTest: boolean, doPick: boolean): IPointerEvent;
     protected routeEvent(event: ITriggerEvent, doHitTest: boolean, doPick: boolean): ITriggerEvent;
     protected routeEvent(event, doHitTest, doPick)
     {
-        let viewport = this.activeViewport;
-        let object3D = this.activeObject3D;
-        let component = this.activeComponent;
+        let viewport = this.targetViewport;
+        let object3D = this.targetObject3D;
+        let component = this.targetComponent;
 
         // if no active viewport, perform a hit test against all viewports
         if (doHitTest) {
@@ -298,8 +317,8 @@ export default class RenderView extends Publisher implements IManip
         // perform 3D pick
         if (doPick) {
             const sceneComponent = this.rendererComponent.activeSceneComponent;
-            const scene = sceneComponent && sceneComponent.scene;
-            const camera = sceneComponent &&sceneComponent.activeCamera;
+            const scene = this.targetScene = sceneComponent && sceneComponent.scene;
+            const camera = this.targetCamera = sceneComponent &&sceneComponent.activeCamera;
 
             object3D = null;
             component = null;
@@ -329,9 +348,9 @@ export default class RenderView extends Publisher implements IManip
         viewEvent.object3D = object3D;
         viewEvent.component = component;
 
-        this.activeViewport = viewport;
-        this.activeObject3D = object3D;
-        this.activeComponent = component;
+        this.targetViewport = viewport;
+        this.targetObject3D = object3D;
+        this.targetComponent = component;
 
         return viewEvent;
     }

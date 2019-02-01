@@ -15,12 +15,14 @@ import RenderView, { Viewport } from "../RenderView";
 import CRenderer, { IActiveSceneEvent } from "./CRenderer";
 import CTransform from "./CTransform";
 import CCamera from "./CCamera";
+import CObject3D from "./CObject3D";
+import { IComponentEvent } from "@ff/graph/Component";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export { IActiveSceneEvent };
 
-const _context: IRenderSceneContext = {
+const _context: IRenderContext = {
     view: null,
     viewport: null,
     renderer: null,
@@ -40,7 +42,7 @@ const _afterRenderEvent: ISceneAfterRenderEvent = {
     context: _context
 };
 
-export interface IRenderSceneContext
+export interface IRenderContext
 {
     view: RenderView;
     viewport: Viewport;
@@ -52,7 +54,7 @@ export interface IRenderSceneContext
 interface ISceneRenderEvent<T extends string> extends ITypedEvent<T>
 {
     component: CScene;
-    context: IRenderSceneContext;
+    context: IRenderContext;
 }
 
 export interface ISceneBeforeRenderEvent extends ISceneRenderEvent<"before-render"> { }
@@ -73,6 +75,8 @@ export default class CScene extends CTransform
     static readonly isGraphSingleton = true;
 
     private _activeCameraComponent: CCamera = null;
+    private _preRenderList: CObject3D[] = [];
+    private _postRenderList: CObject3D[] = [];
 
     ins = this.addInputs<CTransform, typeof _inputs>(_inputs, 0);
 
@@ -120,6 +124,12 @@ export default class CScene extends CTransform
         if (renderer && !renderer.activeSceneComponent) {
             renderer.activeSceneComponent = this;
         }
+
+        const components = this.getGraphComponents(CObject3D);
+        this._preRenderList = components.filter(component => component.preRender);
+        this._postRenderList = components.filter(component => component.postRender);
+
+        this.graph.components.on(CObject3D, this.onObject3D, this);
     }
 
     update(context)
@@ -143,15 +153,49 @@ export default class CScene extends CTransform
             renderer.activeSceneComponent = null;
         }
 
+        this.graph.components.off(CObject3D, this.onObject3D, this);
+
         super.dispose();
     }
 
-    beforeRender(context: IRenderSceneContext)
+    preRender(context: IRenderContext)
     {
+        const preRenderList = this._preRenderList;
+        for (let i = 0, n = preRenderList.length; i < n; ++i) {
+            preRenderList[i].preRender(context);
+        }
     }
 
-    afterRender(context: IRenderSceneContext)
+    postRender(context: IRenderContext)
     {
+        const postRenderList = this._postRenderList;
+        for (let i = 0, n = postRenderList.length; i < n; ++i) {
+            postRenderList[i].postRender(context);
+        }
+    }
+
+    protected onObject3D(event: IComponentEvent<CObject3D>)
+    {
+        const component = event.object;
+        const preRenderList = this._preRenderList;
+        const postRenderList = this._postRenderList;
+
+        if (event.add) {
+            if (component.preRender) {
+                preRenderList.push(component);
+            }
+            if (component.postRender) {
+                postRenderList.push(component);
+            }
+        }
+        else if (event.remove) {
+            if (component.preRender) {
+                preRenderList.splice(preRenderList.indexOf(component), 1);
+            }
+            if (component.postRender) {
+                postRenderList.splice(postRenderList.indexOf(component), 1);
+            }
+        }
     }
 
     protected createObject3D()
@@ -170,7 +214,7 @@ export default class CScene extends CTransform
         _context.scene = scene;
         _context.camera = camera;
 
-        this.beforeRender && this.beforeRender(_context);
+        this.preRender(_context);
 
         _beforeRenderEvent.component = this;
         this.emit<ISceneBeforeRenderEvent>(_beforeRenderEvent);
@@ -184,12 +228,9 @@ export default class CScene extends CTransform
         _context.scene = scene;
         _context.camera = camera;
 
-        this.afterRender && this.afterRender(_context);
+        this.postRender(_context);
 
         _afterRenderEvent.component = this;
         this.emit<ISceneAfterRenderEvent>(_afterRenderEvent);
     }
 }
-
-CScene.prototype.beforeRender = null;
-CScene.prototype.afterRender = null;

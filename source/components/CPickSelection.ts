@@ -22,15 +22,13 @@ import CScene, { ISceneAfterRenderEvent } from "./CScene";
 ////////////////////////////////////////////////////////////////////////////////
 
 const _inputs = {
-    bracketsVisible: types.Boolean("Brackets.Visible", true)
+    viewportPicking: types.Boolean("Viewport.Picking", true),
+    viewportBrackets: types.Boolean("Viewport.Brackets", true),
 };
 
 export default class CPickSelection extends CSelection
 {
-    ins = this.addInputs(_inputs);
-
-    protected startX = 0;
-    protected startY = 0;
+    ins = this.addInputs<CSelection, typeof _inputs>(_inputs);
 
     private _brackets = new Map<Component, Bracket>();
     private _sceneTracker: ComponentTracker<CScene> = null;
@@ -39,18 +37,13 @@ export default class CPickSelection extends CSelection
     create()
     {
         super.create();
-
-        this.system.on<IPointerEvent>("pointer-down", this.onPointerDown, this);
         this.system.on<IPointerEvent>("pointer-up", this.onPointerUp, this);
     }
 
     dispose()
     {
-        this.system.off<IPointerEvent>("pointer-down", this.onPointerDown, this);
         this.system.off<IPointerEvent>("pointer-up", this.onPointerUp, this);
-
         this._sceneTracker.dispose();
-
         super.dispose();
     }
 
@@ -93,38 +86,31 @@ export default class CPickSelection extends CSelection
         }
     }
 
-    protected onPointerDown(event: IPointerEvent)
-    {
-        if (event.isPrimary) {
-            this.startX = event.centerX;
-            this.startY = event.centerY;
-        }
-    }
-
     protected onPointerUp(event: IPointerEvent)
     {
-        if (event.isPrimary) {
-            const distance = Math.abs(this.startX - event.centerX) + Math.abs(this.startY - event.centerY);
-            if (distance < 2) {
-                if (event.component) {
-                    this.selectComponent(event.component, event.ctrlKey);
-                }
-                else if (!event.ctrlKey) {
-                    this.clearSelection();
-                }
-            }
+        if (!this.ins.viewportPicking.value || !event.isPrimary || event.isDragging) {
+            return;
+        }
+
+        if (event.component) {
+            this.selectComponent(event.component, event.ctrlKey);
+        }
+        else if (!event.ctrlKey) {
+            this.clearSelection();
         }
     }
 
     protected onSceneAfterRender(event: ISceneAfterRenderEvent)
     {
+        if (!this.ins.viewportBrackets.value) {
+            return;
+        }
+
         const renderer = event.context.renderer;
         const camera = event.context.camera;
 
-        if (this.ins.bracketsVisible.value) {
-            for (let entry of this._brackets) {
-                renderer.render(entry[1] as any, camera);
-            }
+        for (let entry of this._brackets) {
+            renderer.render(entry[1] as any, camera);
         }
     }
 

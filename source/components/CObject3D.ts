@@ -13,21 +13,14 @@ import { ITypedEvent } from "@ff/core/Publisher";
 import Component, { types } from "@ff/graph/Component";
 import IndexShader from "@ff/three/shaders/IndexShader";
 
-import RenderView, { Viewport } from "../RenderView";
+import { IPointerEvent, ITriggerEvent } from "../RenderView";
+import { IRenderContext } from "./CScene";
 import CTransform from "./CTransform";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const _context: IRenderContext = {
-    view: null,
-    viewport: null,
-    renderer: null,
-    scene: null,
-    camera: null,
-    geometry: null,
-    material: null,
-    group: null
-};
+export { IPointerEvent, ITriggerEvent, IRenderContext };
+
 
 const _hookObject3D = function(object: THREE.Object3D)
 {
@@ -57,18 +50,6 @@ export interface IObject3DObjectEvent extends ITypedEvent<"object">
 {
     current: THREE.Object3D;
     next: THREE.Object3D;
-}
-
-export interface IRenderContext
-{
-    view: RenderView;
-    viewport: Viewport;
-    renderer: THREE.WebGLRenderer;
-    scene: THREE.Scene;
-    camera: THREE.Camera;
-    geometry: THREE.Geometry;
-    material: THREE.Material;
-    group: any;
 }
 
 const _inputs = {
@@ -130,8 +111,6 @@ export default class CObject3D extends Component implements ICObject3D
 
         if (currentObject) {
             object.userData["component"] = null;
-            currentObject.onBeforeRender = null;
-            currentObject.onAfterRender = null;
 
             this.unregisterPickableObject3D(currentObject, true);
 
@@ -147,11 +126,6 @@ export default class CObject3D extends Component implements ICObject3D
             object.userData["component"] = this;
             object.matrixAutoUpdate = false;
             object.visible = this.ins.visible.value;
-
-            object.onBeforeRender = this._onBeforeRender.bind(this);
-            if (this.afterRender) {
-                object.onAfterRender = this._onAfterRender.bind(this);
-            }
 
             this.registerPickableObject3D(object, true);
 
@@ -199,20 +173,20 @@ export default class CObject3D extends Component implements ICObject3D
     }
 
     /**
-     * This is called right before the component's 3D object is rendered.
+     * This is called right before the graph's scene is rendered to a specific viewport/view.
      * Override to make adjustments specific to the renderer, view or viewport.
      * @param context
      */
-    beforeRender(context: IRenderContext)
+    preRender(context: IRenderContext)
     {
     }
 
     /**
-     * This is called right after the component's 3D object has been rendered.
+     * This is called right after the graph's scene has been rendered to a specific viewport/view.
      * Override to make adjustments specific to the renderer, view or viewport.
      * @param context
      */
-    afterRender(context: IRenderContext)
+    postRender(context: IRenderContext)
     {
     }
 
@@ -246,13 +220,10 @@ export default class CObject3D extends Component implements ICObject3D
      */
     registerPickableObject3D(object: THREE.Object3D, recursive: boolean = false)
     {
-        if (recursive && object === this._object3D) {
-            object.children.forEach(child => child.traverse(object => _hookObject3D(object)));
-        }
-        else if (recursive) {
+        if (recursive) {
             object.traverse(object => _hookObject3D(object));
         }
-        else if (object !== this._object3D) {
+        else {
             _hookObject3D(object);
         }
     }
@@ -265,13 +236,10 @@ export default class CObject3D extends Component implements ICObject3D
      */
     unregisterPickableObject3D(object: THREE.Object3D, recursive: boolean = false)
     {
-        if (recursive && object === this._object3D) {
-            object.children.forEach(child => child.traverse(object => _unhookObject3D(object)));
-        }
-        else if (recursive) {
+        if (recursive) {
             object.traverse(object => _unhookObject3D(object));
         }
-        else if (object !== this._object3D) {
+        else {
             _unhookObject3D(object);
         }
     }
@@ -283,62 +251,7 @@ export default class CObject3D extends Component implements ICObject3D
     {
         return super.toString() + (this._object3D ? ` - type: ${this._object3D.type}` : " - (null)");
     }
-
-    /**
-     * Three.js event handler called before the object is rendered.
-     * @private
-     */
-    private _onBeforeRender(
-        renderer: THREE.WebGLRenderer,
-        scene: THREE.Scene,
-        camera: THREE.Camera,
-        geometry: THREE.Geometry,
-        material: any,
-        group: any)
-    {
-        // index rendering for picking: set shader index uniform to the object's id
-        if (material.isIndexShader && this.ins.pickable.value) {
-            material.setIndex(this.object3D.id);
-        }
-
-        if (this.beforeRender) {
-            _context.view = renderer["__view"];
-            _context.viewport = renderer["__viewport"];
-            _context.renderer = renderer;
-            _context.scene = scene;
-            _context.camera = camera;
-            _context.geometry = geometry;
-            _context.material = material;
-            _context.group = group;
-
-            this.beforeRender(_context);
-        }
-    }
-
-    /**
-     * Three.js event handler called after the object has been rendered.
-     * @private
-     */
-    private _onAfterRender(
-        renderer: THREE.WebGLRenderer,
-        scene: THREE.Scene,
-        camera: THREE.Camera,
-        geometry: THREE.Geometry,
-        material: THREE.Material,
-        group: any)
-    {
-        _context.view = renderer["__view"];
-        _context.viewport = renderer["__viewport"];
-        _context.renderer = renderer;
-        _context.scene = scene;
-        _context.camera = camera;
-        _context.geometry = geometry;
-        _context.material = material;
-        _context.group = group;
-
-        this.afterRender(_context);
-    }
 }
 
-CObject3D.prototype.beforeRender = null;
-CObject3D.prototype.afterRender = null;
+CObject3D.prototype.preRender = null;
+CObject3D.prototype.postRender = null;
