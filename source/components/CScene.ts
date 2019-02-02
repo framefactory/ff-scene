@@ -113,7 +113,7 @@ export default class CScene extends CTransform
     }
 
     protected get renderer(): CRenderer {
-        return this.system.graph.components.get(CRenderer);
+        return this.system.getMainComponent(CRenderer);
     }
 
     create()
@@ -124,12 +124,6 @@ export default class CScene extends CTransform
         if (renderer && !renderer.activeSceneComponent) {
             renderer.activeSceneComponent = this;
         }
-
-        const components = this.getGraphComponents(CObject3D);
-        this._preRenderList = components.filter(component => component.preRender);
-        this._postRenderList = components.filter(component => component.postRender);
-
-        this.graph.components.on(CObject3D, this.onObject3D, this);
     }
 
     update(context)
@@ -153,8 +147,6 @@ export default class CScene extends CTransform
             renderer.activeSceneComponent = null;
         }
 
-        this.graph.components.off(CObject3D, this.onObject3D, this);
-
         super.dispose();
     }
 
@@ -174,27 +166,23 @@ export default class CScene extends CTransform
         }
     }
 
-    protected onObject3D(event: IComponentEvent<CObject3D>)
+    registerComponent(component: CObject3D)
     {
-        const component = event.object;
-        const preRenderList = this._preRenderList;
-        const postRenderList = this._postRenderList;
-
-        if (event.add) {
-            if (component.preRender) {
-                preRenderList.push(component);
-            }
-            if (component.postRender) {
-                postRenderList.push(component);
-            }
+        if (component.preRender) {
+            this._preRenderList.push(component);
         }
-        else if (event.remove) {
-            if (component.preRender) {
-                preRenderList.splice(preRenderList.indexOf(component), 1);
-            }
-            if (component.postRender) {
-                postRenderList.splice(postRenderList.indexOf(component), 1);
-            }
+        if (component.postRender) {
+            this._postRenderList.push(component);
+        }
+    }
+
+    unregisterComponent(component: CObject3D)
+    {
+        if (component.preRender) {
+            this._preRenderList.splice(this._preRenderList.indexOf(component), 1);
+        }
+        if (component.postRender) {
+            this._postRenderList.splice(this._postRenderList.indexOf(component), 1);
         }
     }
 

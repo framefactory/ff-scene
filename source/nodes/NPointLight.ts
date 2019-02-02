@@ -13,7 +13,7 @@ import CPointLight from "../components/CPointLight";
 export default class NPointLight extends NLight
 {
     get light() {
-        return this.components.get(CPointLight);
+        return this.getComponent(CPointLight);
     }
 
     createComponents()

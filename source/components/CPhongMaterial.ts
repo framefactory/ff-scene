@@ -8,6 +8,7 @@
 import * as THREE from "three";
 
 import { types } from "@ff/graph/propertyTypes";
+
 import CMaterial from "./CMaterial";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -31,7 +32,11 @@ export default class CPhongMaterial extends CMaterial
         const material = this.material as THREE.MeshBasicMaterial;
         const { color } = this.ins;
 
-        material.color.setRGB(color.value[0], color.value[1], color.value[2]);
+        if (color.changed) {
+            const rgb = color.value;
+            material.color.setRGB(rgb[0], rgb[1], rgb[2]);
+        }
+
         return true;
     }
 }

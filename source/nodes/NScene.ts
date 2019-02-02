@@ -13,7 +13,7 @@ import CScene from "../components/CScene";
 export default class NScene extends NTransform
 {
     get scene() {
-        return this.components.get(CScene);
+        return this.getComponent(CScene);
     }
 
     createComponents()

@@ -5,27 +5,26 @@
  * License: MIT
  */
 
+import * as THREE from "three";
+
+import { types } from "@ff/graph/propertyTypes";
+
 import Component from "@ff/graph/Component";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export default class CGeometry extends Component
 {
+    outs = this.addOutputs({ self: types.Object("Geometry", CGeometry) });
+
     private _geometry: THREE.BufferGeometry = null;
-
     
-    constructor(id: string)
-    {
-        super(id);
-        this.addEvent("geometry");
-    }
-
     get geometry() {
         return this._geometry;
     }
 
-    set geometry(value: THREE.BufferGeometry) {
-        this._geometry = value;
-        this.emit("geometry", value);
+    set geometry(geometry: THREE.BufferGeometry) {
+        this._geometry = geometry;
+        this.outs.self.setValue(geometry ? this : null);
     }
 }

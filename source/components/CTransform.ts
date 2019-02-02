@@ -140,7 +140,6 @@ export default class CTransform extends CHierarchy implements ICObject3D
         scale.set();
     }
 
-
     /**
      * Adds the given transform component as a children to this.
      * @param component
@@ -160,26 +159,6 @@ export default class CTransform extends CHierarchy implements ICObject3D
         this._object3D.remove(component._object3D);
         super.removeChild(component);
     }
-
-    // /**
-    //  * Called by [[CObject3D]] to attach its three.js renderable object to the transform component.
-    //  * Do not call this directly.
-    //  * @param object
-    //  */
-    // addObject3D(object: THREE.Object3D)
-    // {
-    //     this._object3D.add(object);
-    // }
-    //
-    // /**
-    //  * Called by [[CObject3D]] to detach its three.js renderable object from the transform component.
-    //  * Do not call this directly.
-    //  * @param object
-    //  */
-    // removeObject3D(object: THREE.Object3D)
-    // {
-    //     this._object3D.remove(object);
-    // }
 
     protected createObject3D()
     {

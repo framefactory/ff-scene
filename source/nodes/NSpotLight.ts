@@ -13,7 +13,7 @@ import CSpotLight from "../components/CSpotLight";
 export default class NSpotLight extends NLight
 {
     get light() {
-        return this.components.get(CSpotLight);
+        return this.getComponent(CSpotLight);
     }
 
     createComponents()

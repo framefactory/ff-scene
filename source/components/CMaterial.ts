@@ -5,27 +5,26 @@
  * License: MIT
  */
 
+import * as THREE from "three";
+
+import { types } from "@ff/graph/propertyTypes";
+
 import Component from "@ff/graph/Component";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export default class CMaterial extends Component
 {
+    outs = this.addOutputs({ self: types.Object("Material", CMaterial) });
+
     private _material: THREE.Material = null;
-
-
-    constructor(id: string)
-    {
-        super(id);
-        this.addEvent("material");
-    }
 
     get material() {
         return this._material;
     }
 
-    set material(value: THREE.Material) {
-        this._material = value;
-        this.emit("material", value);
+    set material(material: THREE.Material) {
+        this._material = material;
+        this.outs.self.setValue(material ? this : null);
     }
 }

@@ -9,37 +9,17 @@ import * as THREE from "three";
 
 import { ClassOf } from "@ff/core/types";
 import { ITypedEvent } from "@ff/core/Publisher";
-
-import Component, { types } from "@ff/graph/Component";
-import IndexShader from "@ff/three/shaders/IndexShader";
+import Component, { IComponentEvent, types } from "@ff/graph/Component";
+import GPUPicker from "@ff/three/GPUPicker";
 
 import { IPointerEvent, ITriggerEvent } from "../RenderView";
-import { IRenderContext } from "./CScene";
+import CScene, { IRenderContext } from "./CScene";
 import CTransform from "./CTransform";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export { IPointerEvent, ITriggerEvent, IRenderContext };
 
-
-const _hookObject3D = function(object: THREE.Object3D)
-{
-    if ((object as any).material) {
-        object.onBeforeRender = function(r, s, c, g, material: IndexShader) {
-            if (material.isIndexShader) {
-                //console.log("setIndex #%s for %s", object.id, object);
-                material.setIndex(object.id);
-            }
-        }
-    }
-};
-
-const _unhookObject3D = function(object: THREE.Object3D)
-{
-    if ((object as any).material) {
-        object.onBeforeRender = null;
-    }
-};
 
 export interface ICObject3D extends Component
 {
@@ -91,8 +71,17 @@ export default class CObject3D extends Component implements ICObject3D
         return (this.constructor as any).parentComponentClass;
     }
     /** The transform parent of this object. */
-    get parentComponent(): ICObject3D {
-        return this.node.components.get(this.parentComponentClass);
+    get parentComponent(): ICObject3D | undefined {
+        return this.node.components.get(this.parentComponentClass, true);
+    }
+    /** The component node's transform component. */
+    get transform(): CTransform | undefined {
+        return this.node.components.get(CTransform, true);
+    }
+    /** The scene this renderable object is part of. */
+    get scene(): CScene | undefined {
+        const transform = this.transform;
+        return transform ? transform.getParent(CScene, true) : undefined;
     }
     /** The underlying [[THREE.Object3D]] of this component. */
     get object3D(): THREE.Object3D | null {
@@ -137,15 +126,13 @@ export default class CObject3D extends Component implements ICObject3D
 
     create()
     {
-        this.trackComponent(this.parentComponentClass, component => {
-            if (this._object3D) {
-                component.object3D.add(this._object3D);
-            }
-        }, component => {
-            if (this._object3D) {
-                component.object3D.remove(this._object3D);
-            }
-        });
+        this.node.components.on(this.parentComponentClass, this._onParent, this);
+        this.system.components.on(CScene, this._onScene, this);
+
+        const scene = this.scene;
+        if (scene) {
+            scene.registerComponent(this);
+        }
     }
 
     update(context): boolean
@@ -167,6 +154,14 @@ export default class CObject3D extends Component implements ICObject3D
             if (component) {
                 component.object3D.remove(this._object3D);
             }
+        }
+
+        this.node.components.off(this.parentComponentClass, this._onParent, this);
+        this.system.components.off(CScene, this._onScene, this);
+
+        const scene = this.scene;
+        if (scene) {
+            scene.unregisterComponent(this);
         }
 
         super.dispose();
@@ -191,11 +186,19 @@ export default class CObject3D extends Component implements ICObject3D
     }
 
     /**
+     * Returns a text representation.
+     */
+    toString()
+    {
+        return super.toString() + (this._object3D ? ` - type: ${this._object3D.type}` : " - (null)");
+    }
+
+    /**
      * Adds a [[THREE.Object3D]] as a child to this component's object.
      * Registers the object with the picking service to make it pickable.
      * @param object
      */
-    addObject3D(object: THREE.Object3D)
+    protected addObject3D(object: THREE.Object3D)
     {
         this._object3D.add(object);
         this.registerPickableObject3D(object, true);
@@ -206,7 +209,7 @@ export default class CObject3D extends Component implements ICObject3D
      * Also unregisters the object from the picking service.
      * @param object
      */
-    removeObject3D(object: THREE.Object3D)
+    protected removeObject3D(object: THREE.Object3D)
     {
         this._object3D.remove(object);
         this.unregisterPickableObject3D(object, true);
@@ -218,14 +221,9 @@ export default class CObject3D extends Component implements ICObject3D
      * @param object
      * @param recursive
      */
-    registerPickableObject3D(object: THREE.Object3D, recursive: boolean = false)
+    protected registerPickableObject3D(object: THREE.Object3D, recursive: boolean)
     {
-        if (recursive) {
-            object.traverse(object => _hookObject3D(object));
-        }
-        else {
-            _hookObject3D(object);
-        }
+        GPUPicker.add(object, recursive);
     }
 
     /**
@@ -234,22 +232,60 @@ export default class CObject3D extends Component implements ICObject3D
      * @param object
      * @param recursive
      */
-    unregisterPickableObject3D(object: THREE.Object3D, recursive: boolean = false)
+    protected unregisterPickableObject3D(object: THREE.Object3D, recursive: boolean)
     {
-        if (recursive) {
-            object.traverse(object => _unhookObject3D(object));
-        }
-        else {
-            _unhookObject3D(object);
-        }
+        GPUPicker.remove(object, recursive);
     }
 
     /**
-     * Returns a text representation.
+     * Called when this object becomes a child of a [[CScene]] component.
+     * Override to interact with the parent scene, connect to events, etc.
+     * Base class implementation does nothing.
+     * @param scene The new parent scene component.
      */
-    toString()
+    protected sceneConnected(scene: CScene)
     {
-        return super.toString() + (this._object3D ? ` - type: ${this._object3D.type}` : " - (null)");
+        console.log("CObject3D.sceneConnected - scene: ", scene);
+    }
+
+    /**
+     * Called when this object is removed from its parent [[CScene]] component.
+     * Override to interact with the parent scene, disconnect from events, etc.
+     * Base class implementation does nothing.
+     * @param scene The former parent scene component.
+     */
+    protected sceneDisconnected(scene: CScene)
+    {
+        console.log("CObject3D.sceneDisconnected - scene: ", scene);
+    }
+
+    private _onParent(event: IComponentEvent<ICObject3D>)
+    {
+        // add or remove this THREE.Object3D to the parent THREE.Object3D
+        if (this._object3D) {
+            if (event.add) {
+                event.object.object3D.add(this._object3D);
+            }
+            else {
+                event.object.object3D.remove(this._object3D);
+            }
+        }
+    }
+
+    private _onScene(event: IComponentEvent<CScene>)
+    {
+        const scene = event.object;
+
+        if (scene === this.scene) {
+            if (event.add) {
+                scene.registerComponent(this);
+                this.sceneConnected(scene);
+            }
+            else {
+                this.sceneDisconnected(scene);
+                scene.unregisterComponent(this);
+            }
+        }
     }
 }
 

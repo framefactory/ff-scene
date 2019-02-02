@@ -13,6 +13,6 @@ import CLight from "../components/CLight";
 export default class NLight extends NTransform
 {
     get light() {
-        return this.components.get(CLight);
+        return this.getComponent(CLight);
     }
 }

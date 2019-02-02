@@ -13,7 +13,7 @@ import CDirectionalLight from "../components/CDirectionalLight";
 export default class NDirectionalLight extends NLight
 {
     get light() {
-        return this.components.get(CDirectionalLight);
+        return this.getComponent(CDirectionalLight);
     }
 
     createComponents()

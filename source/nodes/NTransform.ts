@@ -13,7 +13,7 @@ import CTransform from "../components/CTransform";
 export default class NTransform extends NHierarchy
 {
     get transform() {
-        return this.components.get(CTransform);
+        return this.getComponent(CTransform);
     }
 
     createComponents()

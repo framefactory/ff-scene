@@ -34,7 +34,7 @@ const createScene = function(graph: Graph, name?: string): Node
 
 const createTransform = function(parent: Node, name?: string): Node
 {
-    const hierarchy = parent.components.get(CHierarchy);
+    const hierarchy = parent.getComponent(CHierarchy);
     if (!hierarchy) {
         throw new Error("can't attach to parent; missing a hierarchy component");
     }
@@ -75,9 +75,13 @@ const createSpotLight = function(parent: Node, name?: string): Node
 const createBox = function(parent: Node, name?: string): Node
 {
     const node = createTransform(parent, name);
-    node.createComponent(CMesh);
-    node.createComponent(CBox);
-    node.createComponent(CPhongMaterial);
+    const mesh = node.createComponent(CMesh);
+    const geo = node.createComponent(CBox);
+    const mat = node.createComponent(CPhongMaterial);
+
+    mesh.ins.geometry.linkFrom(geo.outs.self);
+    mesh.ins.material.linkFrom(mat.outs.self);
+
     return node;
 };
 

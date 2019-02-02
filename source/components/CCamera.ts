@@ -9,7 +9,6 @@ import { types } from "@ff/graph/propertyTypes";
 
 import UniversalCamera, { EProjection } from "@ff/three/UniversalCamera";
 import CObject3D from "./CObject3D";
-import CScene from "./CScene";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -34,10 +33,6 @@ export default class CCamera extends CObject3D
 
     get camera() {
         return this.object3D as UniversalCamera;
-    }
-
-    protected get scene() {
-        return this.graph.components.get(CScene)
     }
 
     create()
