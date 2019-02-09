@@ -58,7 +58,7 @@ export default class CObject3D extends Component implements ICObject3D
 
 
     private _object3D: THREE.Object3D = null;
-
+    private _scene: CScene = null;
 
     constructor(id: string)
     {
@@ -126,13 +126,8 @@ export default class CObject3D extends Component implements ICObject3D
 
     create()
     {
+        super.create();
         this.node.components.on(this.parentComponentClass, this._onParent, this);
-        this.system.components.on(CScene, this._onScene, this);
-
-        const scene = this.scene;
-        if (scene) {
-            scene.registerComponent(this);
-        }
     }
 
     update(context): boolean
@@ -157,13 +152,6 @@ export default class CObject3D extends Component implements ICObject3D
         }
 
         this.node.components.off(this.parentComponentClass, this._onParent, this);
-        this.system.components.off(CScene, this._onScene, this);
-
-        const scene = this.scene;
-        if (scene) {
-            scene.unregisterComponent(this);
-        }
-
         super.dispose();
     }
 
@@ -237,28 +225,6 @@ export default class CObject3D extends Component implements ICObject3D
         GPUPicker.remove(object, recursive);
     }
 
-    /**
-     * Called when this object becomes a child of a [[CScene]] component.
-     * Override to interact with the parent scene, connect to events, etc.
-     * Base class implementation does nothing.
-     * @param scene The new parent scene component.
-     */
-    protected sceneConnected(scene: CScene)
-    {
-        console.log("CObject3D.sceneConnected - scene: ", scene);
-    }
-
-    /**
-     * Called when this object is removed from its parent [[CScene]] component.
-     * Override to interact with the parent scene, disconnect from events, etc.
-     * Base class implementation does nothing.
-     * @param scene The former parent scene component.
-     */
-    protected sceneDisconnected(scene: CScene)
-    {
-        console.log("CObject3D.sceneDisconnected - scene: ", scene);
-    }
-
     private _onParent(event: IComponentEvent<ICObject3D>)
     {
         // add or remove this THREE.Object3D to the parent THREE.Object3D
@@ -268,22 +234,6 @@ export default class CObject3D extends Component implements ICObject3D
             }
             else {
                 event.object.object3D.remove(this._object3D);
-            }
-        }
-    }
-
-    private _onScene(event: IComponentEvent<CScene>)
-    {
-        const scene = event.object;
-
-        if (scene === this.scene) {
-            if (event.add) {
-                scene.registerComponent(this);
-                this.sceneConnected(scene);
-            }
-            else {
-                this.sceneDisconnected(scene);
-                scene.unregisterComponent(this);
             }
         }
     }

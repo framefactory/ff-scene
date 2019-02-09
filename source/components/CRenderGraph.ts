@@ -5,30 +5,44 @@
  * License: MIT
  */
 
-import CHierarchy from "@ff/graph/components/CHierarchy";
 import CGraph from "@ff/graph/components/CGraph";
-
 import CTransform from "./CTransform";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export default class CRenderGraph extends CGraph
 {
-    set innerRoot(root: CHierarchy)
+    create()
     {
-        if (root.is(CTransform)) {
-            const parent = this.getComponent(CTransform);
-            const previous = this.innerRoot as CTransform;
-            const next = root as CTransform;
+        super.create();
 
-            if (parent && previous) {
-                parent.object3D.remove(previous.object3D);
+        this.trackComponent(CTransform, component => {
+            this.getInnerRoots()
+                .filter(root => root.is(CTransform))
+                .forEach((root: CTransform) => component.object3D.add(root.object3D));
+        }, component => {
+            this.getInnerRoots()
+                .filter(root => root.is(CTransform))
+                .forEach((root: CTransform) => component.object3D.remove(root.object3D));
+        });
+    }
+
+    onAddInnerRoot(component: CTransform)
+    {
+        if (component.is(CTransform)) {
+            const parent = this.getComponent(CTransform, true);
+            if (parent) {
+                parent.object3D.add(component.object3D);
             }
+        }
+    }
 
-            super.innerRoot = next;
-
-            if (parent && next) {
-                parent.object3D.add(next.object3D);
+    onRemoveInnerRoot(component: CTransform)
+    {
+        if (component.is(CTransform)) {
+            const parent = this.getComponent(CTransform, true);
+            if (parent) {
+                parent.object3D.remove(component.object3D);
             }
         }
     }

@@ -140,6 +140,7 @@ export default class RenderView extends Publisher implements IManip
         const camera = sceneComponent.activeCamera;
 
         if (!scene || !camera) {
+            console.warn("can't render, no scene/camera");
             return;
         }
 
@@ -226,10 +227,17 @@ export default class RenderView extends Publisher implements IManip
         const viewEvent = this.routeEvent(event, doHitTest, doPick);
 
         if (viewEvent) {
-            if (viewEvent.component) {
-                viewEvent.component.propagateUp(viewEvent);
+            const component = viewEvent.component;
+            if (component) {
+                component.emit(viewEvent);
+
+                const hierarchy = component.hierarchy;
+                if (!viewEvent.stopPropagation && hierarchy) {
+                    hierarchy.propagateUp(false, true, viewEvent);
+                }
             }
-            else {
+
+            if (!viewEvent.stopPropagation) {
                 this.system.emit(viewEvent);
             }
 
@@ -253,10 +261,17 @@ export default class RenderView extends Publisher implements IManip
         const viewEvent = this.routeEvent(event, true, true);
 
         if (viewEvent) {
-            if (viewEvent.component) {
-                viewEvent.component.propagateUp(viewEvent);
+            const component = viewEvent.component;
+            if (component) {
+                component.emit(viewEvent);
+
+                const hierarchy = component.hierarchy;
+                if (!viewEvent.stopPropagation && hierarchy) {
+                    hierarchy.propagateUp(false, true, viewEvent);
+                }
             }
-            else {
+
+            if (!viewEvent.stopPropagation) {
                 this.system.emit(viewEvent);
             }
 
@@ -324,15 +339,16 @@ export default class RenderView extends Publisher implements IManip
             component = null;
 
             if (scene && camera) {
-                let object3D = this.picker.pickObject(scene, camera, event);
+                object3D = this.picker.pickObject(scene, camera, event);
                 if (object3D === undefined) {
                     console.log("Pick Index - Background");
                 }
                 else {
-                    while(object3D && !component) {
-                        component = object3D.userData["component"];
+                    let componentObject3D = object3D;
+                    while(componentObject3D && !component) {
+                        component = componentObject3D.userData["component"];
                         if (!component) {
-                            object3D = object3D.parent;
+                            componentObject3D = componentObject3D.parent;
                         }
                     }
                     if (component) {

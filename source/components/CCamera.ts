@@ -15,6 +15,7 @@ import CObject3D from "./CObject3D";
 export { EProjection };
 
 const _inputs = {
+    autoActivate: types.Boolean("Camera.AutoActivate", true),
     activate: types.Event("Camera.Activate"),
     position: types.Vector3("Transform.Position"),
     rotation: types.Vector3("Transform.Rotation"),
@@ -23,7 +24,7 @@ const _inputs = {
     size: types.Number("Projection.Size", 20),
     zoom: types.Number("Projection.Zoom", 1),
     near: types.Number("Frustum.ZNear", 0.01),
-    far: types.Number("Frustum.ZFar", 10000)
+    far: types.Number("Frustum.ZFar", 10000),
 };
 
 export default class CCamera extends CObject3D
@@ -39,18 +40,13 @@ export default class CCamera extends CObject3D
     {
         super.create();
         this.object3D = new UniversalCamera();
-
-        const scene = this.scene;
-        if (scene && !scene.activeCameraComponent) {
-            scene.activeCameraComponent = this;
-        }
     }
 
     update()
     {
-        const { activate, position, rotation, projection, fov, size, zoom, near, far } = this.ins;
+        const { autoActivate, activate } = this.ins;
 
-        if (activate.changed) {
+        if (activate.changed || autoActivate.changed && autoActivate.value) {
             const scene = this.scene;
             if (scene) {
                 scene.activeCameraComponent = this;
@@ -58,6 +54,7 @@ export default class CCamera extends CObject3D
         }
 
         const camera = this.camera;
+        const { position, rotation, projection, fov, size, zoom, near, far } = this.ins;
 
         if (position.changed || rotation.changed) {
             camera.position.fromArray(position.value);

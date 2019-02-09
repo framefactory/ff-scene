@@ -13,10 +13,11 @@ import { types } from "@ff/graph/propertyTypes";
 
 import RenderView, { Viewport } from "../RenderView";
 import CRenderer, { IActiveSceneEvent } from "./CRenderer";
+
 import CTransform from "./CTransform";
 import CCamera from "./CCamera";
 import CObject3D from "./CObject3D";
-import { IComponentEvent } from "@ff/graph/Component";
+import { IChildComponentEvent, IHierarchyEvent } from "@ff/graph/components/CHierarchy";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -70,6 +71,11 @@ const _inputs = {
     activate: types.Event("Scene.Activate")
 };
 
+/**
+ * Represents a 3D scene. Root of a hierarchy of a number of 3D renderable objects and one
+ * or multiple cameras. Only one camera at a time can be the "active" camera which is
+ * used during each render cycle to render the currently active scene to one or multiple render views.
+ */
 export default class CScene extends CTransform
 {
     static readonly isGraphSingleton = true;
@@ -100,11 +106,6 @@ export default class CScene extends CTransform
 
             const event: IActiveCameraEvent = { type: "active-camera", previous, next: component };
             this.emit(event);
-
-            const renderer = this.renderer;
-            if (renderer) {
-                this.renderer.emit(event);
-            }
         }
     }
 
@@ -113,12 +114,15 @@ export default class CScene extends CTransform
     }
 
     protected get renderer(): CRenderer {
-        return this.system.getMainComponent(CRenderer);
+        return
     }
 
     create()
     {
         super.create();
+
+        this.on<IHierarchyEvent>("hierarchy", this.updateRenderLists, this);
+        this.on<IChildComponentEvent>("child-component", this.updateRenderLists, this);
 
         const renderer = this.renderer;
         if (renderer && !renderer.activeSceneComponent) {
@@ -147,6 +151,9 @@ export default class CScene extends CTransform
             renderer.activeSceneComponent = null;
         }
 
+        this.off<IHierarchyEvent>("hierarchy", this.updateRenderLists, this);
+        this.off<IChildComponentEvent>("child-component", this.updateRenderLists, this);
+
         super.dispose();
     }
 
@@ -166,32 +173,52 @@ export default class CScene extends CTransform
         }
     }
 
-    registerComponent(component: CObject3D)
-    {
-        if (component.preRender) {
-            this._preRenderList.push(component);
-        }
-        if (component.postRender) {
-            this._postRenderList.push(component);
-        }
-    }
-
-    unregisterComponent(component: CObject3D)
-    {
-        if (component.preRender) {
-            this._preRenderList.splice(this._preRenderList.indexOf(component), 1);
-        }
-        if (component.postRender) {
-            this._postRenderList.splice(this._postRenderList.indexOf(component), 1);
-        }
-    }
-
     protected createObject3D()
     {
         const scene = new THREE.Scene();
         scene.onBeforeRender = this._onBeforeRender.bind(this);
         scene.onAfterRender = this._onAfterRender.bind(this);
         return scene;
+    }
+
+    protected updateRenderLists()
+    {
+        this._preRenderList = [];
+        this._postRenderList = [];
+
+        this.traverseDown(true, true, true, (component: CObject3D) => {
+            if (component.is(CObject3D)) {
+                if (component.preRender) {
+                    this._preRenderList.push(component);
+                }
+                if (component.postRender) {
+                    this._postRenderList.push(component);
+                }
+            }
+
+            return false;
+        });
+
+
+        // registerComponent(component: CObject3D)
+        // {
+        //     if (component.preRender) {
+        //         this._preRenderList.push(component);
+        //     }
+        //     if (component.postRender) {
+        //         this._postRenderList.push(component);
+        //     }
+        // }
+        //
+        // unregisterComponent(component: CObject3D)
+        // {
+        //     if (component.preRender) {
+        //         this._preRenderList.splice(this._preRenderList.indexOf(component), 1);
+        //     }
+        //     if (component.postRender) {
+        //         this._postRenderList.splice(this._postRenderList.indexOf(component), 1);
+        //     }
+        // }
     }
 
     private _onBeforeRender(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera)

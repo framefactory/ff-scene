@@ -13,6 +13,12 @@ import CScene, { IActiveCameraEvent } from "./CScene";
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export { IActiveCameraEvent };
+
+/**
+ * Emitted by [[CRenderer]] if the active scene changes.
+ * @event
+ */
 export interface IActiveSceneEvent extends ITypedEvent<"active-scene">
 {
     previous: CScene;
@@ -27,6 +33,20 @@ const _outputs = {
     maxCubemapSize: types.Integer("Caps.MaxCubemapSize"),
 };
 
+/**
+ * Manages 3D rendering. Keeps track of one "active" scene/camera pair,
+ * and of a number of render views. During each render cycle, the active scene
+ * and camera are rendered to each render view.
+ *
+ * ### Events
+ * - *"active-scene"* - emits [[IActiveSceneEvent]] when the active scene changes.
+ * - *"active-camera"* - emits [[IActiveCameraEvent]] when the active camera changes.
+ *
+ * ### See also
+ * - [[CScene]]
+ * - [[CCamera]]
+ * - [[RenderView]]
+ */
 export default class CRenderer extends Component
 {
     static readonly isSystemSingleton: boolean = true;
@@ -89,6 +109,8 @@ export default class CRenderer extends Component
 
     create()
     {
+        super.create();
+
         this.trackComponent(CPulse, component => {
             component.on("pulse", this.onPulse, this)
         }, component => {
