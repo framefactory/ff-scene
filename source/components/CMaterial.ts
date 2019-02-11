@@ -15,6 +15,8 @@ import Component from "@ff/graph/Component";
 
 export default class CMaterial extends Component
 {
+    static readonly typeName: string = "CMaterial";
+
     outs = this.addOutputs({ self: types.Object("Material", CMaterial) });
 
     private _material: THREE.Material = null;

@@ -22,6 +22,8 @@ const _inputs = {
 
 export default class CMesh extends CObject3D
 {
+    static readonly typeName: string = "CMesh";
+
     ins = this.addInputs<CObject3D, typeof _inputs>(_inputs);
 
     get mesh() {
@@ -56,7 +58,7 @@ export default class CMesh extends CObject3D
     {
         const geo = this.mesh.geometry;
         const mat = this.mesh.material as THREE.Material;
-        return `${this.className} - Geometry: '${geo ? geo.type : "N/A"}', Material: '${mat ? mat.type : "N/A"}'`
+        return `${this.typeName} - Geometry: '${geo ? geo.type : "N/A"}', Material: '${mat ? mat.type : "N/A"}'`
     }
 
     protected updateGeometry(component: CGeometry | null)

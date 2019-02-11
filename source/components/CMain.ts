@@ -22,6 +22,8 @@ const ins = {
 
 export default class CMain extends Component
 {
+    static readonly typeName: string = "CMain";
+
     protected scenes: CScene[] = [];
     protected cameras: CCamera[] = [];
 
@@ -128,14 +130,14 @@ export default class CMain extends Component
         const { scene, camera } = this.ins;
 
         if (this.scenes.length > 0) {
-            scene.setOptions(this.scenes.map(scene => scene.name || scene.className));
+            scene.setOptions(this.scenes.map(scene => scene.name || scene.typeName));
         }
         else {
             scene.setOptions([ "N/A" ]);
         }
 
         if (this.cameras.length > 0) {
-            camera.setOptions(this.cameras.map(camera => camera.name || camera.className));
+            camera.setOptions(this.cameras.map(camera => camera.name || camera.typeName));
         }
         else {
             camera.setOptions([ "N/A" ]);

@@ -352,7 +352,7 @@ export default class RenderView extends Publisher implements IManip
                         }
                     }
                     if (component) {
-                        console.log("Pick Index - Component: %s", component.className);
+                        console.log("Pick Index - Component: %s", component.typeName);
                     }
                     else {
                         console.warn("Pick Index - Object without component");

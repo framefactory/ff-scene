@@ -46,6 +46,8 @@ const _outputs = {
  */
 export default class CTransform extends CHierarchy implements ICObject3D
 {
+    static readonly typeName: string = "CTransform";
+
     ins = this.addInputs<CHierarchy, typeof _inputs>(_inputs);
     outs = this.addOutputs<CHierarchy, typeof _outputs>(_outputs);
 

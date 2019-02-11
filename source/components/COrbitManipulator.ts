@@ -34,6 +34,8 @@ const _outputs = {
 
 export default class COrbitManipulator extends Component
 {
+    static readonly typeName: string = "COrbitManipulator";
+
     ins = this.addInputs(_inputs);
     outs = this.addOutputs(_outputs);
 

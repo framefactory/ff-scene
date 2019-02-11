@@ -22,6 +22,8 @@ const _inputs = {
 
 export default class CSpotLight extends CLight
 {
+    static readonly typeName: string = "CSpotLight";
+
     ins = this.addInputs<CLight, typeof _inputs>(_inputs);
 
 

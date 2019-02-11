@@ -7,7 +7,7 @@
 
 import * as THREE from "three";
 
-import { ClassOf } from "@ff/core/types";
+import { TypeOf } from "@ff/core/types";
 import { ITypedEvent } from "@ff/core/Publisher";
 import Component, { IComponentEvent, types } from "@ff/graph/Component";
 import GPUPicker from "@ff/three/GPUPicker";
@@ -50,8 +50,10 @@ const _outputs = {
  */
 export default class CObject3D extends Component implements ICObject3D
 {
+    static readonly typeName: string = "CObject3D";
+
     /** The component type whose object3D is the parent of this component's object3D. */
-    protected static readonly parentComponentClass: ClassOf<ICObject3D> = CTransform;
+    protected static readonly parentComponentClass: TypeOf<ICObject3D> = CTransform;
 
     ins = this.addInputs(_inputs);
     outs = this.addOutputs(_outputs);
@@ -67,7 +69,7 @@ export default class CObject3D extends Component implements ICObject3D
     }
 
     /** The class of a component in the same node this component uses as parent transform. */
-    get parentComponentClass(): ClassOf<ICObject3D> {
+    get parentComponentClass(): TypeOf<ICObject3D> {
         return (this.constructor as any).parentComponentClass;
     }
     /** The transform parent of this object. */

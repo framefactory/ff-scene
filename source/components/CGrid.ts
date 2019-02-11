@@ -31,6 +31,8 @@ const _inputs = {
 
 export default class CGrid extends CObject3D
 {
+    static readonly typeName: string = "CGrid";
+
     ins = this.addInputs<CObject3D, typeof _inputs>(_inputs);
 
 

@@ -28,6 +28,8 @@ const _inputs = {
 
 export default class CPickSelection extends CSelection
 {
+    static readonly typeName: string = "CPickSelection";
+
     ins = this.addInputs<CSelection, typeof _inputs>(_inputs);
 
     private _brackets = new Map<Component, Bracket>();

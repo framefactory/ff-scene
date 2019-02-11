@@ -20,6 +20,8 @@ const _inputs = {
 
 export default class CDirectionalLight extends CLight
 {
+    static readonly typeName: string = "CDirectionalLight";
+
     ins = this.addInputs<CLight, typeof _inputs>(_inputs);
 
     get light(): THREE.DirectionalLight

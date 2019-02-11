@@ -15,6 +15,8 @@ import Component from "@ff/graph/Component";
 
 export default class CGeometry extends Component
 {
+    static readonly typeName: string = "CGeometry";
+
     outs = this.addOutputs({ self: types.Object("Geometry", CGeometry) });
 
     private _geometry: THREE.BufferGeometry = null;

@@ -18,6 +18,8 @@ const _inputs = {
 
 export default class CBasicMaterial extends CMaterial
 {
+    static readonly typeName: string = "CBasicMaterial";
+
     ins = this.addInputs<CMaterial, typeof _inputs>(_inputs);
 
 

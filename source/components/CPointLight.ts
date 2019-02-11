@@ -20,6 +20,8 @@ const _inputs = {
 
 export default class CPointLight extends CLight
 {
+    static readonly typeName: string = "CPointLight";
+
     ins = this.addInputs<CLight, typeof _inputs>(_inputs);
 
 

@@ -19,6 +19,8 @@ const _inputs = {
 
 export default class CPhongMaterial extends CMaterial
 {
+    static readonly typeName: string = "CPhongMaterial";
+
     ins = this.addInputs(_inputs);
 
 

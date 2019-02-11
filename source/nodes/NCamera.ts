@@ -14,6 +14,8 @@ export { EProjection };
 
 export default class NCamera extends NTransform
 {
+    static readonly typeName: string = "NCamera";
+
     get camera() {
         return this.getComponent(CCamera);
     }

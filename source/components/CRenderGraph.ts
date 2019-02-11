@@ -12,6 +12,8 @@ import CTransform from "./CTransform";
 
 export default class CRenderGraph extends CGraph
 {
+    static readonly typeName: string = "CRenderGraph";
+
     create()
     {
         super.create();

@@ -78,6 +78,7 @@ const _inputs = {
  */
 export default class CScene extends CTransform
 {
+    static readonly typeName: string = "CScene";
     static readonly isGraphSingleton = true;
 
     private _activeCameraComponent: CCamera = null;

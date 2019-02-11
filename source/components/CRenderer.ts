@@ -49,6 +49,7 @@ const _outputs = {
  */
 export default class CRenderer extends Component
 {
+    static readonly typeName: string = "CRenderer";
     static readonly isSystemSingleton: boolean = true;
 
     ins = this.addInputs(_inputs);

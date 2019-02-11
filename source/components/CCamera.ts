@@ -29,6 +29,8 @@ const _inputs = {
 
 export default class CCamera extends CObject3D
 {
+    static readonly typeName: string = "CCamera";
+
     ins = this.addInputs<CObject3D, typeof _inputs>(_inputs);
 
 

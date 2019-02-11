@@ -22,6 +22,8 @@ const _inputs = {
 
 export default class CTorus extends CGeometry
 {
+    static readonly typeName: string = "CTorus";
+
     ins = this.addInputs<CGeometry, typeof _inputs>(_inputs);
 
     update()

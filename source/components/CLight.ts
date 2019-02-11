@@ -17,6 +17,8 @@ const _inputs = {
 
 export default class CLight extends CObject3D
 {
+    static readonly typeName: string = "CLight";
+
     ins = this.addInputs<CObject3D, typeof _inputs>(_inputs);
 
 
