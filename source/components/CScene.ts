@@ -114,8 +114,8 @@ export default class CScene extends CTransform
         return this._activeCameraComponent ? this._activeCameraComponent.camera : null;
     }
 
-    protected get renderer(): CRenderer {
-        return
+    protected get renderer(): CRenderer | null {
+        return this.getSystemComponent(CRenderer, true);
     }
 
     create()
@@ -136,9 +136,11 @@ export default class CScene extends CTransform
         const updated = super.update(context);
 
         if (this.ins.activate.changed) {
+            console.log("try actuvate");
             const renderer = this.renderer;
             if (renderer) {
                 renderer.activeSceneComponent = this;
+                console.log("scene activated");
             }
         }
 
