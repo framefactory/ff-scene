@@ -115,7 +115,7 @@ export default class CScene extends CTransform
     }
 
     protected get renderer(): CRenderer {
-        return
+        return this.getMainComponent(CRenderer);
     }
 
     create()

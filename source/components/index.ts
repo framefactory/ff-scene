@@ -5,6 +5,7 @@
  * License: MIT
  */
 
+import CAssetManager from "./CAssetManager";
 import CBasicMaterial from "./CBasicMaterial";
 import CBox from "./CBox";
 import CCamera from "./CCamera";
@@ -30,6 +31,7 @@ import CTransform from "./CTransform";
 ////////////////////////////////////////////////////////////////////////////////
 
 export {
+    CAssetManager,
     CBasicMaterial,
     CBox,
     CCamera,
@@ -54,6 +56,7 @@ export {
 };
 
 export const componentTypes = [
+    CAssetManager,
     CBasicMaterial,
     CBox,
     CCamera,
