@@ -136,9 +136,11 @@ export default class CScene extends CTransform
         const updated = super.update(context);
 
         if (this.ins.activate.changed) {
+            console.log("try actuvate");
             const renderer = this.renderer;
             if (renderer) {
                 renderer.activeSceneComponent = this;
+                console.log("scene activated");
             }
         }
 
