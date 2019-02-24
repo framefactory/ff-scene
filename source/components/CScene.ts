@@ -136,11 +136,9 @@ export default class CScene extends CTransform
         const updated = super.update(context);
 
         if (this.ins.activate.changed) {
-            console.log("try actuvate");
             const renderer = this.renderer;
             if (renderer) {
                 renderer.activeSceneComponent = this;
-                console.log("scene activated");
             }
         }
 
@@ -201,27 +199,6 @@ export default class CScene extends CTransform
 
             return false;
         });
-
-
-        // registerComponent(component: CObject3D)
-        // {
-        //     if (component.preRender) {
-        //         this._preRenderList.push(component);
-        //     }
-        //     if (component.postRender) {
-        //         this._postRenderList.push(component);
-        //     }
-        // }
-        //
-        // unregisterComponent(component: CObject3D)
-        // {
-        //     if (component.preRender) {
-        //         this._preRenderList.splice(this._preRenderList.indexOf(component), 1);
-        //     }
-        //     if (component.postRender) {
-        //         this._postRenderList.splice(this._postRenderList.indexOf(component), 1);
-        //     }
-        // }
     }
 
     private _onBeforeRender(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera)
