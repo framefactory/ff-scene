@@ -19,11 +19,11 @@ export default class CRenderGraph extends CGraph
         super.create();
 
         this.trackComponent(CTransform, component => {
-            this.getInnerRoots()
+            this.innerRoots
                 .filter(root => root.is(CTransform))
                 .forEach((root: CTransform) => component.object3D.add(root.object3D));
         }, component => {
-            this.getInnerRoots()
+            this.innerRoots
                 .filter(root => root.is(CTransform))
                 .forEach((root: CTransform) => component.object3D.remove(root.object3D));
         });
