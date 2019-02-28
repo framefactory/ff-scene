@@ -26,6 +26,7 @@ export interface IActiveSceneEvent extends ITypedEvent<"active-scene">
 }
 
 const _inputs = {
+    shadowsEnabled: types.Boolean("Shadows.Enabled", true),
 };
 
 const _outputs = {
@@ -121,7 +122,13 @@ export default class CRenderer extends Component
 
     update()
     {
-        return false;
+        const ins = this.ins;
+
+        if (ins.shadowsEnabled.changed) {
+            this.views.forEach(view => view.renderer.shadowMap.enabled = ins.shadowsEnabled.value);
+        }
+
+        return true;
     }
 
     attachView(view: RenderView)

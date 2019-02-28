@@ -18,7 +18,7 @@ import CTransform from "./CTransform";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { IPointerEvent, ITriggerEvent, IRenderContext };
+export { types, IPointerEvent, ITriggerEvent, IRenderContext };
 
 
 export interface ICObject3D extends Component

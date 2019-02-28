@@ -18,6 +18,8 @@ import CMaterial from "./CMaterial";
 const _inputs = {
     geometry: types.Object("Mesh.Geometry", CGeometry),
     material: types.Object("Mesh.Material", CMaterial),
+    castShadow: types.Boolean("Shadow.Cast", true),
+    receiveShadow: types.Boolean("Shadow.Receive", true)
 };
 
 export default class CMesh extends CObject3D
@@ -36,6 +38,7 @@ export default class CMesh extends CObject3D
 
         this.object3D = new THREE.Mesh();
         this.object3D.visible = false;
+        this.object3D.castShadow = true;
     }
 
     update(context)
@@ -49,6 +52,12 @@ export default class CMesh extends CObject3D
         }
         if (ins.material.changed) {
             this.updateMaterial(ins.material.value);
+        }
+        if (ins.castShadow.changed) {
+            this.object3D.castShadow = ins.castShadow.value;
+        }
+        if (ins.receiveShadow.changed) {
+            this.object3D.receiveShadow = ins.receiveShadow.value;
         }
 
         return true;

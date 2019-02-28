@@ -13,7 +13,10 @@ import CLight from "./CLight";
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const _vec3 = new THREE.Vector3();
+
 const _inputs = {
+    position: types.Vector3("Light.Position", [ 0, 1, 0 ]),
     distance: types.Number("Light.Distance"),
     decay: types.Number("Light.Decay", 1)
 };
@@ -36,15 +39,22 @@ export default class CPointLight extends CLight
         this.object3D = new THREE.PointLight();
     }
 
-    update()
+    update(context)
     {
-        const light = this.light;
-        const { color, intensity, distance, decay } = this.ins;
+        super.update(context);
 
-        light.color.fromArray(color.value);
-        light.intensity = intensity.value;
-        light.distance = distance.value;
-        light.decay = decay.value;
+        const light = this.light;
+        const ins = this.ins;
+
+        if (ins.position.changed) {
+            light.position.fromArray(ins.position.value);
+            light.updateMatrix();
+        }
+
+        if (ins.distance.changed || ins.decay.changed) {
+            light.distance = ins.distance.value;
+            light.decay = ins.decay.value;
+        }
 
         light.updateMatrix();
         return true;

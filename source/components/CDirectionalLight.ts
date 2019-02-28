@@ -15,7 +15,8 @@ import CLight from "./CLight";
 
 const _inputs = {
     position: types.Vector3("Light.Position", [ 0, 1, 0 ]),
-    target: types.Vector3("Light.Target")
+    target: types.Vector3("Light.Target"),
+    shadowSize: types.Number("Shadow.Size", 100),
 };
 
 export default class CDirectionalLight extends CLight
@@ -35,17 +36,27 @@ export default class CDirectionalLight extends CLight
         this.object3D = new THREE.DirectionalLight();
     }
 
-    update()
+    update(context)
     {
+        super.update(context);
+
         const light = this.light;
-        const { color, intensity, position, target } = this.ins;
+        const ins = this.ins;
 
-        light.color.fromArray(color.value);
-        light.intensity = intensity.value;
-        light.position.fromArray(position.value);
-        light.target.position.fromArray(target.value);
+        if (ins.position.changed || ins.target.changed) {
+            light.position.fromArray(ins.position.value);
+            light.target.position.fromArray(ins.target.value);
+            light.updateMatrix();
+        }
 
-        light.updateMatrix();
+        if (ins.shadowSize.changed) {
+            const camera = light.shadow.camera;
+            const halfSize = ins.shadowSize.value * 0.5;
+            camera.left = camera.bottom = -halfSize;
+            camera.right = camera.top = halfSize;
+            camera.updateProjectionMatrix();
+        }
+
         return true;
     }
 }

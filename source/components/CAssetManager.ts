@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import resolvePathname from "resolve-pathname";
+//import resolvePathname from "resolve-pathname";
 
 import Component from "@ff/graph/Component";
 
@@ -22,11 +22,11 @@ export default class CAssetManager extends Component
         return this._assetBaseUrl;
     }
     set assetBaseUrl(url: string) {
-        this._assetBaseUrl = resolvePathname(".", url);
+        //this._assetBaseUrl = resolvePathname(".", url);
     }
 
     getAssetUrl(path: string)
     {
-        return resolvePathname(path, this._assetBaseUrl);
+        //return resolvePathname(path, this._assetBaseUrl);
     }
 }
