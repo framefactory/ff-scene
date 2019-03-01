@@ -1,0 +1,215 @@
+/**
+ * FF Typescript Foundation Library
+ * Copyright 2018 Ralph Wiedemeier, Frame Factory GmbH
+ *
+ * License: MIT
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// NODE GRAPH SYSTEM
+
+.ff-hierarchy-tree-view {
+  @include fullsize;
+  display: flex;
+  flex-direction: column;
+
+  & > .ff-header {
+    flex: 0 0 auto;
+    height: 22px;
+    padding: 4px;
+    background-color: $color-background;
+
+    .ff-text {
+      flex: 1 1 auto;
+      align-self: center;
+      color: $color-icon;
+    }
+    .ff-button {
+      flex: 0 1 32px;
+      color: $color-text;
+      padding: 0;
+    }
+    .ff-button + .ff-text {
+      padding-left: 8px;
+    }
+  }
+}
+
+.ff-hierarchy-tree {
+  font-size: 0.9rem;
+
+  .ff-tree-node-container {
+    border-top: 1px solid #40464d;
+    border-bottom: 1px solid #40464d;
+  }
+
+  .ff-tree-node {
+    .ff-header {
+      height: 17px;
+    }
+
+    &.ff-node {
+      &.ff-odd {
+        background-color: #0e1421;
+      }
+      &.ff-even {
+        background-color: #131c2e;
+      }
+
+      & > .ff-header .ff-text {
+        color: #b8c8d9;
+      }
+      & > .ff-content {
+        margin-left: 9px;
+      }
+    }
+    &.ff-component {
+      background-color: #24272b;
+
+      & > .ff-content {
+        margin-left: 11px;
+      }
+    }
+    &[selected] {
+      background-color: $color-primary !important;
+    }
+  }
+}
+
+.ff-property-tree {
+  font-size: 0.9rem;
+
+  .ff-tree-node {
+    &.ff-leaf {
+      background-color: $color-background;
+    }
+    &.ff-node {
+      background-color: darken($color-background-darker, 1%);
+    }
+    &.ff-component {
+      background-color: lighten($color-background-darker, 1%);
+    }
+    &.ff-inputs {
+      background-color: #2e231e; //darken($color-background, 6%);
+      & > .ff-header .ff-text {
+        color: #d9ccc7;
+      }
+
+      .ff-inner {
+        background-color: #382c24;
+        & > .ff-header .ff-text {
+          color: #d9ccc7;
+        }
+      }
+    }
+    &.ff-outputs {
+      background-color: #1e292e;
+      & > .ff-header .ff-text {
+        color: #c7d4d9;
+      }
+      .ff-inner {
+        background-color: #243338;
+        & > .ff-header .ff-text {
+          color: #c7d4d9;
+        }
+      }
+    }
+
+    .ff-header {
+      height: 17px;
+
+      & > .ff-label {
+        width: 27%;
+      }
+      ff-property-view {
+        flex: 1 1 auto;
+      }
+    }
+  }
+}
+
+.ff-property-view {
+  .ff-label {
+    padding: 0 2px;
+    color: $color-icon;
+    user-select: none;
+  }
+  .ff-property-field {
+    flex: 1 1 100%;
+    margin: 2px 2px 0 2px;
+  }
+}
+
+@keyframes ff-event-flash {
+  from { background-color: #ccff33; }
+  to { background-color: auto; }
+}
+
+.ff-property-field {
+  box-sizing: border-box;
+  background-color: $color-background-dark;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+  &:hover .ff-event-button {
+    background-color: $color-background-lighter;
+  }
+
+  .ff-bar {
+    margin: 2px 0;
+    background-color: $color-background-light;
+    z-index: 0;
+  }
+  .ff-content {
+    margin: -2px 2px 0 2px;
+    text-align: end;
+    z-index: 1;
+  }
+  .ff-event-button {
+    box-sizing: border-box;
+    position: absolute;
+    top: 1px; bottom: 1px; right: 1px;
+    width: 33%;
+    min-width: 30px;
+    max-width: 100px;
+    background-color: $color-background-light;
+    border-top: 1px solid $color-background-lighter;
+    border-left: 1px solid $color-background-lighter;
+    border-bottom: 1px solid $color-background-darker;
+    border-right: 1px solid $color-background-darker;
+    z-index: 1;
+
+    &.ff-event-flash {
+      animation-name: ff-event-flash;
+      animation-duration: 0.7s;
+    }
+  }
+
+  &.ff-input {
+    &.ff-linked {
+      pointer-events: none;
+      color: #e6b673;
+    }
+  }
+  &.ff-output {
+    pointer-events: none;
+    &.ff-linked {
+      pointer-events: none;
+      color: #73bfe6;
+    }
+  }
+
+  &.ff-event {
+  }
+  &.ff-option {
+  }
+
+  input {
+    @include fullsize;
+    padding: 0 2px;
+    background-color: $color-background-dark;
+    text-align: end;
+  }
+}

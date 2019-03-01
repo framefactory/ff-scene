@@ -25,11 +25,11 @@ export default class CGeometry extends Component
 
     private _geometry: THREE.BufferGeometry = null;
     
-    protected get geometry() {
+    get geometry() {
         return this._geometry;
     }
 
-    protected set geometry(geometry: THREE.BufferGeometry) {
+    set geometry(geometry: THREE.BufferGeometry) {
         if (geometry !== this._geometry) {
             if (this._geometry) {
                 this._geometry.dispose();
