@@ -17,21 +17,22 @@ import math from "@ff/core/math";
 
 const _vec3 = new THREE.Vector3();
 
-const _inputs = {
-    position: types.Vector3("Light.Position", [ 0, 1, 0 ]),
-    rotation: types.Vector3("Light.Rotation", [ 0, 0, 0 ]),
-    order: types.Enum("Light.RotationOrder", ERotationOrder),
-    distance: types.Number("Light.Distance"),
-    decay: types.Number("Light.Decay", 1),
-    angle: types.Number("Light.Angle", 45),
-    penumbra: types.Number("Light.Penumbra", 0.5)
-};
 
 export default class CSpotLight extends CLight
 {
     static readonly typeName: string = "CSpotLight";
 
-    ins = this.addInputs<CLight, typeof _inputs>(_inputs);
+    protected static readonly spotLightIns = {
+        position: types.Vector3("Light.Position", [ 0, 1, 0 ]),
+        rotation: types.Vector3("Light.Rotation", [ 0, 0, 0 ]),
+        order: types.Enum("Light.RotationOrder", ERotationOrder),
+        distance: types.Number("Light.Distance"),
+        decay: types.Number("Light.Decay", 1),
+        angle: types.Number("Light.Angle", 45),
+        penumbra: types.Number("Light.Penumbra", 0.5),
+    };
+
+    ins = this.addInputs<CLight, typeof CSpotLight["spotLightIns"]>(CSpotLight.spotLightIns);
 
 
     get light(): THREE.SpotLight

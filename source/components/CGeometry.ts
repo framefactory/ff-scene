@@ -17,16 +17,26 @@ export default class CGeometry extends Component
 {
     static readonly typeName: string = "CGeometry";
 
-    outs = this.addOutputs({ self: types.Object("Geometry", CGeometry) });
+    protected static readonly geometryOuts = {
+        self: types.Object("Geometry", CGeometry)
+    };
+
+    outs = this.addOutputs(CGeometry.geometryOuts);
 
     private _geometry: THREE.BufferGeometry = null;
     
-    get geometry() {
+    protected get geometry() {
         return this._geometry;
     }
 
-    set geometry(geometry: THREE.BufferGeometry) {
-        this._geometry = geometry;
-        this.outs.self.setValue(geometry ? this : null);
+    protected set geometry(geometry: THREE.BufferGeometry) {
+        if (geometry !== this._geometry) {
+            if (this._geometry) {
+                this._geometry.dispose();
+            }
+
+            this._geometry = geometry;
+            this.outs.self.setValue(geometry ? this : null);
+        }
     }
 }

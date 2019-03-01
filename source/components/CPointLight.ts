@@ -15,17 +15,17 @@ import CLight from "./CLight";
 
 const _vec3 = new THREE.Vector3();
 
-const _inputs = {
-    position: types.Vector3("Light.Position", [ 0, 1, 0 ]),
-    distance: types.Number("Light.Distance"),
-    decay: types.Number("Light.Decay", 1)
-};
-
 export default class CPointLight extends CLight
 {
     static readonly typeName: string = "CPointLight";
 
-    ins = this.addInputs<CLight, typeof _inputs>(_inputs);
+    protected static readonly pointLightIns = {
+        position: types.Vector3("Light.Position", [ 0, 1, 0 ]),
+        distance: types.Number("Light.Distance"),
+        decay: types.Number("Light.Decay", 1),
+    };
+
+    ins = this.addInputs<CLight, typeof CPointLight["pointLightIns"]>(CPointLight.pointLightIns);
 
 
     get light(): THREE.PointLight

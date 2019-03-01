@@ -18,19 +18,19 @@ const _mapResolution = {
     [EShadowMapResolution.High]: 2048,
 };
 
-const _inputs = {
-    color: types.ColorRGB("Light.Color"),
-    intensity: types.Number("Light.Intensity", 1),
-    shadowEnabled: types.Boolean("Shadow.Enabled"),
-    shadowMap: types.Enum("Shadow.Resolution", EShadowMapResolution),
-    shadowBlur: types.Number("Shadow.Blur", 1),
-};
-
 export default class CLight extends CObject3D
 {
     static readonly typeName: string = "CLight";
 
-    ins = this.addInputs<CObject3D, typeof _inputs>(_inputs);
+    protected static readonly lightIns = {
+        color: types.ColorRGB("Light.Color"),
+        intensity: types.Number("Light.Intensity", 1),
+        shadowEnabled: types.Boolean("Shadow.Enabled"),
+        shadowMap: types.Enum("Shadow.Resolution", EShadowMapResolution),
+        shadowBlur: types.Number("Shadow.Blur", 1),
+    };
+
+    ins = this.addInputs<CObject3D, typeof CLight["lightIns"]>(CLight.lightIns);
 
     get light(): THREE.Light
     {

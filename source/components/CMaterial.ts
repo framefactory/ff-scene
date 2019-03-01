@@ -17,7 +17,11 @@ export default class CMaterial extends Component
 {
     static readonly typeName: string = "CMaterial";
 
-    outs = this.addOutputs({ self: types.Object("Material", CMaterial) });
+    protected static readonly materialOuts = {
+        self: types.Object("Material", CMaterial),
+    };
+
+    outs = this.addOutputs(CMaterial.materialOuts);
 
     private _material: THREE.Material = null;
 
@@ -26,7 +30,13 @@ export default class CMaterial extends Component
     }
 
     set material(material: THREE.Material) {
-        this._material = material;
-        this.outs.self.setValue(material ? this : null);
+        if (material !== this._material) {
+            if (this._material) {
+                this._material.dispose();
+            }
+
+            this._material = material;
+            this.outs.self.setValue(material ? this : null);
+        }
     }
 }

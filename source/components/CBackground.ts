@@ -10,18 +10,18 @@ import Background, { EBackgroundMode } from "@ff/three/Background";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const _inputs = {
-    mode: types.Enum("Background.Mode", EBackgroundMode, EBackgroundMode.RadialGradient),
-    color0: types.ColorRGB("Background.Color0", [ 0.2, 0.25, 0.3 ]),
-    color1: types.ColorRGB("Background.Color1", [ 0.01, 0.03, 0.05 ]),
-    noise: types.Number("Background.Noise", { min: 0, max: 1, bar: true, preset: 0.02 }),
-};
-
 export default class CBackground extends CObject3D
 {
     static readonly typeName: string = "CBackground";
 
-    ins = this.addInputs<CObject3D, typeof _inputs>(_inputs);
+    protected static readonly backgroundIns = {
+        mode: types.Enum("Background.Mode", EBackgroundMode, EBackgroundMode.RadialGradient),
+        color0: types.ColorRGB("Background.Color0", [ 0.2, 0.25, 0.3 ]),
+        color1: types.ColorRGB("Background.Color1", [ 0.01, 0.03, 0.05 ]),
+        noise: types.Number("Background.Noise", { min: 0, max: 1, bar: true, preset: 0.02 }),
+    };
+
+    ins = this.addInputs<CObject3D, typeof CBackground["backgroundIns"]>(CBackground.backgroundIns);
 
     protected get background() {
         return this.object3D as Background;

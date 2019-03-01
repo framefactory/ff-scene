@@ -13,16 +13,16 @@ import CMaterial from "./CMaterial";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const _inputs = {
-    color: types.ColorRGB("Color")
-};
-
 export default class CPhongMaterial extends CMaterial
 {
     static readonly typeName: string = "CPhongMaterial";
 
-    ins = this.addInputs(_inputs);
+    protected static readonly phongMatIns = {
+        color: types.ColorRGB("Color"),
+        opacity: types.Percent("Opacity", 1),
+    };
 
+    ins = this.addInputs(CPhongMaterial.phongMatIns);
 
     create()
     {
@@ -32,12 +32,11 @@ export default class CPhongMaterial extends CMaterial
     update()
     {
         const material = this.material as THREE.MeshBasicMaterial;
-        const { color } = this.ins;
+        const { color, opacity } = this.ins;
 
-        if (color.changed) {
-            const rgb = color.value;
-            material.color.setRGB(rgb[0], rgb[1], rgb[2]);
-        }
+        material.color.setRGB(color.value[0], color.value[1], color.value[2]);
+        material.opacity = opacity.value;
+        material.transparent = opacity.value < 1;
 
         return true;
     }

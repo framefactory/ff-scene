@@ -8,20 +8,21 @@
 import * as THREE from "three";
 
 import { types } from "@ff/graph/propertyTypes";
+
 import CMaterial from "./CMaterial";
 
 ////////////////////////////////////////////////////////////////////////////////
-
-const _inputs = {
-    color: types.ColorRGB("Color")
-};
 
 export default class CBasicMaterial extends CMaterial
 {
     static readonly typeName: string = "CBasicMaterial";
 
-    ins = this.addInputs<CMaterial, typeof _inputs>(_inputs);
+    protected static readonly basicMatIns = {
+        color: types.ColorRGB("Color"),
+        opacity: types.Percent("Opacity", 1),
+    };
 
+    ins = this.addInputs(CBasicMaterial.basicMatIns);
 
     create()
     {
@@ -31,9 +32,12 @@ export default class CBasicMaterial extends CMaterial
     update()
     {
         const material = this.material as THREE.MeshBasicMaterial;
-        const { color } = this.ins;
+        const { color, opacity } = this.ins;
 
         material.color.setRGB(color.value[0], color.value[1], color.value[2]);
+        material.opacity = opacity.value;
+        material.transparent = opacity.value < 1;
+
         return true;
     }
 }

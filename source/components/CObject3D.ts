@@ -13,13 +13,16 @@ import Component, { IComponentEvent, types } from "@ff/graph/Component";
 import GPUPicker from "@ff/three/GPUPicker";
 
 import { IPointerEvent, ITriggerEvent } from "../RenderView";
+
 import CScene, { IRenderContext } from "./CScene";
 import CTransform from "./CTransform";
+import math from "@ff/core/math";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { types, IPointerEvent, ITriggerEvent, IRenderContext };
+const _vec3 = new THREE.Vector3();
 
+export { types, IPointerEvent, ITriggerEvent, IRenderContext };
 
 export interface ICObject3D extends Component
 {
@@ -32,19 +35,8 @@ export interface IObject3DObjectEvent extends ITypedEvent<"object">
     next: THREE.Object3D;
 }
 
-const _inputs = {
-    visible: types.Boolean("Object.Visible", true),
-    pickable: types.Boolean("Object.Pickable", true),
-};
-
-const _outputs = {
-    pointerDown: types.Event("Picking.PointerDown"),
-    pointerUp: types.Event("Picking.PointerUp"),
-    pointerActive: types.Event("Picking.PointerActive")
-};
-
 /**
- * Base component for Three.js renderable objects.
+ * Base class for drawable components. Wraps a THREE.Object3D based instance.
  * If component is added to a node together with a [[Transform]] component,
  * it is automatically added as a child to the transform.
  */
@@ -55,12 +47,25 @@ export default class CObject3D extends Component implements ICObject3D
     /** The component type whose object3D is the parent of this component's object3D. */
     protected static readonly parentComponentClass: TypeOf<ICObject3D> = CTransform;
 
-    ins = this.addInputs(_inputs);
-    outs = this.addOutputs(_outputs);
+    static readonly object3DIns = {
+        visible: types.Boolean("Object.Visible", true),
+        pickable: types.Boolean("Object.Pickable"),
+    };
+
+    static readonly object3DOuts = {
+        pointerDown: types.Event("Object.PointerDown"),
+        pointerUp: types.Event("Object.PointerUp"),
+        pointerActive: types.Boolean("Object.PointerActive")
+    };
+
+    static readonly transformIns = CTransform.transformIns;
+
+    ins = this.addInputs(CObject3D.object3DIns);
+    outs = this.addOutputs(CObject3D.object3DOuts);
 
 
     private _object3D: THREE.Object3D = null;
-    private _scene: CScene = null;
+    private _isPickable = false;
 
     constructor(id: string)
     {
@@ -134,10 +139,49 @@ export default class CObject3D extends Component implements ICObject3D
 
     update(context): boolean
     {
-        const ins = this.ins;
+        const { visible, pickable } = this.ins;
 
-        if (ins.visible.changed && this._object3D) {
-            this._object3D.visible = ins.visible.value;
+        if (visible.changed && this._object3D) {
+            this._object3D.visible = visible.value;
+        }
+        if (pickable.changed && pickable.value !== this._isPickable) {
+            this._isPickable = pickable.value;
+
+            if (pickable.value) {
+                this.enablePointerEvents();
+            }
+            else {
+                this.disablePointerEvents();
+            }
+        }
+
+        return true;
+    }
+
+    protected updateTransform()
+    {
+        const object3D = this._object3D;
+        if (!object3D) {
+            return;
+        }
+
+        const { position, rotation, order, scale } = this.ins as any;
+
+        if (position.changed || rotation.changed || order.changed || scale.changed) {
+
+            // update position
+            object3D.position.fromArray(position.value);
+
+            // update rotation angles, rotation order
+            _vec3.fromArray(rotation.value).multiplyScalar(math.DEG2RAD);
+            const orderName = order.getOptionText();
+            object3D.rotation.setFromVector3(_vec3, orderName);
+
+            // update scale
+            object3D.scale.fromArray(scale.value);
+
+            // compose matrix
+            object3D.updateMatrix();
         }
 
         return true;
@@ -151,6 +195,9 @@ export default class CObject3D extends Component implements ICObject3D
             if (component) {
                 component.object3D.remove(this._object3D);
             }
+        }
+        if (this.ins.pickable.value) {
+            this.disablePointerEvents();
         }
 
         this.node.components.off(this.parentComponentClass, this._onParent, this);
@@ -181,6 +228,41 @@ export default class CObject3D extends Component implements ICObject3D
     toString()
     {
         return super.toString() + (this._object3D ? ` - type: ${this._object3D.type}` : " - (null)");
+    }
+
+    protected onPointer(event: IPointerEvent)
+    {
+        const outs = this.outs;
+
+        if (event.type === "pointer-down") {
+            outs.pointerDown.set();
+            outs.pointerActive.setValue(true);
+        }
+        else if (event.type === "pointer-up") {
+            outs.pointerUp.set();
+            outs.pointerActive.setValue(false);
+        }
+
+        event.stopPropagation = true;
+    }
+
+    protected enablePointerEvents()
+    {
+        this.on<IPointerEvent>("pointer-down", this.onPointer, this);
+        this.on<IPointerEvent>("pointer-up", this.onPointer, this);
+    }
+
+    protected disablePointerEvents()
+    {
+        this.off<IPointerEvent>("pointer-down", this.onPointer, this);
+        this.off<IPointerEvent>("pointer-up", this.onPointer, this);
+
+        const outs = this.outs;
+
+        if (outs.pointerActive.value) {
+            outs.pointerUp.set();
+            outs.pointerActive.setValue(false);
+        }
     }
 
     /**

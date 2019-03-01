@@ -9,24 +9,25 @@ import * as THREE from "three";
 
 import { types } from "@ff/graph/propertyTypes";
 
+import CTransform from "./CTransform";
 import CObject3D from "./CObject3D";
 import CGeometry from "./CGeometry";
 import CMaterial from "./CMaterial";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const _inputs = {
-    geometry: types.Object("Mesh.Geometry", CGeometry),
-    material: types.Object("Mesh.Material", CMaterial),
-    castShadow: types.Boolean("Shadow.Cast", true),
-    receiveShadow: types.Boolean("Shadow.Receive", true)
-};
-
 export default class CMesh extends CObject3D
 {
     static readonly typeName: string = "CMesh";
 
-    ins = this.addInputs<CObject3D, typeof _inputs>(_inputs);
+    static readonly meshIns = Object.assign({}, CTransform.transformIns, {
+        geometry: types.Object("Mesh.Geometry", CGeometry),
+        material: types.Object("Mesh.Material", CMaterial),
+        castShadow: types.Boolean("Shadow.Cast"),
+        receiveShadow: types.Boolean("Shadow.Receive")
+    });
+
+    ins = this.addInputs<CObject3D, typeof CMesh["meshIns"]>(CMesh.meshIns);
 
     get mesh() {
         return this.object3D as THREE.Mesh;
@@ -44,6 +45,7 @@ export default class CMesh extends CObject3D
     update(context)
     {
         super.update(context);
+        super.updateTransform();
 
         const ins = this.ins;
 

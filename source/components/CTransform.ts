@@ -28,17 +28,6 @@ export interface ICObject3D extends Component
     object3D: THREE.Object3D;
 }
 
-const _inputs = {
-    position: types.Vector3("Transform.Position"),
-    rotation: types.Vector3("Transform.Rotation"),
-    order: types.Enum("Transform.Order", ERotationOrder),
-    scale: types.Vector3("Transform.Scale", [ 1, 1, 1 ])
-};
-
-const _outputs = {
-    matrix: types.Matrix4("Transform.Matrix")
-};
-
 /**
  * Allows arranging components in a hierarchical structure. Each [[TransformComponent]]
  * contains a transformation which affects its children as well as other components which
@@ -48,8 +37,19 @@ export default class CTransform extends CHierarchy implements ICObject3D
 {
     static readonly typeName: string = "CTransform";
 
-    ins = this.addInputs<CHierarchy, typeof _inputs>(_inputs);
-    outs = this.addOutputs<CHierarchy, typeof _outputs>(_outputs);
+    static readonly transformIns = {
+        position: types.Vector3("Transform.Position"),
+        rotation: types.Vector3("Transform.Rotation"),
+        order: types.Enum("Transform.Order", ERotationOrder),
+        scale: types.Scale3("Transform.Scale")
+    };
+
+    static readonly transformOuts = {
+        matrix: types.Matrix4("Transform.Matrix")
+    };
+
+    ins = this.addInputs(CTransform.transformIns);
+    outs = this.addOutputs(CTransform.transformOuts);
 
     private _object3D: THREE.Object3D;
 
