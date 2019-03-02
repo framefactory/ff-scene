@@ -11,6 +11,7 @@ import Property, { IPropertyChangeEvent } from "@ff/graph/Property";
 
 import CustomElement, { customElement, property, PropertyValues } from "@ff/ui/CustomElement";
 import PopupOptions, { IPopupMenuSelectEvent } from "@ff/ui/PopupOptions";
+import LineEdit, { ILineEditChangeEvent } from "@ff/ui/LineEdit";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -38,7 +39,7 @@ export default class PropertyField extends CustomElement
     protected lastX: number = 0;
     protected lastY: number = 0;
 
-    protected editElement: HTMLInputElement = null;
+    protected editElement: LineEdit = null;
     protected barElement: HTMLDivElement = null;
     protected buttonElement: HTMLDivElement = null;
     protected contentElement: HTMLDivElement = null;
@@ -47,12 +48,15 @@ export default class PropertyField extends CustomElement
     {
         super();
 
+        this.property = property;
+
         this.onFocus = this.onFocus.bind(this);
         this.onClick = this.onClick.bind(this);
         this.onContextMenu = this.onContextMenu.bind(this);
         this.onPointerDown = this.onPointerDown.bind(this);
         this.onPointerMove = this.onPointerMove.bind(this);
         this.onPointerUp = this.onPointerUp.bind(this);
+        this.onEditChange = this.onEditChange.bind(this);
         this.onSelectOption = this.onSelectOption.bind(this);
 
         this.addEventListener("focus", this.onFocus);
@@ -62,8 +66,6 @@ export default class PropertyField extends CustomElement
         this.addEventListener("pointermove", this.onPointerMove);
         this.addEventListener("pointerup", this.onPointerUp);
         this.addEventListener("pointercancel", this.onPointerUp);
-
-        this.property = property;
     }
 
     protected update(changedProperties: PropertyValues)
@@ -91,16 +93,16 @@ export default class PropertyField extends CustomElement
             this.buttonElement.classList.add("ff-off", "ff-event-button");
         }
         else {
-            // create content (text) element
-            this.contentElement = this.appendElement("div");
-            this.contentElement.classList.add("ff-off", "ff-content");
-
             // create bar element
             const { min, max, bar } = schema;
             if (!schema.options && min !== undefined && max !== undefined && bar !== undefined) {
                 this.barElement = this.appendElement("div");
                 this.barElement.classList.add("ff-fullsize", "ff-off", "ff-bar");
             }
+
+            // create content (text) element
+            this.contentElement = this.appendElement("div");
+            this.contentElement.classList.add("ff-fullsize", "ff-off", "ff-content");
         }
 
         // set css classes based on property/schema traits
@@ -130,16 +132,14 @@ export default class PropertyField extends CustomElement
     {
         this.tabIndex = 0;
 
-        this.setStyle({
-            position: "relative",
-            overflow: "hidden"
-        });
-
         this.classList.add("ff-property-field");
 
         if (!this.property) {
             throw new Error("missing property");
         }
+
+        //const measureText = document.createTextNode(" ");
+
     }
 
     protected connected()
@@ -160,6 +160,10 @@ export default class PropertyField extends CustomElement
 
     protected onClick(event: MouseEvent)
     {
+        if (this.editElement) {
+            return;
+        }
+
         const property = this.property;
         const schema = property.schema;
 
@@ -173,17 +177,7 @@ export default class PropertyField extends CustomElement
         }
 
         if (schema.options) {
-            const popup = new PopupOptions();
-            popup.options = schema.options;
-            popup.selectionIndex = property.getValidatedValue();
-            popup.position = "anchor";
-            popup.anchor = this;
-            popup.align = "fixed";
-            popup.justify = "end";
-            popup.positionX = event.clientX - 10;
-            popup.keepVisible = true;
-            popup.addEventListener(PopupOptions.selectEvent, this.onSelectOption);
-            document.body.appendChild(popup);
+            this.showPopupOptions(event);
             return;
         }
 
@@ -201,6 +195,10 @@ export default class PropertyField extends CustomElement
 
     protected onContextMenu(event: MouseEvent)
     {
+        if (this.editElement) {
+            return;
+        }
+
         this.property.reset();
         event.preventDefault();
     }
@@ -288,13 +286,23 @@ export default class PropertyField extends CustomElement
         }
     }
 
+    protected onEditChange(event: ILineEditChangeEvent)
+    {
+        if (!event.detail.isEditing) {
+            this.stopEditing(true);
+        }
+    }
+
     protected startEditing()
     {
         const property = this.property;
         const schema = property.schema;
         let text = this.value;
+        let isNumber = false;
 
+        // convert number properties to string
         if (property.type === "number") {
+            isNumber = true;
             if (isFinite(text)) {
                 const precision = schema.precision !== undefined
                     ? schema.precision : PropertyField.defaultEditPrecision;
@@ -306,61 +314,63 @@ export default class PropertyField extends CustomElement
             }
         }
 
-        const editElement = this.editElement = this.appendElement("input");
-        editElement.setAttribute("type", "text");
-        editElement.value = text;
+        const editElement = this.editElement = this.appendElement(LineEdit);
+        editElement.classList.add("ff-fullsize");
+        editElement.align = isNumber ? "right" : "left";
+        editElement.text = text;
         editElement.focus();
-        editElement.select();
-
-        editElement.addEventListener("keydown", (e: KeyboardEvent) => {
-            if (e.key === "Escape") {
-                this.stopEditing(false);
-            }
-            else if (e.key === "Enter") {
-                this.stopEditing(true);
-            }
-        });
-
-        editElement.addEventListener("blur", () => {
-            this.stopEditing(true);
-        });
-
-        PropertyField.setStyle(editElement, {
-            position: "absolute", zIndex: "1", boxSizing: "border-box", width: "100%", height: "100%"
-        });
+        editElement.addEventListener("change", this.onEditChange);
     }
 
     protected stopEditing(commit: boolean)
     {
-        if (this.editElement) {
-            const editElement = this.editElement;
-            this.editElement = null;
-            this.removeChild(editElement);
-
-            const property = this.property;
-            const schema = property.schema;
-
-            const text = editElement.value;
-            let value: any = text;
-
-            if (this.property.type === "number") {
-                if (text.toLowerCase().indexOf("inf") >= 0) {
-                    value = text[0] === "-" ? -Infinity : Infinity;
-                }
-                else {
-                    value = parseFloat(value) || 0;
-                    if (schema.precision) {
-                        const factor = Math.pow(10, schema.precision);
-                        value = Math.round(value * factor) / factor;
-                    }
-
-                    value = schema.min !== undefined ? Math.max(value, schema.min) : value;
-                    value = schema.max !== undefined ? Math.min(value, schema.max) : value;
-                }
-            }
-
-            this.updateProperty(value);
+        if (!this.editElement) {
+            return;
         }
+
+        const editElement = this.editElement;
+        this.editElement = null;
+        this.removeChild(editElement);
+
+        const property = this.property;
+        const schema = property.schema;
+
+        const text = editElement.text;
+        let value: any = text;
+
+        if (this.property.type === "number") {
+            if (text.toLowerCase().indexOf("inf") >= 0) {
+                value = text[0] === "-" ? -Infinity : Infinity;
+            }
+            else {
+                value = parseFloat(value) || 0;
+                if (schema.precision) {
+                    const factor = Math.pow(10, schema.precision);
+                    value = Math.round(value * factor) / factor;
+                }
+
+                value = schema.min !== undefined ? Math.max(value, schema.min) : value;
+                value = schema.max !== undefined ? Math.min(value, schema.max) : value;
+            }
+        }
+
+        this.updateProperty(value);
+    }
+
+    protected showPopupOptions(event: MouseEvent)
+    {
+        const property = this.property;
+        const popup = new PopupOptions();
+        popup.options = property.schema.options;
+        popup.selectionIndex = property.getValidatedValue();
+        popup.position = "anchor";
+        popup.anchor = this;
+        popup.align = "fixed";
+        popup.justify = "end";
+        popup.positionX = event.clientX - 10;
+        popup.keepVisible = true;
+        popup.addEventListener(PopupOptions.selectEvent, this.onSelectOption);
+        document.body.appendChild(popup);
     }
 
     protected onSelectOption(event: IPopupMenuSelectEvent)
@@ -412,7 +422,12 @@ export default class PropertyField extends CustomElement
                         const precision = schema.precision !== undefined
                             ? schema.precision : PropertyField.defaultPrecision;
 
-                        text = value.toFixed(precision);
+                        if (schema.percent) {
+                            text = (value * 100).toFixed(precision - 2) + "%";
+                        }
+                        else {
+                            text = value.toFixed(precision);
+                        }
 
                         if (this.barElement) {
                             this.barElement.style.width

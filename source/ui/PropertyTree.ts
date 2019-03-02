@@ -91,7 +91,7 @@ export default class PropertyTree extends Tree<ITreeNode>
                 <ff-property-view .property=${node.property}></ff-property-view>`;
         }
 
-        return html`<div class="ff-text ff-ellipsis">${node.text}</div>`;
+        return html`<div class="ff-text ff-label ff-ellipsis">${node.text}</div>`;
     }
 
     protected onSelectNode(event: INodeEvent)
