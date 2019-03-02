@@ -10,18 +10,20 @@ import Floor from "@ff/three/Floor";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const _inputs = {
-    offset: types.Vector3("Floor.Offset", [ 0, -25, 0 ]),
-    radius: types.Number("Floor.Radius", 50),
-    color: types.ColorRGB("Floor.Color", [ 0.6, 0.75, 0.8 ]),
-    opacity: types.Percent("Floor.Opacity", 0.5)
-};
-
 export default class CFloor extends CObject3D
 {
     static readonly typeName: string = "CFloor";
 
-    ins = this.addInputs<CObject3D, typeof _inputs>(_inputs);
+    protected static readonly floorIns = {
+        position: types.Vector3("Floor.Position", [ 0, -25, 0 ]),
+        radius: types.Number("Floor.Radius", 50),
+        color: types.ColorRGB("Floor.Color", [ 0.6, 0.75, 0.8 ]),
+        opacity: types.Percent("Floor.Opacity", 0.5),
+        castShadow: types.Boolean("Shadow.Cast"),
+        receiveShadow: types.Boolean("Shadow.Receive"),
+    };
+
+    ins = this.addInputs<CObject3D, typeof CFloor["floorIns"]>(CFloor.floorIns);
 
     protected get floor() {
         return this.object3D as Floor;
@@ -39,8 +41,8 @@ export default class CFloor extends CObject3D
         const ins = this.ins;
         const floor = this.floor;
 
-        if (ins.offset.changed || ins.radius.changed) {
-            floor.position.fromArray(ins.offset.value);
+        if (ins.position.changed || ins.radius.changed) {
+            floor.position.fromArray(ins.position.value);
             floor.scale.setScalar(ins.radius.value);
             floor.updateMatrix();
         }

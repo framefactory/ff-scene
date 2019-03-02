@@ -24,7 +24,7 @@ export default class CMesh extends CObject3D
         geometry: types.Object("Mesh.Geometry", CGeometry),
         material: types.Object("Mesh.Material", CMaterial),
         castShadow: types.Boolean("Shadow.Cast"),
-        receiveShadow: types.Boolean("Shadow.Receive")
+        receiveShadow: types.Boolean("Shadow.Receive"),
     });
 
     ins = this.addInputs<CObject3D, typeof CMesh["meshIns"]>(CMesh.meshIns);
