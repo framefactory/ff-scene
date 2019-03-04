@@ -8,6 +8,7 @@
 //import resolvePathname from "resolve-pathname";
 
 import Component from "@ff/graph/Component";
+import WebDAVProvider from "../assets/WebDAVProvider";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +18,17 @@ export default class CAssetManager extends Component
     static readonly isGraphSingleton = true;
 
     private _assetBaseUrl: string = "";
+    private _provider: WebDAVProvider = null;
+
+    test()
+    {
+        this._provider.test();
+    }
+
+    create()
+    {
+        this._provider = new WebDAVProvider();
+    }
 
     get assetBaseUrl() {
         return this._assetBaseUrl;
