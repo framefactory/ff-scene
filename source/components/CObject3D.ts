@@ -53,9 +53,9 @@ export default class CObject3D extends Component implements ICObject3D
     };
 
     static readonly object3DOuts = {
-        pointerDown: types.Event("Object.PointerDown"),
-        pointerUp: types.Event("Object.PointerUp"),
-        pointerActive: types.Boolean("Object.PointerActive")
+        pointerDown: types.Event("Pointer.Down"),
+        pointerUp: types.Event("Pointer.Up"),
+        pointerActive: types.Boolean("Pointer.Active")
     };
 
     static readonly transformIns = CTransform.transformIns;
