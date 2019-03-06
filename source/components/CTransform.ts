@@ -123,8 +123,11 @@ export default class CTransform extends CHierarchy implements ICObject3D
         super.dispose();
     }
 
-    setFromMatrix(matrix: THREE.Matrix4)
+    setPropertiesFromMatrix(matrix?: THREE.Matrix4)
     {
+        const silent = !matrix;
+        matrix = matrix || this._object3D.matrix;
+
         const { position, rotation, order, scale } = this.ins;
 
         matrix.decompose(_vec3a, _quat, _vec3b);
@@ -137,9 +140,9 @@ export default class CTransform extends CHierarchy implements ICObject3D
 
         _vec3b.toArray(scale.value);
 
-        position.set();
-        rotation.set();
-        scale.set();
+        position.set(silent);
+        rotation.set(silent);
+        scale.set(silent);
     }
 
     /**

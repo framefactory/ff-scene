@@ -66,17 +66,17 @@ export default class RenderQuadView extends RenderView
 
         if (viewports[1]) {
             viewports[1].setBuiltInCamera(EProjection.Orthographic, EViewPreset.Top);
-            viewports[1].enableCameraManip(true).orientationEnabled = false;
+            viewports[1].enableCameraControl(true).orientationEnabled = false;
         }
 
         if (viewports[2]) {
             viewports[2].setBuiltInCamera(EProjection.Orthographic, EViewPreset.Left);
-            viewports[2].enableCameraManip(true).orientationEnabled = false;
+            viewports[2].enableCameraControl(true).orientationEnabled = false;
         }
 
         if (viewports[3]) {
             viewports[3].setBuiltInCamera(EProjection.Orthographic, EViewPreset.Front);
-            viewports[3].enableCameraManip(true).orientationEnabled = false;
+            viewports[3].enableCameraControl(true).orientationEnabled = false;
         }
 
         this.emit<ILayoutChange>({ type: "layout", layout });

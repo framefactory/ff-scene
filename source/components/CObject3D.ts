@@ -15,14 +15,14 @@ import GPUPicker from "@ff/three/GPUPicker";
 import { IPointerEvent, ITriggerEvent } from "../RenderView";
 
 import CScene, { IRenderContext } from "./CScene";
-import CTransform from "./CTransform";
+import CTransform, { ERotationOrder } from "./CTransform";
 import math from "@ff/core/math";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 const _vec3 = new THREE.Vector3();
 
-export { types, IPointerEvent, ITriggerEvent, IRenderContext };
+export { types, IPointerEvent, ITriggerEvent, IRenderContext, ERotationOrder };
 
 export interface ICObject3D extends Component
 {
@@ -158,35 +158,6 @@ export default class CObject3D extends Component implements ICObject3D
         return true;
     }
 
-    protected updateTransform()
-    {
-        const object3D = this._object3D;
-        if (!object3D) {
-            return;
-        }
-
-        const { position, rotation, order, scale } = this.ins as any;
-
-        if (position.changed || rotation.changed || order.changed || scale.changed) {
-
-            // update position
-            object3D.position.fromArray(position.value);
-
-            // update rotation angles, rotation order
-            _vec3.fromArray(rotation.value).multiplyScalar(math.DEG2RAD);
-            const orderName = order.getOptionText();
-            object3D.rotation.setFromVector3(_vec3, orderName);
-
-            // update scale
-            object3D.scale.fromArray(scale.value);
-
-            // compose matrix
-            object3D.updateMatrix();
-        }
-
-        return true;
-    }
-
     dispose()
     {
         if (this._object3D) {
@@ -263,6 +234,35 @@ export default class CObject3D extends Component implements ICObject3D
             outs.pointerUp.set();
             outs.pointerActive.setValue(false);
         }
+    }
+
+    protected updateTransform()
+    {
+        const object3D = this._object3D;
+        if (!object3D) {
+            return;
+        }
+
+        const { position, rotation, order, scale } = this.ins as any;
+
+        if (position.changed || rotation.changed || order.changed || scale.changed) {
+
+            // update position
+            object3D.position.fromArray(position.value);
+
+            // update rotation angles, rotation order
+            _vec3.fromArray(rotation.value).multiplyScalar(math.DEG2RAD);
+            const orderName = order.getOptionText();
+            object3D.rotation.setFromVector3(_vec3, orderName);
+
+            // update scale
+            object3D.scale.fromArray(scale.value);
+
+            // compose matrix
+            object3D.updateMatrix();
+        }
+
+        return true;
     }
 
     /**

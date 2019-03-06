@@ -5,33 +5,43 @@
  * License: MIT
  */
 
+import * as THREE from "three";
+
 import { types } from "@ff/graph/propertyTypes";
 
 import UniversalCamera, { EProjection } from "@ff/three/UniversalCamera";
-import CObject3D from "./CObject3D";
+import CObject3D, { ERotationOrder } from "./CObject3D";
+import math from "@ff/core/math";
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const _vec3a = new THREE.Vector3();
+const _vec3b = new THREE.Vector3();
+const _euler = new THREE.Euler();
+const _quat = new THREE.Quaternion();
+
 export { EProjection };
 
-const _inputs = {
-    autoActivate: types.Boolean("Camera.AutoActivate", true),
-    activate: types.Event("Camera.Activate"),
-    position: types.Vector3("Transform.Position"),
-    rotation: types.Vector3("Transform.Rotation"),
-    projection: types.Enum("Projection.Type", EProjection, EProjection.Perspective),
-    fov: types.Number("Projection.FovY", 52),
-    size: types.Number("Projection.Size", 20),
-    zoom: types.Number("Projection.Zoom", 1),
-    near: types.Number("Frustum.ZNear", 0.01),
-    far: types.Number("Frustum.ZFar", 10000),
-};
 
 export default class CCamera extends CObject3D
 {
     static readonly typeName: string = "CCamera";
 
-    ins = this.addInputs<CObject3D, typeof _inputs>(_inputs);
+    protected static readonly camIns = {
+        autoActivate: types.Boolean("Camera.AutoActivate", true),
+        activate: types.Event("Camera.Activate"),
+        position: types.Vector3("Transform.Position"),
+        rotation: types.Vector3("Transform.Rotation"),
+        order: types.Enum("Transform.Order", ERotationOrder, ERotationOrder.ZYX),
+        projection: types.Enum("Projection.Type", EProjection, EProjection.Perspective),
+        fov: types.Number("Projection.FovY", 52),
+        size: types.Number("Projection.Size", 20),
+        zoom: types.Number("Projection.Zoom", 1),
+        near: types.Number("Frustum.ZNear", 0.01),
+        far: types.Number("Frustum.ZFar", 10000),
+    };
+
+    ins = this.addInputs<CObject3D, typeof CCamera.camIns>(CCamera.camIns);
 
 
     get camera() {
@@ -86,5 +96,24 @@ export default class CCamera extends CObject3D
         }
 
         super.dispose();
+    }
+
+    setPropertiesFromMatrix(matrix?: THREE.Matrix4)
+    {
+        const silent = !matrix;
+        matrix = matrix || this.object3D.matrix;
+
+        const { position, rotation, order } = this.ins;
+
+        matrix.decompose(_vec3a, _quat, _vec3b);
+        _vec3a.toArray(position.value);
+
+        const orderName = order.getOptionText();
+        _euler.setFromQuaternion(_quat, orderName);
+        _euler.toVector3(_vec3a);
+        _vec3a.multiplyScalar(math.RAD2DEG).toArray(rotation.value);
+
+        position.set(silent);
+        rotation.set(silent);
     }
 }
