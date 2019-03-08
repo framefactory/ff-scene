@@ -5,6 +5,8 @@
  * License: MIT
  */
 
+import * as THREE from "three";
+
 import { types } from "@ff/graph/propertyTypes";
 import CObject3D from "./CObject3D";
 

@@ -18,10 +18,12 @@ import {
     ITriggerEvent as IManipTriggerEvent
 } from "@ff/browser/ManipTarget";
 
-import GPUPicker from "@ff/three/GPUPicker";
 import Viewport, {
     IBaseEvent as IViewportBaseEvent
 } from "@ff/three/Viewport";
+
+import ViewportOverlay from "@ff/three/ui/ViewportOverlay";
+import GPUPicker from "@ff/three/GPUPicker";
 
 import CRenderer from "./components/CRenderer";
 
@@ -189,9 +191,7 @@ export default class RenderView extends Publisher implements IManip
         }
         for (let i = viewports.length; i < count; ++i) {
 
-            const overlay = document.createElement("div");
-            overlay.classList.add("ff-viewport-overlay");
-            this.overlay.appendChild(overlay);
+            const overlay = new ViewportOverlay().appendTo(this.overlay);
 
             viewports[i] = new Viewport();
             viewports[i].setCanvasSize(this.canvasWidth, this.canvasHeight);
@@ -309,7 +309,7 @@ export default class RenderView extends Publisher implements IManip
             const viewports = this.viewports;
             for (let i = 0, n = viewports.length; i < n; ++i) {
                 const vp = viewports[i];
-                if (vp.isPointInside(event.localX, event.localY)) {
+                if (vp.isInside(event)) {
                     viewport = vp;
                     break;
                 }

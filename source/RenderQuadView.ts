@@ -120,15 +120,15 @@ export default class RenderQuadView extends RenderView
                 break;
 
             case EQuadViewLayout.VerticalSplit:
-                this.viewports[0].setSize(0, 0, 1, v);
-                this.viewports[1].setSize(0, v, 1, 1-v);
+                this.viewports[0].setSize(0, 1-v, 1, v);
+                this.viewports[1].setSize(0, 0, 1, 1-v);
                 break;
 
             case EQuadViewLayout.Quad:
-                this.viewports[0].setSize(0, 0, h, v);
-                this.viewports[1].setSize(h, 0, 1-h, v);
-                this.viewports[2].setSize(0, v, h, 1-v);
-                this.viewports[3].setSize(h, v, 1-h, 1-v);
+                this.viewports[0].setSize(0, 1-v, h, v);
+                this.viewports[1].setSize(h, 1-v, 1-h, v);
+                this.viewports[2].setSize(0, 0, h, 1-v);
+                this.viewports[3].setSize(h, 0, 1-h, 1-v);
                 break;
         }
     }
