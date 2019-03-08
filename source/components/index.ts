@@ -14,6 +14,7 @@ import CDirectionalLight from "./CDirectionalLight";
 import CFloor from "./CFloor";
 import CGeometry from "./CGeometry";
 import CGrid from "./CGrid";
+import CImageTexture from "./CImageTexture";
 import CLight from "./CLight";
 import CMain from "./CMain";
 import CMaterial from "./CMaterial";
@@ -28,8 +29,11 @@ import CRenderer from "./CRenderer";
 import CRenderGraph from "./CRenderGraph";
 import CScene from "./CScene";
 import CSpotLight from "./CSpotLight";
+import CStandardMaterial from "./CStandardMaterial";
+import CTexture from "./CTexture";
 import CTorus from "./CTorus";
 import CTransform from "./CTransform";
+import CVideoTexture from "./CVideoTexture";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -43,6 +47,7 @@ export {
     CFloor,
     CGeometry,
     CGrid,
+    CImageTexture,
     CLight,
     CMain,
     CMaterial,
@@ -57,8 +62,11 @@ export {
     CRenderGraph,
     CScene,
     CSpotLight,
+    CStandardMaterial,
+    CTexture,
     CTorus,
-    CTransform
+    CTransform,
+    CVideoTexture,
 };
 
 export const componentTypes = [
@@ -71,6 +79,7 @@ export const componentTypes = [
     CDirectionalLight,
     CFloor,
     CGrid,
+    CImageTexture,
     CMain,
     CMesh,
     CNavigator,
@@ -81,6 +90,8 @@ export const componentTypes = [
     CRenderGraph,
     CScene,
     CSpotLight,
+    CStandardMaterial,
     CTorus,
-    CTransform
+    CTransform,
+    CVideoTexture,
 ];

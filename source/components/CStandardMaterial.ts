@@ -7,30 +7,28 @@
 
 import * as THREE from "three";
 
-import { types } from "@ff/graph/propertyTypes";
-
-import CMaterial from "./CMaterial";
+import CMaterial, { types } from "./CMaterial";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CBasicMaterial extends CMaterial
+export default class CStandardMaterial extends CMaterial
 {
-    static readonly typeName: string = "CBasicMaterial";
+    static readonly typeName: string = "CStandardMaterial";
 
     protected static readonly ins = {
-        color: types.ColorRGB("Basic.Color"),
-        opacity: types.Percent("Basic.Opacity", 1),
+        color: types.ColorRGB("Standard.Color"),
+        opacity: types.Percent("Standard.Opacity", 1),
     };
 
-    ins = this.addInputs<CMaterial, typeof CBasicMaterial.ins>(CBasicMaterial.ins, 0);
+    ins = this.addInputs<CMaterial, typeof CStandardMaterial.ins>(CStandardMaterial.ins, 0);
 
     get material() {
-        return this._material as THREE.MeshBasicMaterial;
+        return this._material as THREE.MeshStandardMaterial;
     }
 
     create()
     {
-        this._material = new THREE.MeshBasicMaterial();
+        this._material = new THREE.MeshStandardMaterial();
         super.create();
     }
 

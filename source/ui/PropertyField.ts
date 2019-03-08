@@ -134,12 +134,12 @@ export default class PropertyField extends CustomElement
 
         this.classList.add("ff-property-field");
 
+        this.style.touchAction = "none";
+        this.setAttribute("touch-action", "none");
+
         if (!this.property) {
             throw new Error("missing property");
         }
-
-        //const measureText = document.createTextNode(" ");
-
     }
 
     protected connected()
