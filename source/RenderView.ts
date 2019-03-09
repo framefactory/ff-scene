@@ -147,12 +147,6 @@ export default class RenderView extends Publisher implements IManip
         }
 
         const renderer = this.renderer;
-
-        if (this.shouldResize) {
-            this.shouldResize = false;
-            this.setRenderSize(this.canvas.clientWidth, this.canvas.clientHeight);
-        }
-
         renderer.clear();
         renderer["__view"] = this;
 
@@ -179,7 +173,8 @@ export default class RenderView extends Publisher implements IManip
 
     resize()
     {
-        this.shouldResize = true;
+        this.setRenderSize(this.canvas.clientWidth, this.canvas.clientHeight);
+        this.render();
     }
 
     setViewportCount(count: number)

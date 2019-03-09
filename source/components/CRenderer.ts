@@ -163,7 +163,6 @@ export default class CRenderer extends Component
                 view.render();
             });
         }
-
     }
 
     protected onActiveCamera(event: IActiveCameraEvent)
