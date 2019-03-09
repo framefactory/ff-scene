@@ -13,7 +13,8 @@ import {
     TemplateResult
 } from "@ff/ui/CustomElement";
 
-import CDocumentManager, { IActiveDocumentEvent } from "@ff/graph/components/CDocumentManager";
+import CDocumentManager from "@ff/graph/components/CDocumentManager";
+import CDocument from "@ff/graph/components/CDocument";
 
 import SystemView from "./SystemView";
 
@@ -23,34 +24,37 @@ export { customElement, property, html, PropertyValues, TemplateResult };
 
 export default class DocumentView extends SystemView
 {
+    private _activeDocument: CDocument = null;
+
     protected get documentManager() {
         return this.system.getMainComponent(CDocumentManager);
     }
     protected get activeDocument() {
-        return this.documentManager.activeDocument;
+        return this._activeDocument;
     }
 
     protected connected()
     {
-        this.documentManager.on<IActiveDocumentEvent>("active-document", this.onActiveDocument, this);
-
-        const activeDocument = this.documentManager.activeDocument;
-        if (activeDocument) {
-            this.onActiveDocument({ type: "active-document", previous: activeDocument, next: null });
-        }
+        const activeDocumentProp = this.documentManager.outs.activeDocument;
+        activeDocumentProp.on("value", this._onActiveDocument, this);
+        this._onActiveDocument(activeDocumentProp.value);
     }
 
     protected disconnected()
     {
-        const activeDocument = this.documentManager.activeDocument;
-        if (activeDocument) {
-            this.onActiveDocument({ type: "active-document", previous: null, next: activeDocument });
-        }
-
-        this.documentManager.on<IActiveDocumentEvent>("active-document", this.onActiveDocument, this);
+        this._onActiveDocument(null);
+        this.documentManager.outs.activeDocument.off("value", this._onActiveDocument, this);
     }
 
-    protected onActiveDocument(event: IActiveDocumentEvent)
+    protected onActiveDocument(previous: CDocument, next: CDocument)
     {
+    }
+
+    private _onActiveDocument(document: CDocument)
+    {
+        if (document !== this._activeDocument) {
+            this.onActiveDocument(this._activeDocument, document);
+            this._activeDocument = document;
+        }
     }
 }

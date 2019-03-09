@@ -6,7 +6,7 @@
  */
 
 import Component, { ITypedEvent, types } from "@ff/graph/Component";
-import CPulse from "@ff/graph/components/CPulse";
+import CPulse, { IPulseEvent } from "@ff/graph/components/CPulse";
 
 import RenderView from "../RenderView";
 import CScene, { IActiveCameraEvent } from "./CScene";
@@ -154,11 +154,16 @@ export default class CRenderer extends Component
         //console.log("RenderSystem.detachView - total views: %s", this.views.length);
     }
 
-    protected onPulse()
+    protected onPulse(event: IPulseEvent)
     {
-        this.views.forEach(view => {
-            view.render();
-        });
+        if (event.systemUpdated) {
+            console.log("CRenderer.onPulse - render views...");
+
+            this.views.forEach(view => {
+                view.render();
+            });
+        }
+
     }
 
     protected onActiveCamera(event: IActiveCameraEvent)
