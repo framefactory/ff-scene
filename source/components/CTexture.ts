@@ -122,7 +122,10 @@ export default class CTexture extends Component
 
     create()
     {
-        (this._texture as any).matrixAutoUpdate = false;
+        if (this._texture) {
+            (this._texture as any).matrixAutoUpdate = false;
+        }
+
         this.outs.self.setValue(this);
     }
 
@@ -130,6 +133,10 @@ export default class CTexture extends Component
     {
         const ins = this.ins;
         const texture = this._texture;
+
+        if (!texture) {
+            return false;
+        }
 
         if (ins.mipmaps.changed || ins.encoding.changed || ins.wrapS.changed || ins.wrapT.changed) {
             texture.generateMipmaps = ins.mipmaps.value;
@@ -169,9 +176,57 @@ export default class CTexture extends Component
 
     dispose()
     {
-        this._texture.dispose();
-        this._texture = null;
+        if (this._texture) {
+            this._texture.dispose();
+            this._texture = null;
+        }
 
         super.dispose();
+    }
+
+    setFromTexture(texture: THREE.Texture)
+    {
+        (texture as any).matrixAutoUpdate = false;
+        this._texture = texture;
+
+        if (texture.name) {
+            this.name = texture.name;
+        }
+
+        const ins = this.ins;
+        ins.mipmaps.value = texture.generateMipmaps;
+        ins.mapping.value = _THREE_MAPPING_MODE.indexOf(texture.mapping);
+        ins.encoding.value = _THREE_ENCODING_TYPE.indexOf(texture.encoding);
+        ins.anisotropy.value = texture.anisotropy;
+
+        ins.wrapS.value = _THREE_WRAP_MODE.indexOf(texture.wrapS);
+        ins.wrapT.value = _THREE_WRAP_MODE.indexOf(texture.wrapT);
+
+        ins.magFilter.value = _THREE_FILTER_MODE.indexOf(texture.magFilter);
+        switch(texture.minFilter) {
+            case THREE.NearestFilter:
+            case THREE.NearestMipMapNearestFilter:
+                ins.minFilter.value = EFilterMode.Nearest;
+                ins.mipmapFilter.value = EFilterMode.Nearest;
+                break;
+            case THREE.LinearFilter:
+            case THREE.LinearMipMapLinearFilter:
+                ins.minFilter.value = EFilterMode.Linear;
+                ins.mipmapFilter.value = EFilterMode.Linear;
+                break;
+            case THREE.LinearMipMapNearestFilter:
+                ins.minFilter.value = EFilterMode.Linear;
+                ins.mipmapFilter.value = EFilterMode.Nearest;
+                break;
+            case THREE.NearestMipMapLinearFilter:
+                ins.minFilter.value = EFilterMode.Nearest;
+                ins.mipmapFilter.value = EFilterMode.Linear;
+                break;
+        }
+
+        texture.offset.toArray(ins.offset.value);
+        texture.repeat.toArray(ins.repeat.value);
+        texture.center.toArray(ins.center.value);
+        ins.rotation.value = texture.rotation;
     }
 }

@@ -84,6 +84,10 @@ export default class CMaterial extends Component
         const material = this._material;
         const ins = this.ins;
 
+        if (!material) {
+            return false;
+        }
+
         if (ins.side.changed) {
             material.side = _THREE_SIDE[ins.side.getValidatedValue()];
         }
@@ -106,7 +110,11 @@ export default class CMaterial extends Component
 
     dispose()
     {
-        this._material.dispose();
+        if (this._material) {
+            this._material.dispose();
+            this._material = null;
+        }
+
         super.dispose();
     }
 }
