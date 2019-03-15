@@ -6,13 +6,25 @@
  */
 
 import CGraph from "@ff/graph/components/CGraph";
+
 import CTransform from "./CTransform";
+import CScene from "./CScene";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export default class CRenderGraph extends CGraph
 {
     static readonly typeName: string = "CRenderGraph";
+
+    /** The component node's transform component. */
+    get transform(): CTransform | undefined {
+        return this.node.components.get(CTransform, true);
+    }
+    /** The scene this renderable object is part of. */
+    get scene(): CScene | undefined {
+        const transform = this.transform;
+        return transform ? transform.getParentComponent(CScene, true) : undefined;
+    }
 
     create()
     {

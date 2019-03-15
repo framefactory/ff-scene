@@ -88,7 +88,7 @@ export default class CObject3D extends Component implements ICObject3D
     /** The scene this renderable object is part of. */
     get scene(): CScene | undefined {
         const transform = this.transform;
-        return transform ? transform.getParent(CScene, true) : undefined;
+        return transform ? transform.getParentComponent(CScene, true) : undefined;
     }
     /** The underlying [[THREE.Object3D]] of this component. */
     get object3D(): THREE.Object3D | null {
