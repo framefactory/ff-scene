@@ -9,9 +9,8 @@ import * as THREE from "three";
 
 import math from "@ff/core/math";
 
-import { types } from "@ff/graph/propertyTypes";
+import Component, { types } from "@ff/graph/Component";
 import CHierarchy from "@ff/graph/components/CHierarchy";
-import Component from "@ff/graph/Component";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -20,6 +19,7 @@ const _vec3b = new THREE.Vector3();
 const _quat = new THREE.Quaternion();
 const _euler = new THREE.Euler();
 
+export { types };
 
 export enum ERotationOrder { XYZ, YZX, ZXY, XZY, YXZ, ZYX }
 
