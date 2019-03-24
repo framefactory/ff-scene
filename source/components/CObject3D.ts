@@ -16,7 +16,6 @@ import { IPointerEvent, ITriggerEvent } from "../RenderView";
 
 import CScene, { IRenderContext } from "./CScene";
 import CTransform, { ERotationOrder } from "./CTransform";
-import math from "@ff/core/math";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -251,7 +250,7 @@ export default class CObject3D extends Component implements ICObject3D
             object3D.position.fromArray(position.value);
 
             // update rotation angles, rotation order
-            _vec3.fromArray(rotation.value).multiplyScalar(math.DEG2RAD);
+            _vec3.fromArray(rotation.value).multiplyScalar(THREE.Math.DEG2RAD);
             const orderName = order.getOptionText();
             object3D.rotation.setFromVector3(_vec3, orderName);
 
