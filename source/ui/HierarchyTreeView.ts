@@ -260,9 +260,4 @@ export class HierarchyTree extends Tree<NCG>
     {
         this.root = this.selection.activeGraph;
     }
-
-    protected onUpdate()
-    {
-        this.requestUpdate();
-    }
 }
