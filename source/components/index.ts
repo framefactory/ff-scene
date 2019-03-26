@@ -12,6 +12,7 @@ import CBox from "./CBox";
 import CCamera from "./CCamera";
 import CDirectionalLight from "./CDirectionalLight";
 import CFloor from "./CFloor";
+import CFullscreen from "./CFullscreen";
 import CGeometry from "./CGeometry";
 import CGrid from "./CGrid";
 import CImageTexture from "./CImageTexture";
@@ -45,6 +46,7 @@ export {
     CCamera,
     CDirectionalLight,
     CFloor,
+    CFullscreen,
     CGeometry,
     CGrid,
     CImageTexture,
@@ -78,6 +80,7 @@ export const componentTypes = [
     CPickSelection,
     CDirectionalLight,
     CFloor,
+    CFullscreen,
     CGrid,
     CImageTexture,
     CMain,
