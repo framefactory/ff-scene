@@ -8,8 +8,6 @@
 import Node from "@ff/graph/Node";
 import Graph from "@ff/graph/Graph";
 
-import CHierarchy from "@ff/graph/components/CHierarchy";
-
 import {
     CBox,
     CCamera,
@@ -34,13 +32,13 @@ const createScene = function(graph: Graph, name?: string): Node
 
 const createTransform = function(parent: Node, name?: string): Node
 {
-    const hierarchy = parent.getComponent(CHierarchy);
-    if (!hierarchy) {
+    const transform = parent.getComponent(CTransform);
+    if (!transform) {
         throw new Error("can't attach to parent; missing a hierarchy component");
     }
 
     const node = parent.graph.createNode(name);
-    hierarchy.addChild(node.createComponent(CTransform));
+    transform.addChild(node.createComponent(CTransform));
     return node;
 };
 
