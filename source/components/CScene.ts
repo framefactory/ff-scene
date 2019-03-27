@@ -134,7 +134,7 @@ export default class CScene extends CTransform
 
     update(context)
     {
-        const updated = super.update(context);
+        super.update(context);
 
         if (this.ins.activate.changed) {
             const renderer = this.renderer;
@@ -143,7 +143,7 @@ export default class CScene extends CTransform
             }
         }
 
-        return updated;
+        return true;
     }
 
     tick(context)
@@ -215,6 +215,8 @@ export default class CScene extends CTransform
 
             return false;
         });
+
+        this.changed = true;
     }
 
     private _onBeforeRender(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera)

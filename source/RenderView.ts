@@ -27,6 +27,7 @@ import ViewportOverlay from "@ff/three/ui/ViewportOverlay";
 import GPUPicker from "@ff/three/GPUPicker";
 
 import CRenderer from "./components/CRenderer";
+import UniversalCamera from "@ff/three/UniversalCamera";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -58,6 +59,9 @@ export default class RenderView extends Publisher implements IManip
     protected targetComponent: Component = null;
     protected targetScene: THREE.Scene = null;
     protected targetCamera: THREE.Camera = null;
+
+    protected defaultScene = new THREE.Scene();
+    protected defaultCamera = new UniversalCamera();
 
     protected shouldResize = false;
     protected picker: GPUPicker;
@@ -139,12 +143,13 @@ export default class RenderView extends Publisher implements IManip
             return;
         }
 
-        const scene = sceneComponent.scene;
-        const camera = sceneComponent.activeCamera;
+        let scene = sceneComponent.scene;
+        let camera = sceneComponent.activeCamera;
 
         if (!scene || !camera) {
-            console.warn("can't render, no scene/camera");
-            return;
+            console.warn("no scene/camera");
+            scene = this.defaultScene;
+            camera = this.defaultCamera;
         }
 
         const renderer = this.renderer;

@@ -191,7 +191,7 @@ export class HierarchyTree extends Tree<NCG>
 
     protected getId(node: NCG)
     {
-        return node instanceof Graph ? this.rootId : node.id;
+        return (node as any).id || this.rootId;
     }
 
     protected getClasses(node: NCG)
