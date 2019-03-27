@@ -7,7 +7,7 @@
 
 import * as THREE from "three";
 
-import { types } from "@ff/graph/propertyTypes";
+import { Node, types } from "@ff/graph/Component";
 
 import UniversalCamera, { EProjection } from "@ff/three/UniversalCamera";
 import CObject3D, { ERotationOrder } from "./CObject3D";
@@ -43,15 +43,13 @@ export default class CCamera extends CObject3D
 
     ins = this.addInputs<CObject3D, typeof CCamera.camIns>(CCamera.camIns);
 
-
+    constructor(node: Node, id: string)
+    {
+        super(node, id);
+        this.object3D = new UniversalCamera();
+    }
     get camera() {
         return this.object3D as UniversalCamera;
-    }
-
-    create()
-    {
-        super.create();
-        this.object3D = new UniversalCamera();
     }
 
     update()

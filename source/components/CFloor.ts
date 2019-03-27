@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import CObject3D, { types } from "./CObject3D";
+import CObject3D, { Node, types } from "./CObject3D";
 import Floor from "@ff/three/Floor";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -25,13 +25,14 @@ export default class CFloor extends CObject3D
 
     ins = this.addInputs<CObject3D, typeof CFloor["floorIns"]>(CFloor.floorIns);
 
-    protected get floor() {
-        return this.object3D as Floor;
+    constructor(node: Node, id: string)
+    {
+        super(node, id);
+        this.object3D = new Floor();
     }
 
-    create()
-    {
-        this.object3D = new Floor();
+    protected get floor() {
+        return this.object3D as Floor;
     }
 
     update(context)

@@ -9,7 +9,7 @@ import * as THREE from "three";
 
 import { TypeOf } from "@ff/core/types";
 import { ITypedEvent } from "@ff/core/Publisher";
-import Component, { IComponentEvent, types } from "@ff/graph/Component";
+import Component, { Node, types, IComponentEvent } from "@ff/graph/Component";
 import GPUPicker from "@ff/three/GPUPicker";
 
 import { IPointerEvent, ITriggerEvent } from "../RenderView";
@@ -21,7 +21,7 @@ import CTransform, { ERotationOrder } from "./CTransform";
 
 const _vec3 = new THREE.Vector3();
 
-export { types, IPointerEvent, ITriggerEvent, IRenderContext, ERotationOrder };
+export { Node, types, IPointerEvent, ITriggerEvent, IRenderContext, ERotationOrder };
 
 export interface ICObject3D extends Component
 {
@@ -66,10 +66,12 @@ export default class CObject3D extends Component implements ICObject3D
     private _object3D: THREE.Object3D = null;
     private _isPickable = false;
 
-    constructor(id: string)
+    constructor(node: Node, id: string)
     {
-        super(id);
+        super(node, id);
         this.addEvent("object");
+
+        this.node.components.on(this.parentComponentClass, this._onParent, this);
     }
 
     /** The class of a component in the same node this component uses as parent transform. */
@@ -128,12 +130,6 @@ export default class CObject3D extends Component implements ICObject3D
                 parentComponent.object3D.add(object);
             }
         }
-    }
-
-    create()
-    {
-        super.create();
-        this.node.components.on(this.parentComponentClass, this._onParent, this);
     }
 
     update(context): boolean

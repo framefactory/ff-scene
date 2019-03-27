@@ -50,6 +50,8 @@ export default class CMain extends Component
 
     create()
     {
+        super.create();
+
         this.scenes = this.system.components.cloneArray(CScene);
         this.system.components.on(CScene, this.onSceneComponent, this);
 

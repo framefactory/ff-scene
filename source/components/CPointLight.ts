@@ -7,7 +7,7 @@
 
 import * as THREE from "three";
 
-import { types } from "@ff/graph/propertyTypes";
+import { Node, types } from "@ff/graph/Component";
 
 import CLight from "./CLight";
 
@@ -27,16 +27,15 @@ export default class CPointLight extends CLight
 
     ins = this.addInputs<CLight, typeof CPointLight["pointLightIns"]>(CPointLight.pointLightIns);
 
+    constructor(node: Node, id: string)
+    {
+        super(node, id);
+        this.object3D = new THREE.PointLight();
+    }
 
     get light(): THREE.PointLight
     {
         return this.object3D as THREE.PointLight;
-    }
-
-    create()
-    {
-        super.create();
-        this.object3D = new THREE.PointLight();
     }
 
     update(context)

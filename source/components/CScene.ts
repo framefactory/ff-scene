@@ -9,7 +9,8 @@ import * as THREE from "three";
 
 import { ITypedEvent } from "@ff/core/Publisher";
 
-import { types } from "@ff/graph/propertyTypes";
+import { Node, types } from "@ff/graph/Component";
+import { IChildEvent, IHierarchyEvent } from "@ff/graph/components/CHierarchy";
 
 import RenderView, { Viewport } from "../RenderView";
 import CRenderer, { IActiveSceneEvent } from "./CRenderer";
@@ -17,7 +18,6 @@ import CRenderer, { IActiveSceneEvent } from "./CRenderer";
 import CTransform from "./CTransform";
 import CCamera from "./CCamera";
 import CObject3D from "./CObject3D";
-import { IChildComponentEvent, IHierarchyEvent } from "@ff/graph/components/CHierarchy";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -84,12 +84,13 @@ export default class CScene extends CTransform
     private _activeCameraComponent: CCamera = null;
     private _preRenderList: CObject3D[] = [];
     private _postRenderList: CObject3D[] = [];
+    private _renderListsNeedUpdate = true;
 
     ins = this.addInputs<CTransform, typeof _inputs>(_inputs, 0);
 
-    constructor(id: string)
+    constructor(node: Node, id: string)
     {
-        super(id);
+        super(node, id);
         this.addEvents("before-render", "after-render", "active-camera");
     }
 
@@ -122,8 +123,8 @@ export default class CScene extends CTransform
     {
         super.create();
 
-        this.on<IHierarchyEvent>("hierarchy", this.updateRenderLists, this);
-        this.on<IChildComponentEvent>("child-component", this.updateRenderLists, this);
+        this.on<IHierarchyEvent>("hierarchy", this.shouldUpdateRenderLists, this);
+        this.on<IChildEvent>("child", this.shouldUpdateRenderLists, this);
 
         const renderer = this.renderer;
         if (renderer && !renderer.activeSceneComponent) {
@@ -145,6 +146,16 @@ export default class CScene extends CTransform
         return updated;
     }
 
+    tick(context)
+    {
+        if (this._renderListsNeedUpdate) {
+            this.updateRenderLists();
+            this._renderListsNeedUpdate = false;
+        }
+
+        return false;
+    }
+
     dispose()
     {
         const renderer = this.renderer;
@@ -152,8 +163,8 @@ export default class CScene extends CTransform
             renderer.activeSceneComponent = null;
         }
 
-        this.off<IHierarchyEvent>("hierarchy", this.updateRenderLists, this);
-        this.off<IChildComponentEvent>("child-component", this.updateRenderLists, this);
+        this.off<IHierarchyEvent>("hierarchy", this.shouldUpdateRenderLists, this);
+        this.off<IChildEvent>("child", this.shouldUpdateRenderLists, this);
 
         super.dispose();
     }
@@ -180,6 +191,11 @@ export default class CScene extends CTransform
         scene.onBeforeRender = this._onBeforeRender.bind(this);
         scene.onAfterRender = this._onAfterRender.bind(this);
         return scene;
+    }
+
+    protected shouldUpdateRenderLists()
+    {
+        this._renderListsNeedUpdate = true;
     }
 
     protected updateRenderLists()

@@ -7,7 +7,7 @@
 
 import * as THREE from "three";
 
-import CTexture, { types } from "./CTexture";
+import CTexture, { Node, types } from "./CTexture";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -21,10 +21,10 @@ export default class CImageTexture extends CTexture
 
     ins = this.addInputs<CTexture, typeof CImageTexture.ins>(CImageTexture.ins, 0);
 
-    create()
+    constructor(node: Node, id: string)
     {
+        super(node, id);
         this._texture = new THREE.Texture();
-        super.create();
     }
 
     update(context)

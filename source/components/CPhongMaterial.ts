@@ -7,7 +7,7 @@
 
 import * as THREE from "three";
 
-import { types } from "@ff/graph/propertyTypes";
+import { Node, types } from "@ff/graph/Component";
 
 import CMaterial from "./CMaterial";
 import CTexture from "./CTexture";
@@ -33,14 +33,14 @@ export default class CPhongMaterial extends CMaterial
 
     ins = this.addInputs<CMaterial, typeof CPhongMaterial.ins>(CPhongMaterial.ins, 0);
 
-    get material() {
-        return this._material as THREE.MeshPhongMaterial;
+    constructor(node: Node, id: string)
+    {
+        super(node, id);
+        this._material = new THREE.MeshPhongMaterial();
     }
 
-    create()
-    {
-        this._material = new THREE.MeshPhongMaterial();
-        super.create();
+    get material() {
+        return this._material as THREE.MeshPhongMaterial;
     }
 
     update()

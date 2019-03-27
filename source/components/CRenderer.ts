@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import Component, { ITypedEvent, types } from "@ff/graph/Component";
+import Component, { Node, ITypedEvent, types } from "@ff/graph/Component";
 import CPulse, { IPulseEvent } from "@ff/graph/components/CPulse";
 
 import RenderView from "../RenderView";
@@ -61,9 +61,9 @@ export default class CRenderer extends Component
     private _activeSceneComponent: CScene = null;
 
 
-    constructor(id: string)
+    constructor(node: Node, id: string)
     {
-        super(id);
+        super(node, id);
         this.addEvents("active-scene", "active-camera");
     }
 

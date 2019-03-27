@@ -73,6 +73,7 @@ export default class CVideoTexture extends CTexture
         };
 
         this._texture = new THREE.VideoTexture(this._video);
+
         super.create();
     }
 

@@ -7,7 +7,7 @@
 
 //import resolvePathname from "resolve-pathname";
 
-import Component from "@ff/graph/Component";
+import Component, { Node } from "@ff/graph/Component";
 import WebDAVProvider from "../assets/WebDAVProvider";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -20,14 +20,15 @@ export default class CAssetManager extends Component
     private _assetBaseUrl: string = "";
     private _provider: WebDAVProvider = null;
 
+    constructor(node: Node, id: string)
+    {
+        super(node, id);
+        this._provider = new WebDAVProvider();
+    }
+
     test()
     {
         this._provider.test();
-    }
-
-    create()
-    {
-        this._provider = new WebDAVProvider();
     }
 
     get assetBaseUrl() {

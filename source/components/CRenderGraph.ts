@@ -7,7 +7,7 @@
 
 import * as THREE from "three";
 
-import CGraph, { types } from "@ff/graph/components/CGraph";
+import CGraph, { Node, types } from "@ff/graph/components/CGraph";
 import CHierarchy from "@ff/graph/components/CHierarchy";
 import { ICObject3D } from "./CObject3D";
 
@@ -16,7 +16,7 @@ import CScene from "./CScene";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { types };
+export { Node, types };
 
 export default class CRenderGraph extends CGraph implements ICObject3D
 {
@@ -28,10 +28,16 @@ export default class CRenderGraph extends CGraph implements ICObject3D
 
     ins = this.addInputs<CGraph, typeof CRenderGraph.rgIns>(CRenderGraph.rgIns);
 
-
     private _object3D: THREE.Object3D = null;
     private _isAttached = false;
 
+    constructor(node: Node, id: string)
+    {
+        super(node, id);
+
+        this._object3D = new THREE.Object3D();
+        this._object3D.matrixAutoUpdate = false;
+    }
 
     /** The component node's transform component. */
     get transform(): CTransform | undefined {
@@ -50,9 +56,6 @@ export default class CRenderGraph extends CGraph implements ICObject3D
     create()
     {
         super.create();
-
-        this._object3D = new THREE.Object3D();
-        this._object3D.matrixAutoUpdate = false;
 
         // add existing inner root transforms
         this.innerRoots

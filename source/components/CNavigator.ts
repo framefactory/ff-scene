@@ -38,14 +38,13 @@ export default class CNavigator extends Component
     ins = this.addInputs(_inputs);
     outs = this.addOutputs(_outputs);
 
-    protected manip: OrbitManipulator = null;
+    protected manip = new OrbitManipulator();
     protected camera: CCamera = null;
+
 
     create()
     {
         super.create();
-
-        this.manip = new OrbitManipulator();
 
         this.trackComponent(CCamera, camera => {
             this.camera = camera;

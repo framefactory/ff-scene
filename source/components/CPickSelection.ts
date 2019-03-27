@@ -39,6 +39,7 @@ export default class CPickSelection extends CSelection
     create()
     {
         super.create();
+
         this.system.on<IPointerEvent>("pointer-up", this.onPointerUp, this);
     }
 
@@ -46,6 +47,7 @@ export default class CPickSelection extends CSelection
     {
         this.system.off<IPointerEvent>("pointer-up", this.onPointerUp, this);
         this._sceneTracker.dispose();
+
         super.dispose();
     }
 

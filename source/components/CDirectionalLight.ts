@@ -7,7 +7,7 @@
 
 import * as THREE from "three";
 
-import { types } from "@ff/graph/propertyTypes";
+import { Node, types } from "@ff/graph/Component";
 
 import CLight from "./CLight";
 
@@ -25,16 +25,16 @@ export default class CDirectionalLight extends CLight
 
     ins = this.addInputs<CLight, typeof CDirectionalLight["dirLightIns"]>(CDirectionalLight.dirLightIns);
 
+    constructor(node: Node, id: string)
+    {
+        super(node, id);
+
+        this.object3D = new THREE.DirectionalLight();
+    }
 
     get light(): THREE.DirectionalLight
     {
         return this.object3D as THREE.DirectionalLight;
-    }
-
-    create()
-    {
-        super.create();
-        this.object3D = new THREE.DirectionalLight();
     }
 
     update(context)

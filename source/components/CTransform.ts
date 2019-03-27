@@ -9,7 +9,7 @@ import * as THREE from "three";
 
 import math from "@ff/core/math";
 
-import Component, { types } from "@ff/graph/Component";
+import Component, { Node, types } from "@ff/graph/Component";
 import CHierarchy from "@ff/graph/components/CHierarchy";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,9 +53,9 @@ export default class CTransform extends CHierarchy implements ICObject3D
 
     private _object3D: THREE.Object3D;
 
-    constructor(id: string)
+    constructor(node: Node, id: string)
     {
-        super(id);
+        super(node, id);
 
         this._object3D = this.createObject3D();
         this._object3D.matrixAutoUpdate = false;
@@ -110,15 +110,15 @@ export default class CTransform extends CHierarchy implements ICObject3D
 
     dispose()
     {
-        if (!this._object3D) {
-            return;
-        }
+        if (this._object3D) {
+            // detach all children
+            this._object3D.children.slice().forEach(child => this._object3D.remove(child));
 
-        // detach the three.js object from its parent and children
-        if (this._object3D.parent) {
-            this._object3D.parent.remove(this._object3D);
+            // detach from parent
+            if (this._object3D.parent) {
+                this._object3D.parent.remove(this._object3D);
+            }
         }
-        this._object3D.children.slice().forEach(child => this._object3D.remove(child));
 
         super.dispose();
     }

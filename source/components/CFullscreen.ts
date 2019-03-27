@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import Component, { types } from "@ff/graph/Component";
+import Component, { Node, types } from "@ff/graph/Component";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -45,14 +45,11 @@ export default class CFullscreen extends Component
         }
     }
 
-    constructor(id: string)
+    constructor(node: Node, id: string)
     {
-        super(id);
+        super(node, id);
         this.onFullscreenChange = this.onFullscreenChange.bind(this);
-    }
 
-    create()
-    {
         const e: any = document.documentElement;
         const fullscreenAvailable = e.requestFullscreen || e.mozRequestFullScreen || e.webkitRequestFullscreen;
         this.outs.fullscreenAvailable.setValue(!!fullscreenAvailable);

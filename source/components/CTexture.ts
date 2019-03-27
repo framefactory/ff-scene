@@ -7,11 +7,11 @@
 
 import * as THREE from "three";
 
-import Component, { types } from "@ff/graph/Component";
+import Component, { Node, types } from "@ff/graph/Component";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { types };
+export { Node, types };
 
 export enum EMappingMode {
     UV,
@@ -122,6 +122,8 @@ export default class CTexture extends Component
 
     create()
     {
+        super.create();
+
         if (this._texture) {
             (this._texture as any).matrixAutoUpdate = false;
         }

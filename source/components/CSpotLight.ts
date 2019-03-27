@@ -7,11 +7,10 @@
 
 import * as THREE from "three";
 
-import { types } from "@ff/graph/propertyTypes";
+import { Node, types } from "@ff/graph/Component";
 
 import CLight from "./CLight";
 import { ERotationOrder } from "./CTransform";
-import math from "@ff/core/math";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -34,16 +33,15 @@ export default class CSpotLight extends CLight
 
     ins = this.addInputs<CLight, typeof CSpotLight["spotLightIns"]>(CSpotLight.spotLightIns);
 
+    constructor(node: Node, id: string)
+    {
+        super(node, id);
+        this.object3D = new THREE.SpotLight();
+    }
 
     get light(): THREE.SpotLight
     {
         return this.object3D as THREE.SpotLight;
-    }
-
-    create()
-    {
-        super.create();
-        this.object3D = new THREE.SpotLight();
     }
 
     update(context)
@@ -55,7 +53,7 @@ export default class CSpotLight extends CLight
 
         if (ins.position.changed || ins.rotation.changed || ins.order.changed) {
             light.position.fromArray(ins.position.value);
-            _vec3.fromArray(ins.rotation.value).multiplyScalar(math.DEG2RAD);
+            _vec3.fromArray(ins.rotation.value).multiplyScalar(THREE.Math.DEG2RAD);
             const orderName = ins.order.getOptionText();
             light.rotation.setFromVector3(_vec3, orderName);
             light.updateMatrix();
@@ -64,7 +62,7 @@ export default class CSpotLight extends CLight
         if (ins.distance.changed || ins.decay.changed || ins.angle.changed || ins.penumbra.changed) {
             light.distance = ins.distance.value;
             light.decay = ins.decay.value;
-            light.angle = ins.angle.value * math.DEG2RAD;
+            light.angle = ins.angle.value * THREE.Math.DEG2RAD;
             light.penumbra = ins.penumbra.value;
         }
 

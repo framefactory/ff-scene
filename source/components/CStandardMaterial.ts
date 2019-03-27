@@ -7,7 +7,7 @@
 
 import * as THREE from "three";
 
-import CMaterial, { types } from "./CMaterial";
+import CMaterial, { Node, types } from "./CMaterial";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -22,14 +22,14 @@ export default class CStandardMaterial extends CMaterial
 
     ins = this.addInputs<CMaterial, typeof CStandardMaterial.ins>(CStandardMaterial.ins, 0);
 
-    get material() {
-        return this._material as THREE.MeshStandardMaterial;
+    constructor(node: Node, id: string)
+    {
+        super(node, id);
+        this._material = new THREE.MeshStandardMaterial();
     }
 
-    create()
-    {
-        this._material = new THREE.MeshStandardMaterial();
-        super.create();
+    get material() {
+        return this._material as THREE.MeshStandardMaterial;
     }
 
     update()

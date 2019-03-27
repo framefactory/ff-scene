@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import CObject3D, { types } from "./CObject3D";
+import CObject3D, { Node, types } from "./CObject3D";
 import Background, { EBackgroundStyle } from "@ff/three/Background";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -25,13 +25,14 @@ export default class CBackground extends CObject3D
 
     ins = this.addInputs<CObject3D, typeof CBackground["backgroundIns"]>(CBackground.backgroundIns);
 
-    protected get background() {
-        return this.object3D as Background;
+    constructor(node: Node, id: string)
+    {
+        super(node, id);
+        this.object3D = new Background();
     }
 
-    create()
-    {
-        this.object3D = new Background();
+    protected get background() {
+        return this.object3D as Background;
     }
 
     update(context)

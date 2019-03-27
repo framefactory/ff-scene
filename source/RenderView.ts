@@ -8,8 +8,9 @@
 import * as THREE from "three";
 
 import Publisher from "@ff/core/Publisher";
-import Component from "@ff/graph/Component";
 import System from "@ff/graph/System";
+import Component from "@ff/graph/Component";
+import CHierarchy from "@ff/graph/components/CHierarchy";
 
 
 import {
@@ -226,7 +227,7 @@ export default class RenderView extends Publisher implements IManip
             if (component) {
                 component.emit(viewEvent);
 
-                const hierarchy = component.hierarchy;
+                const hierarchy = component.getComponent(CHierarchy);
                 if (!viewEvent.stopPropagation && hierarchy) {
                     hierarchy.propagateUp(false, true, viewEvent);
                 }
@@ -260,7 +261,7 @@ export default class RenderView extends Publisher implements IManip
             if (component) {
                 component.emit(viewEvent);
 
-                const hierarchy = component.hierarchy;
+                const hierarchy = component.getComponent(CHierarchy);
                 if (!viewEvent.stopPropagation && hierarchy) {
                     hierarchy.propagateUp(false, true, viewEvent);
                 }

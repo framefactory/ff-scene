@@ -7,7 +7,7 @@
 
 import * as THREE from "three";
 
-import { types } from "@ff/graph/propertyTypes";
+import { Node, types } from "@ff/graph/Component";
 
 import CTransform from "./CTransform";
 import CObject3D from "./CObject3D";
@@ -29,17 +29,17 @@ export default class CMesh extends CObject3D
 
     ins = this.addInputs<CObject3D, typeof CMesh["meshIns"]>(CMesh.meshIns);
 
-    get mesh() {
-        return this.object3D as THREE.Mesh;
-    }
-
-    create()
+    constructor(node: Node, id: string)
     {
-        super.create();
+        super(node, id);
 
         this.object3D = new THREE.Mesh();
         this.object3D.visible = false;
         this.object3D.castShadow = true;
+    }
+
+    get mesh() {
+        return this.object3D as THREE.Mesh;
     }
 
     update(context)
