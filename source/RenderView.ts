@@ -147,7 +147,7 @@ export default class RenderView extends Publisher implements IManip
         let camera = sceneComponent.activeCamera;
 
         if (!scene || !camera) {
-            console.warn("no scene/camera");
+            console.warn(!scene ? !camera ? "no scene/camera" : "no scene" : "no camera");
             scene = this.defaultScene;
             camera = this.defaultCamera;
         }
