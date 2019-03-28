@@ -203,14 +203,12 @@ export default class CScene extends CTransform
         this._preRenderList = [];
         this._postRenderList = [];
 
-        this.traverseDown(true, true, true, (component: CObject3D) => {
-            if (component.is(CObject3D)) {
-                if (component.preRender) {
-                    this._preRenderList.push(component);
-                }
-                if (component.postRender) {
-                    this._postRenderList.push(component);
-                }
+        this.traverseDown(false, true, true, (component: CObject3D) => {
+            if (component.preRender) {
+                this._preRenderList.push(component);
+            }
+            if (component.postRender) {
+                this._postRenderList.push(component);
             }
 
             return false;

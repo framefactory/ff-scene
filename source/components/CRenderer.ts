@@ -59,7 +59,7 @@ export default class CRenderer extends Component
     readonly views: RenderView[] = [];
 
     private _activeSceneComponent: CScene = null;
-
+    private _forceRender = false;
 
     constructor(node: Node, id: string)
     {
@@ -109,6 +109,10 @@ export default class CRenderer extends Component
         return component ? component.camera : null;
     }
 
+    forceRender() {
+        this._forceRender = true;
+    }
+
     create()
     {
         super.create();
@@ -156,12 +160,14 @@ export default class CRenderer extends Component
 
     protected onPulse(event: IPulseEvent)
     {
-        if (event.systemUpdated) {
-            //console.log("CRenderer.onPulse - render views...");
+        if (event.systemUpdated || this._forceRender) {
+            console.log("CRenderer.onPulse - render views...");
 
             this.views.forEach(view => {
                 view.render();
             });
+
+            this._forceRender = false;
         }
     }
 

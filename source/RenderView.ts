@@ -243,7 +243,10 @@ export default class RenderView extends Publisher implements IManip
             }
 
             if (!viewEvent.stopPropagation) {
-                viewEvent.viewport.onPointer(viewEvent);
+                const updated = viewEvent.viewport.onPointer(viewEvent);
+                if (updated) {
+                    this.system.getMainComponent(CRenderer).forceRender();
+                }
             }
 
             return true;
@@ -277,7 +280,10 @@ export default class RenderView extends Publisher implements IManip
             }
 
             if (!viewEvent.stopPropagation) {
-                viewEvent.viewport.onTrigger(viewEvent);
+                const updated = viewEvent.viewport.onTrigger(viewEvent);
+                if (updated) {
+                    this.system.getMainComponent(CRenderer).forceRender();
+                }
             }
 
             return true;
