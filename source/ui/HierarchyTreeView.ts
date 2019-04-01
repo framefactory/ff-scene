@@ -67,7 +67,7 @@ export default class HierarchyTreeView extends SelectionView
         const up = selection.hasParentGraph() ? html`<ff-button icon="up" @click=${this.onClickUp}></ff-button>` : null;
 
         return html`<div class="ff-flex-row ff-header">${up}<div class="ff-text">${text}</div>${down}</div>
-            <div class="ff-scroll-y">${this.tree}</div>`;
+            <div class="ff-flex-item-stretch"><div class="ff-scroll-y">${this.tree}</div></div>`;
     }
 
     protected onClick()
