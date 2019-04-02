@@ -30,6 +30,9 @@ export default class PropertyField extends CustomElement
     @property({ attribute: false })
     index: number = undefined;
 
+    @property({ type: Boolean })
+    commitonly = false;
+
     protected value: any = undefined;
     protected isActive: boolean = false;
     protected isDragging: boolean = false;
@@ -91,8 +94,7 @@ export default class PropertyField extends CustomElement
         if (schema.event) {
             this.buttonElement = this.appendElement("div");
             this.buttonElement.classList.add("ff-off", "ff-event-button");
-        }
-        else {
+        } else {
             // create bar element
             const { min, max, bar } = schema;
             if (!schema.options && min !== undefined && max !== undefined && bar !== undefined) {
@@ -111,8 +113,7 @@ export default class PropertyField extends CustomElement
         if (isInput) {
             classList.add("ff-input");
             classList.remove("ff-output");
-        }
-        else {
+        } else {
             classList.add("ff-output");
             classList.remove("ff-input");
         }
@@ -181,14 +182,14 @@ export default class PropertyField extends CustomElement
             return;
         }
 
-        switch(property.type) {
+        switch (property.type) {
             case "number":
             case "string":
                 this.startEditing();
                 break;
 
             case "boolean":
-                this.updateProperty(!this.value);
+                this.updateProperty(!this.value, true);
                 break;
         }
     }
@@ -250,8 +251,7 @@ export default class PropertyField extends CustomElement
             let speed = PropertyField.defaultSpeed;
             if (schema.speed) {
                 speed = schema.speed;
-            }
-            else if (schema.min !== undefined && schema.max !== undefined) {
+            } else if (schema.min !== undefined && schema.max !== undefined) {
                 speed = (schema.max - schema.min) / this.clientWidth;
             }
 
@@ -259,12 +259,12 @@ export default class PropertyField extends CustomElement
             speed = event.shiftKey ? speed * 10 : speed;
             let value = this.startValue + delta * speed;
 
-            value = schema.step !== undefined ? Math.trunc(value / schema.step) * schema.step: value;
+            value = schema.step !== undefined ? Math.trunc(value / schema.step) * schema.step : value;
 
             value = schema.min !== undefined ? Math.max(value, schema.min) : value;
             value = schema.max !== undefined ? Math.min(value, schema.max) : value;
 
-            this.updateProperty(value);
+            this.updateProperty(value, !this.commitonly);
 
             event.stopPropagation();
             event.preventDefault();
@@ -282,6 +282,10 @@ export default class PropertyField extends CustomElement
             if (this.isDragging) {
                 event.stopPropagation();
                 event.preventDefault();
+
+                if (this.commitonly) {
+                    this.property.set();
+                }
             }
         }
     }
@@ -308,8 +312,7 @@ export default class PropertyField extends CustomElement
                     ? schema.precision : PropertyField.defaultEditPrecision;
 
                 text = this.value.toFixed(precision);
-            }
-            else {
+            } else {
                 text = this.value === -Infinity ? "-inf" : "inf";
             }
         }
@@ -341,8 +344,7 @@ export default class PropertyField extends CustomElement
         if (this.property.type === "number") {
             if (text.toLowerCase().indexOf("inf") >= 0) {
                 value = text[0] === "-" ? -Infinity : Infinity;
-            }
-            else {
+            } else {
                 value = parseFloat(value) || 0;
                 if (schema.precision) {
                     const factor = Math.pow(10, schema.precision);
@@ -354,7 +356,7 @@ export default class PropertyField extends CustomElement
             }
         }
 
-        this.updateProperty(value);
+        this.updateProperty(value, true);
     }
 
     protected showPopupOptions(event: MouseEvent)
@@ -376,7 +378,7 @@ export default class PropertyField extends CustomElement
     protected onSelectOption(event: IPopupMenuSelectEvent)
     {
         const index = event.detail.index;
-        this.updateProperty(index);
+        this.updateProperty(index, true);
     }
 
     protected onPropertyValue()
@@ -412,20 +414,18 @@ export default class PropertyField extends CustomElement
 
         this.value = value;
 
-        switch(property.type) {
+        switch (property.type) {
             case "number":
                 if (schema.options) {
                     text = property.getOptionText();
-                }
-                else {
+                } else {
                     if (isFinite(value)) {
                         const precision = schema.precision !== undefined
                             ? schema.precision : PropertyField.defaultPrecision;
 
                         if (schema.percent) {
                             text = (value * 100).toFixed(precision - 2) + "%";
-                        }
-                        else {
+                        } else {
                             text = value.toFixed(precision);
                         }
 
@@ -433,8 +433,7 @@ export default class PropertyField extends CustomElement
                             this.barElement.style.width
                                 = math.scaleLimit(value, schema.min, schema.max, 0, 100) + "%";
                         }
-                    }
-                    else {
+                    } else {
                         text = value === -Infinity ? "-inf" : "inf";
                         if (this.barElement) {
                             this.barElement.style.width = "0";
@@ -459,15 +458,21 @@ export default class PropertyField extends CustomElement
         this.contentElement.innerText = text;
     }
 
-    protected updateProperty(value: any)
+    protected updateProperty(value: any, commit: boolean)
     {
         const property = this.property;
+
         if (this.index >= 0) {
             property.value[this.index] = value;
+        } else {
+            property.value = value;
+        }
+
+        if (commit) {
             property.set();
         }
         else {
-            property.setValue(value);
+            this.updateElement();
         }
     }
 }
