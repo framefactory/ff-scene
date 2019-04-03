@@ -107,12 +107,12 @@ export default class CObject3D extends Component implements ICObject3D
         const parentComponent = this.parentComponent;
 
         if (currentObject) {
-            object.userData["component"] = null;
+            currentObject.userData["component"] = null;
 
             this.unregisterPickableObject3D(currentObject, true);
 
-            if (parentComponent) {
-                parentComponent.object3D.remove(currentObject);
+            if (currentObject.parent) {
+                currentObject.parent.remove(currentObject);
             }
         }
 
@@ -155,13 +155,8 @@ export default class CObject3D extends Component implements ICObject3D
 
     dispose()
     {
-        if (this._object3D) {
-            const component = this.parentComponent;
+        this.object3D = null;
 
-            if (component) {
-                component.object3D.remove(this._object3D);
-            }
-        }
         if (this.ins.pickable.value) {
             this.disablePointerEvents();
         }
@@ -306,14 +301,9 @@ export default class CObject3D extends Component implements ICObject3D
 
     private _onParent(event: IComponentEvent<ICObject3D>)
     {
-        // add or remove this THREE.Object3D to the parent THREE.Object3D
-        if (this._object3D) {
-            if (event.add) {
-                event.object.object3D.add(this._object3D);
-            }
-            else {
-                event.object.object3D.remove(this._object3D);
-            }
+        // add this THREE.Object3D to the parent THREE.Object3D
+        if (this._object3D && !this._object3D.parent && event.add) {
+            event.object.object3D.add(this._object3D);
         }
     }
 }
