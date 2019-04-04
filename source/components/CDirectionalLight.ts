@@ -32,8 +32,7 @@ export default class CDirectionalLight extends CLight
         this.object3D = new THREE.DirectionalLight();
     }
 
-    get light(): THREE.DirectionalLight
-    {
+    get light(): THREE.DirectionalLight {
         return this.object3D as THREE.DirectionalLight;
     }
 

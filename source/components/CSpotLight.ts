@@ -39,8 +39,7 @@ export default class CSpotLight extends CLight
         this.object3D = new THREE.SpotLight();
     }
 
-    get light(): THREE.SpotLight
-    {
+    get light(): THREE.SpotLight {
         return this.object3D as THREE.SpotLight;
     }
 

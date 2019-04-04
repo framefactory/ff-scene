@@ -33,8 +33,7 @@ export default class CPointLight extends CLight
         this.object3D = new THREE.PointLight();
     }
 
-    get light(): THREE.PointLight
-    {
+    get light(): THREE.PointLight {
         return this.object3D as THREE.PointLight;
     }
 
