@@ -41,10 +41,18 @@ export default class CPickSelection extends CSelection
         super.create();
 
         this.system.on<IPointerEvent>("pointer-up", this.onPointerUp, this);
+
+        this._sceneTracker = new ComponentTracker(this.system.components, CScene, component => {
+            component.on<ISceneAfterRenderEvent>("after-render", this.onSceneAfterRender, this);
+        }, component => {
+            component.off<ISceneAfterRenderEvent>("after-render", this.onSceneAfterRender, this);
+        });
     }
 
     dispose()
     {
+        this._sceneTracker.dispose();
+
         this.system.off<IPointerEvent>("pointer-up", this.onPointerUp, this);
         this._sceneTracker.dispose();
 
@@ -75,20 +83,20 @@ export default class CPickSelection extends CSelection
         }
     }
 
-    protected onActiveGraph(graph: Graph)
-    {
-        if (this._sceneTracker) {
-            this._sceneTracker.dispose();
-        }
-
-        if (graph) {
-            this._sceneTracker = new ComponentTracker(graph.components, CScene, component => {
-                component.on<ISceneAfterRenderEvent>("after-render", this.onSceneAfterRender, this);
-            }, component => {
-                component.off<ISceneAfterRenderEvent>("after-render", this.onSceneAfterRender, this);
-            });
-        }
-    }
+    // protected onActiveGraph(graph: Graph)
+    // {
+    //     if (this._sceneTracker) {
+    //         this._sceneTracker.dispose();
+    //     }
+    //
+    //     if (graph) {
+    //         this._sceneTracker = new ComponentTracker(graph.components, CScene, component => {
+    //             component.on<ISceneAfterRenderEvent>("after-render", this.onSceneAfterRender, this);
+    //         }, component => {
+    //             component.off<ISceneAfterRenderEvent>("after-render", this.onSceneAfterRender, this);
+    //         });
+    //     }
+    // }
 
     protected onPointerUp(event: IPointerEvent)
     {
@@ -138,5 +146,7 @@ export default class CPickSelection extends CSelection
                 bracket.dispose();
             }
         }
+
+        this.changed = true;
     }
 }

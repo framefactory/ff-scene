@@ -68,24 +68,21 @@ export default class CTransform extends CHierarchy implements ICObject3D
     /**
      * Returns the three.js renderable object wrapped in this component.
      */
-    get object3D(): THREE.Object3D
-    {
+    get object3D(): THREE.Object3D {
         return this._object3D;
     }
 
     /**
      * Returns an array of child components of this.
      */
-    get children(): Readonly<CTransform[]>
-    {
+    get children(): Readonly<CTransform[]> {
         return this._children as CTransform[] || [];
     }
 
     /**
      * Returns a reference to the local transformation matrix.
      */
-    get matrix(): Readonly<THREE.Matrix4>
-    {
+    get matrix(): Readonly<THREE.Matrix4> {
         return this._object3D.matrix;
     }
 
