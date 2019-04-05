@@ -161,7 +161,7 @@ export default class CRenderer extends Component
     protected onPulse(event: IPulseEvent)
     {
         if (event.systemUpdated || this._forceRender) {
-            console.log("CRenderer.onPulse - render views...");
+            //console.log("CRenderer.onPulse - render views...");
 
             this.views.forEach(view => {
                 view.render();
