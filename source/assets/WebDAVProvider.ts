@@ -45,6 +45,7 @@ export interface IFileInfo
 {
     path: string;
     name: string;
+    text: string;
     created: string;
     modified: string;
     folder: boolean;
@@ -61,12 +62,7 @@ export default class WebDAVProvider
         this.url = url;
     }
 
-    test()
-    {
-        this.getInfo("/data", false);
-    }
-
-    getInfo(url: string, recursive: boolean)
+    getFolderInfo(url: string, recursive: boolean): Promise<IFileInfo[]>
     {
         const props = {
             headers: {
@@ -79,15 +75,30 @@ export default class WebDAVProvider
             props.headers["Depth"] = "1";
         }
 
-        fetch(url, props)
+        return fetch(url, props)
             .then(response => response.text())
             .then(xml => xmlTools.xml2js(xml))
             .then(document => _transform(document.elements[0]))
             .then(element => this.parseMultistatus(element))
-            .then(infos => console.log(infos));
     }
 
-    parseMultistatus(element: IXMLElement): IFileInfo[]
+    createFolder(parent: IFileInfo, name: string)
+    {
+
+    }
+
+    deleteFile(file: IFileInfo)
+    {
+
+    }
+
+    renameFile(file: IFileInfo, name: string)
+    {
+
+    }
+
+
+    protected parseMultistatus(element: IXMLElement): IFileInfo[]
     {
         if (element.name !== "D:multistatus") {
             return null;
@@ -97,7 +108,7 @@ export default class WebDAVProvider
             .map(element => this.parseResponse(element));
     }
 
-    parseResponse(element: IXMLElement): IFileInfo
+    protected parseResponse(element: IXMLElement): IFileInfo
     {
         const propStat = element.dict["D:propstat"];
         const prop = propStat.dict["D:prop"];
@@ -108,46 +119,18 @@ export default class WebDAVProvider
         const contentLength = prop.dict["D:getcontentlength"];
         const contentType = prop.dict["D:getcontenttype"];
 
-        const info = {
-            path: element.dict["D:href"].elements[0].text,
-            name: prop.dict["D:displayname"].elements[0].text,
-            created: prop.dict["D:creationdate"].elements[0].text,
-            modified: prop.dict["D:getlastmodified"].elements[0].text,
+        const info: Partial<IFileInfo> = {
+            path: element.dict["D:href"].elements[0].text as string,
+            name: prop.dict["D:displayname"].elements[0].text as string,
+            created: prop.dict["D:creationdate"].elements[0].text as string,
+            modified: prop.dict["D:getlastmodified"].elements[0].text as string,
             folder: isCollection,
-            size: contentLength ? contentLength.elements[0].text : 0,
-            type: contentType ? contentType.elements[0].text : "",
+            size: contentLength ? contentLength.elements[0].text as number : 0,
+            type: contentType ? contentType.elements[0].text as string : "",
         };
 
+        info.text = decodeURIComponent(info.name);
+
         return info as IFileInfo;
-    }
-
-    getFolder()
-    {
-
-    }
-
-    createFolder()
-    {
-
-    }
-
-    delete()
-    {
-
-    }
-
-    rename()
-    {
-
-    }
-
-    getFileInfo(): IFileInfo
-    {
-        return null;
-    }
-
-    setFileInfo(info: IFileInfo)
-    {
-
     }
 }

@@ -6,6 +6,28 @@
  */
 
 ////////////////////////////////////////////////////////////////////////////////
+// ASSET TREE
+
+.ff-asset-tree {
+  .ff-tree-node {
+    .ff-header {
+      display: flex;
+      align-items: center;
+      line-height: 1.6em;
+
+      .ff-icon {
+        margin: 0 4px 2px 0;
+        height: 1.1em;
+
+        &.ff-folder {
+          fill: #5383a6;
+        }
+      }
+    }
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // HIERARCHY TREE
 
 .ff-hierarchy-tree-view {
