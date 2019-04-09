@@ -41,6 +41,8 @@ export default class CLight extends CObject3D
 
     update(context)
     {
+        super.update(context);
+
         const light = this.light;
         const ins = this.ins;
 
