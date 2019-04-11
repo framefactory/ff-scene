@@ -43,7 +43,7 @@ const _transform = function(element: IXMLElement) {
 
 export interface IFileInfo
 {
-    path: string;
+    url: string;
     name: string;
     text: string;
     created: string;
@@ -120,7 +120,7 @@ export default class WebDAVProvider
         const contentType = prop.dict["D:getcontenttype"];
 
         const info: Partial<IFileInfo> = {
-            path: element.dict["D:href"].elements[0].text as string,
+            url: element.dict["D:href"].elements[0].text as string,
             name: prop.dict["D:displayname"].elements[0].text as string,
             created: prop.dict["D:creationdate"].elements[0].text as string,
             modified: prop.dict["D:getlastmodified"].elements[0].text as string,

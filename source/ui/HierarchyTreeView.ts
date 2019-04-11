@@ -224,7 +224,7 @@ export class HierarchyTree extends Tree<NCG>
         return null;
     }
 
-    protected onClickNode(event: MouseEvent, node: NCG)
+    protected onNodeClick(event: MouseEvent, node: NCG)
     {
         const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
 
@@ -239,7 +239,7 @@ export class HierarchyTree extends Tree<NCG>
         }
     }
 
-    protected onDblClickNode(event: MouseEvent, treeNode: NCG)
+    protected onNodeDblClick(event: MouseEvent, treeNode: NCG)
     {
         if (treeNode instanceof CGraph) {
             this.selection.activeGraph = treeNode.innerGraph;

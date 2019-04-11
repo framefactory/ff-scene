@@ -17,7 +17,7 @@ import CustomElement, {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { customElement, property, html, PropertyValues, TemplateResult };
+export { System, customElement, property, html, PropertyValues, TemplateResult };
 
 export default class SystemView extends CustomElement
 {

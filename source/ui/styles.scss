@@ -10,6 +10,17 @@
 
 .ff-asset-tree {
   .ff-tree-node {
+
+    &.ff-folder {
+      background-color: $color-background-darker;
+    }
+    &.ff-file {
+      background-color: $color-background-dark;
+    }
+    &[selected] {
+      background-color: $color-primary;
+    }
+
     .ff-header {
       display: flex;
       align-items: center;
@@ -18,10 +29,6 @@
       .ff-icon {
         margin: 0 4px 2px 0;
         height: 1.1em;
-
-        &.ff-folder {
-          fill: #5383a6;
-        }
       }
     }
   }
