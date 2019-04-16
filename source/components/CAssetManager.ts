@@ -13,14 +13,11 @@ import { Dictionary } from "@ff/core/types";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const _reNoTrailingSlash = /(.*?)[\/\\]?$/;
-
 export { IFileInfo };
 
 export interface IAssetEntry
 {
     info: IFileInfo;
-    path: string;
     expanded: boolean;
     children: IAssetEntry[];
 }
@@ -40,8 +37,6 @@ export default class CAssetManager extends Component
     static readonly typeName: string = "CAssetManager";
     static readonly isGraphSingleton = true;
 
-    private _rootUrl: string = "";
-    private _rootPath: string = "";
     private _provider: WebDAVProvider = null;
     private _assetsByPath: Dictionary<IAssetEntry> = {};
     private _rootAsset: IAssetEntry = null;
@@ -54,30 +49,32 @@ export default class CAssetManager extends Component
     }
 
     get rootPath() {
-        return this._rootPath;
+        return this._provider.rootPath;
     }
-
     get rootUrl() {
-        return this._rootUrl;
+        return this._provider.rootUrl;
     }
-
     set rootUrl(url: string) {
-        url = url.split("?")[0];
-        if (!url.endsWith("/")) {
-            url += "/";
-        }
-
-        const href = window.location.href.split("?")[0];
-        url = resolvePathname(url, href);
-
-        this._rootUrl = resolvePathname(".", url);
-        this._rootPath = new URL(this._rootUrl).pathname;
-
-        console.log("CAssetManager - rootUrl: %s, rootPath: %s", this.rootUrl, this.rootPath)
+        this._provider.rootUrl = url;
         this.refresh();
     }
 
     uploadFiles(files: FileList, folder: IAssetEntry)
+    {
+
+    }
+
+    createFolder(parentFolder: IAssetEntry, folderName: string)
+    {
+        this._provider.create(parentFolder.info, folderName);
+    }
+
+    rename(asset: IAssetEntry, name: string)
+    {
+        this._provider.rename(asset.info, name);
+    }
+
+    exists(asset: IAssetEntry)
     {
 
     }
@@ -87,9 +84,12 @@ export default class CAssetManager extends Component
         this.emit<IAssetOpenEvent>({ type: "asset-open", asset });
     }
 
-    moveSelected(folder: IAssetEntry)
+    moveSelected(destinationFolder: IAssetEntry)
     {
+        const selected = Array.from(this._selection.values());
+        const operations = selected.map(asset => this._provider.move(asset.info, destinationFolder.info));
 
+        Promise.all(operations);
     }
 
     select(asset: IAssetEntry, toggle: boolean)
@@ -118,20 +118,7 @@ export default class CAssetManager extends Component
 
     getAssetURL(uri: string)
     {
-        return resolvePathname(uri, this._rootUrl);
-    }
-
-    getAssetPathFromUrl(url: string)
-    {
-        if (url.endsWith("/")) {
-            url = url.substr(0, url.length - 1);
-        }
-        const index = url.indexOf(this._rootPath);
-        if (index >= 0) {
-            return url.substr(index + this._rootPath.length);
-        }
-
-        return url;
+        return resolvePathname(uri, this.rootUrl);
     }
 
     getAssetByPath(path: string)
@@ -141,7 +128,7 @@ export default class CAssetManager extends Component
 
     refresh()
     {
-        this._provider.getFolderInfo(this._rootUrl, true)
+        this._provider.get(".", true)
             .then(infos => {
                 this._rootAsset = this.createAssetTree(infos);
                 this.emit<IAssetTreeChangeEvent>({ type: "tree-change", root: this._rootAsset });
@@ -154,15 +141,13 @@ export default class CAssetManager extends Component
 
         const root: IAssetEntry = {
             info: infos[0],
-            path: "",
             expanded: true,
             children: []
         };
 
         for (let i = 1, ni = infos.length; i < ni; ++i) {
             const info = infos[i];
-            const path = this.getAssetPathFromUrl(info.url);
-            const parts = path.split("/");
+            const parts = info.path.split("/").filter(part => !!part);
 
             let entry = root;
             for (let j = 0, nj = parts.length; j < nj; ++j) {
@@ -177,12 +162,11 @@ export default class CAssetManager extends Component
                 else {
                     const asset: IAssetEntry = {
                         info,
-                        path,
                         expanded: false,
                         children: []
                     };
 
-                    this._assetsByPath[path] = asset;
+                    this._assetsByPath[info.path] = asset;
                     entry.children.push(asset);
                 }
             }

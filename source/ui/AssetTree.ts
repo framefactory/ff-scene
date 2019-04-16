@@ -62,7 +62,7 @@ export default class AssetTree extends Tree<IAssetEntry>
 
     protected getId(treeNode: IAssetEntry): string
     {
-        return treeNode.path;
+        return treeNode.info.path;
     }
 
     protected isNodeExpanded(treeNode: IAssetEntry): boolean
@@ -114,11 +114,11 @@ export default class AssetTree extends Tree<IAssetEntry>
     protected onNodeDragStart(event: DragEvent, sourceTreeNode: IAssetEntry)
     {
         this.assetManager.select(sourceTreeNode, event.ctrlKey);
-        event.dataTransfer.setData("text/plain", sourceTreeNode.path);
+        event.dataTransfer.setData("text/plain", sourceTreeNode.info.path);
 
         const mimeType = sourceTreeNode.info.type;
         if (mimeType === "image/jpeg" || mimeType === "image/png") {
-            const url = this.assetManager.getAssetURL(sourceTreeNode.path);
+            const url = this.assetManager.getAssetURL(sourceTreeNode.info.path);
             event.dataTransfer.setData("text/html", `<img src="${url}">`);
         }
 
@@ -136,7 +136,7 @@ export default class AssetTree extends Tree<IAssetEntry>
         }
         else {
             const sourceTreeNode = this.getNodeFromDragEvent(event);
-            console.log("dropping asset", sourceTreeNode.path);
+            console.log("dropping asset", sourceTreeNode.info.path);
             this.assetManager.moveSelected(targetTreeNode);
         }
     }
