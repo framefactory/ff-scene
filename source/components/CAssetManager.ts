@@ -59,6 +59,10 @@ export default class CAssetManager extends Component
         this.refresh();
     }
 
+    get selectedAssets() {
+        return Array.from(this._selection.values());
+    }
+
     uploadFiles(files: FileList, folder: IAssetEntry)
     {
 
@@ -66,17 +70,17 @@ export default class CAssetManager extends Component
 
     createFolder(parentFolder: IAssetEntry, folderName: string)
     {
-        this._provider.create(parentFolder.info, folderName);
+        return this._provider.create(parentFolder.info, folderName).then(() => this.refresh());
     }
 
-    rename(asset: IAssetEntry, name: string)
+    rename(asset: IAssetEntry, name: string): Promise<void>
     {
-        this._provider.rename(asset.info, name);
+        return this._provider.rename(asset.info, name).then(() => this.refresh());
     }
 
-    exists(asset: IAssetEntry)
+    exists(asset: IAssetEntry): Promise<boolean>
     {
-
+        return this._provider.exists(asset.info);
     }
 
     open(asset: IAssetEntry)
@@ -84,12 +88,26 @@ export default class CAssetManager extends Component
         this.emit<IAssetOpenEvent>({ type: "asset-open", asset });
     }
 
+    delete(asset: IAssetEntry)
+    {
+        return this._provider.delete(asset.info).then(() => this.refresh());
+    }
+
+    deleteSelected()
+    {
+        const selected = Array.from(this._selection.values());
+        const operations = selected.map(asset => this._provider.delete(asset.info));
+
+        return Promise.all(operations).then(() => this.refresh());
+    }
+
     moveSelected(destinationFolder: IAssetEntry)
     {
         const selected = Array.from(this._selection.values());
-        const operations = selected.map(asset => this._provider.move(asset.info, destinationFolder.info));
+        const operations = selected.map(asset =>
+            this._provider.move(asset.info, destinationFolder.info.path + asset.info.name));
 
-        Promise.all(operations);
+        return Promise.all(operations).then(() => this.refresh());
     }
 
     select(asset: IAssetEntry, toggle: boolean)
@@ -126,9 +144,9 @@ export default class CAssetManager extends Component
         return this._assetsByPath[path];
     }
 
-    refresh()
+    refresh(): Promise<void>
     {
-        this._provider.get(".", true)
+        return this._provider.get(".", true)
             .then(infos => {
                 this._rootAsset = this.createAssetTree(infos);
                 this.emit<IAssetTreeChangeEvent>({ type: "tree-change", root: this._rootAsset });

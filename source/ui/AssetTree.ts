@@ -19,6 +19,9 @@ export default class AssetTree extends Tree<IAssetEntry>
     @property({ attribute: false })
     system: System;
 
+    @property({ type: String })
+    path: string = "";
+
     protected assetManager: CAssetManager = null;
 
     protected firstConnected()
@@ -52,7 +55,23 @@ export default class AssetTree extends Tree<IAssetEntry>
         const iconClass = isFolder ? "ff-folder" : "ff-file";
 
         return html`<ff-icon class=${iconClass} name=${iconName}></ff-icon>
-            <div class="ff-text ff-ellipsis">${treeNode.info.text}</div>`;
+            <div class="ff-text ff-ellipsis">${treeNode.info.name}</div>`;
+    }
+
+    protected getChildren(treeNode: IAssetEntry): any[] | null
+    {
+        const children = treeNode.children;
+        return children.sort((a, b) => {
+            if (a.info.folder && !b.info.folder) return -1;
+            if (!a.info.folder && b.info.folder) return 1;
+
+            const aName = a.info.name.toLowerCase();
+            const bName = b.info.name.toLowerCase();
+
+            if (aName < bName) return -1;
+            if (aName > bName) return 1;
+            return 0;
+        });
     }
 
     protected getClasses(treeNode: IAssetEntry): string
@@ -77,7 +96,18 @@ export default class AssetTree extends Tree<IAssetEntry>
 
     protected onTreeChange(event: IAssetTreeChangeEvent)
     {
-        this.root = event.root;
+        // traverse base path to find root tree node
+        const parts = this.path.split("/").filter(part => part !== "");
+        let root = event.root;
+
+        for (let i = 0; i < parts.length; ++i) {
+            root = root.children.find(child => child.info.name === parts[i]);
+            if (!root) {
+                break;
+            }
+        }
+
+        this.root = root || event.root;
         this.requestUpdate();
     }
 
@@ -131,12 +161,12 @@ export default class AssetTree extends Tree<IAssetEntry>
         const files = event.dataTransfer.files;
 
         if (files.length > 0) {
-            console.log("dropping files", files.item(0));
+            //console.log("dropping files", files.item(0));
             this.assetManager.uploadFiles(files, targetTreeNode);
         }
         else {
-            const sourceTreeNode = this.getNodeFromDragEvent(event);
-            console.log("dropping asset", sourceTreeNode.info.path);
+            //const sourceTreeNode = this.getNodeFromDragEvent(event);
+            //console.log("dropping asset", sourceTreeNode.info.path);
             this.assetManager.moveSelected(targetTreeNode);
         }
     }

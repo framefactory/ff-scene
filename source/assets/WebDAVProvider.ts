@@ -111,7 +111,9 @@ export default class WebDAVProvider
     {
         parentPath = typeof parentPath === "object" ? parentPath.path : parentPath;
 
-        const url = resolvePathname(folderName, parentPath, this.rootUrl);
+        let url = resolvePathname(parentPath, this.rootUrl);
+        url = resolvePathname(folderName, url);
+
         console.log("WebDAVProvider.create - url: %s", url);
 
         const props = {
@@ -168,14 +170,14 @@ export default class WebDAVProvider
         const props = {
             headers: {
                 "Content-Type": "text/xml",
-                "Destination": resolvePathname(destinationPath, this.rootUrl),
+                "Destination": encodeURI(resolvePathname(destinationPath, this.rootUrl)),
                 "Overwrite": "F",
             },
             method: "MOVE",
         };
 
-        const url = resolvePathname(filePath, this.rootUrl);
-        console.log("WebDAVProvider.move/rename - url: %s", url);
+        const url = encodeURI(resolvePathname(filePath, this.rootUrl));
+        console.log("WebDAVProvider.move/rename - url: %s to %s", url, props.headers.Destination);
 
         return fetch(url, props).then(response => {
             if (!response.ok) {
@@ -213,8 +215,8 @@ export default class WebDAVProvider
         const contentType = prop.dict["D:getcontenttype"];
 
         const info: Partial<IFileInfo> = {
-            url: element.dict["D:href"].elements[0].text as string,
-            name: prop.dict["D:displayname"].elements[0].text as string,
+            url: decodeURI(element.dict["D:href"].elements[0].text as string),
+            name: decodeURI(prop.dict["D:displayname"].elements[0].text as string),
             created: prop.dict["D:creationdate"].elements[0].text as string,
             modified: prop.dict["D:getlastmodified"].elements[0].text as string,
             folder: isCollection,
@@ -229,7 +231,6 @@ export default class WebDAVProvider
         }
 
         info.path = path;
-        info.text = decodeURIComponent(info.name);
 
         return info as IFileInfo;
     }
