@@ -451,7 +451,7 @@ export default class PropertyField extends CustomElement
                 break;
 
             case "object":
-                text = value ? schema.objectType.name : "---";
+                text = value ? "[object]" : "[null]";
                 break;
         }
 
