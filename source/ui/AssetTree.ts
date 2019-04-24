@@ -24,6 +24,12 @@ export default class AssetTree extends Tree<IAssetEntry>
 
     protected assetManager: CAssetManager = null;
 
+    constructor()
+    {
+        super();
+        this.includeRoot = true;
+    }
+
     protected firstConnected()
     {
         super.firstConnected();

@@ -48,6 +48,9 @@ export default class CAssetManager extends Component
         this._provider = new WebDAVProvider();
     }
 
+    get root() {
+        return this._rootAsset;
+    }
     get rootPath() {
         return this._provider.rootPath;
     }
@@ -56,16 +59,23 @@ export default class CAssetManager extends Component
     }
     set rootUrl(url: string) {
         this._provider.rootUrl = url;
-        this.refresh();
+        this.refresh().then(() => this.rootUrlChanged());
     }
 
     get selectedAssets() {
         return Array.from(this._selection.values());
     }
 
-    uploadFiles(files: FileList, folder: IAssetEntry)
+    uploadFiles(files: FileList, folder: IAssetEntry): Promise<any>
     {
+        const fileArray = Array.from(files);
+        const uploads = fileArray.map(file => {
+            const url = resolvePathname(folder.info.path + file.name, this.rootUrl);
+            const params: RequestInit = { method: "PUT", credentials: "include", body: file };
+            return fetch(url, params);
+        });
 
+        return Promise.all(uploads).then(() => this.refresh());
     }
 
     createFolder(parentFolder: IAssetEntry, folderName: string)
@@ -78,9 +88,9 @@ export default class CAssetManager extends Component
         return this._provider.rename(asset.info, name).then(() => this.refresh());
     }
 
-    exists(asset: IAssetEntry): Promise<boolean>
+    exists(asset: IAssetEntry | string): Promise<boolean>
     {
-        return this._provider.exists(asset.info);
+        return this._provider.exists(typeof asset === "object" ? asset.info : asset);
     }
 
     open(asset: IAssetEntry)
@@ -153,6 +163,11 @@ export default class CAssetManager extends Component
             });
     }
 
+    protected rootUrlChanged(): Promise<any>
+    {
+        return Promise.resolve();
+    }
+
     protected createAssetTree(infos: IFileInfo[]): IAssetEntry
     {
         infos.sort((a, b) => a.url < b.url ? -1 : (a.url > b.url ? 1 : 0));
@@ -180,7 +195,7 @@ export default class CAssetManager extends Component
                 else {
                     const asset: IAssetEntry = {
                         info,
-                        expanded: false,
+                        expanded: true,
                         children: []
                     };
 
