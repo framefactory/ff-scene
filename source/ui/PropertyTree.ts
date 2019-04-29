@@ -87,7 +87,7 @@ export default class PropertyTree extends Tree<ITreeNode>
     protected renderNodeHeader(node: ITreeNode)
     {
         if (node.property) {
-            return html`<div class="ff-text ff-label ff-ellipsis">${node.text}</div>
+            return html`<div class="ff-text ff-property-label ff-ellipsis">${node.text}</div>
                 <ff-property-view .property=${node.property}></ff-property-view>`;
         }
 

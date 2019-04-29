@@ -15,6 +15,7 @@ export default class CModel extends CRenderGraph
     static readonly typeName: string = "CModel";
 
     protected static readonly modelIns = {
+        asset: types.AssetPath("Model.Asset"),
         pickable: types.Boolean("Model.Pickable"),
     };
 
@@ -29,12 +30,24 @@ export default class CModel extends CRenderGraph
 
     private _isPickable = false;
 
+    load(assetPath: string)
+    {
+        this.clearInnerGraph();
+
+        if (assetPath) {
+
+        }
+    }
 
     update(context)
     {
         super.update(context);
 
         const ins = this.ins;
+
+        if (ins.asset.changed) {
+            this.load(ins.asset.value);
+        }
 
         if (ins.pickable.changed && ins.pickable.value !== this._isPickable) {
             this._isPickable = ins.pickable.value;

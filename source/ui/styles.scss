@@ -117,6 +117,7 @@
     &.ff-component {
       background-color: lighten($color-background-darker, 1%);
     }
+
     &.ff-inputs {
       background-color: #2e231e; //darken($color-background, 6%);
       & > .ff-header .ff-text {
@@ -147,10 +148,13 @@
       display: flex;
 
       & > .ff-label {
+        padding-bottom: 1px;
+      }
+      & > .ff-property-label {
         flex: 0 0 27%;
         padding-bottom: 1px;
       }
-      .ff-property-view {
+      & > .ff-property-view {
         flex: 1 1 auto;
       }
     }
