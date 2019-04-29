@@ -28,7 +28,7 @@ export default class CLight extends CObject3D
         color: types.ColorRGB("Light.Color"),
         intensity: types.Number("Light.Intensity", 1),
         shadowEnabled: types.Boolean("Shadow.Enabled"),
-        shadowMap: types.Enum("Shadow.Resolution", EShadowMapResolution),
+        shadowResolution: types.Enum("Shadow.Resolution", EShadowMapResolution, EShadowMapResolution.Medium),
         shadowBlur: types.Number("Shadow.Blur", 1),
     };
 
@@ -52,10 +52,10 @@ export default class CLight extends CObject3D
         }
 
         if (ins.shadowEnabled.changed || (ins.shadowEnabled.value && (
-            ins.shadowMap.changed || ins.shadowBlur.changed))) {
+            ins.shadowResolution.changed || ins.shadowBlur.changed))) {
 
             light.castShadow = ins.shadowEnabled.value;
-            const mapResolution = _mapResolution[ins.shadowMap.getValidatedValue()];
+            const mapResolution = _mapResolution[ins.shadowResolution.getValidatedValue()];
             light.shadow.mapSize.set(mapResolution, mapResolution);
             light.shadow.radius = ins.shadowBlur.value;
         }
