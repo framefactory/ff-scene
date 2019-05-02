@@ -20,7 +20,7 @@ export default class CPointLight extends CLight
     static readonly typeName: string = "CPointLight";
 
     protected static readonly pointLightIns = {
-        position: types.Vector3("Light.Position", [ 0, 1, 0 ]),
+        position: types.Vector3("Light.Position"),
         distance: types.Number("Light.Distance"),
         decay: types.Number("Light.Decay", 1),
     };

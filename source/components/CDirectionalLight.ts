@@ -18,8 +18,8 @@ export default class CDirectionalLight extends CLight
     static readonly typeName: string = "CDirectionalLight";
 
     protected static readonly dirLightIns = {
-        position: types.Vector3("Light.Position", [ 0, 1, 0 ]),
-        target: types.Vector3("Light.Target"),
+        position: types.Vector3("Light.Position"),
+        target: types.Vector3("Light.Target", [ 0, -1, 0 ]),
         shadowSize: types.Number("Shadow.Size", 100),
     };
 
@@ -30,6 +30,7 @@ export default class CDirectionalLight extends CLight
         super(node, id);
 
         this.object3D = new THREE.DirectionalLight();
+        this.light.target.matrixAutoUpdate = false;
     }
 
     get light(): THREE.DirectionalLight {
@@ -47,6 +48,7 @@ export default class CDirectionalLight extends CLight
             light.position.fromArray(ins.position.value);
             light.target.position.fromArray(ins.target.value);
             light.updateMatrix();
+            light.target.updateMatrix();
         }
 
         if (ins.shadowSize.changed) {
@@ -58,5 +60,17 @@ export default class CDirectionalLight extends CLight
         }
 
         return true;
+    }
+
+    protected onAddToParent(parent: THREE.Object3D)
+    {
+        super.onAddToParent(parent);
+        parent.add(this.light.target);
+    }
+
+    protected onRemoveFromParent(parent: THREE.Object3D)
+    {
+        super.onRemoveFromParent(parent);
+        parent.remove(this.light.target);
     }
 }

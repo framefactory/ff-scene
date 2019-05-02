@@ -103,8 +103,8 @@ export default class CObject3D extends Component implements ICObject3D
      */
     set object3D(object: THREE.Object3D)
     {
-        const currentObject = this._object3D;
         const parentComponent = this.parentComponent;
+        const currentObject = this._object3D;
 
         if (currentObject) {
             currentObject.userData["component"] = null;
@@ -112,7 +112,7 @@ export default class CObject3D extends Component implements ICObject3D
             this.unregisterPickableObject3D(currentObject, true);
 
             if (currentObject.parent) {
-                currentObject.parent.remove(currentObject);
+                this.onRemoveFromParent(currentObject.parent);
             }
         }
 
@@ -127,7 +127,7 @@ export default class CObject3D extends Component implements ICObject3D
             this.registerPickableObject3D(object, true);
 
             if (parentComponent) {
-                parentComponent.object3D.add(object);
+                this.onAddToParent(parentComponent.object3D);
             }
         }
     }
@@ -255,6 +255,16 @@ export default class CObject3D extends Component implements ICObject3D
         return true;
     }
 
+    protected onAddToParent(parent: THREE.Object3D)
+    {
+        parent.add(this._object3D);
+    }
+
+    protected onRemoveFromParent(parent: THREE.Object3D)
+    {
+        parent.remove(this._object3D);
+    }
+
     /**
      * Adds a [[THREE.Object3D]] as a child to this component's object.
      * Registers the object with the picking service to make it pickable.
@@ -303,7 +313,7 @@ export default class CObject3D extends Component implements ICObject3D
     {
         // add this THREE.Object3D to the parent THREE.Object3D
         if (this._object3D && !this._object3D.parent && event.add) {
-            event.object.object3D.add(this._object3D);
+            this.onAddToParent(event.object.object3D);
         }
     }
 }
