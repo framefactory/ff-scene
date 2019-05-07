@@ -283,8 +283,8 @@ export default class CObject3D extends Component implements ICObject3D
      */
     protected removeObject3D(object: THREE.Object3D)
     {
-        this._object3D.remove(object);
         this.unregisterPickableObject3D(object, true);
+        this._object3D.remove(object);
     }
 
     /**

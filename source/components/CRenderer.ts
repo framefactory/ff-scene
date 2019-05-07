@@ -158,6 +158,13 @@ export default class CRenderer extends Component
         //console.log("RenderSystem.detachView - total views: %s", this.views.length);
     }
 
+    logInfo()
+    {
+        this.views.forEach(view => {
+            console.log(view.renderer.info);
+        });
+    }
+
     protected onPulse(event: IPulseEvent)
     {
         if (event.systemUpdated || this._forceRender) {
