@@ -69,7 +69,9 @@ export default class WebDAVProvider
         this._rootUrl = url;
         this._rootPath = new URL(url).pathname;
 
-        console.log("WebDAVProvider - rootUrl: %s, rootPath: %s", this.rootUrl, this.rootPath)
+        if (ENV_DEVELOPMENT) {
+            console.log("WebDAVProvider - rootUrl: %s, rootPath: %s", this.rootUrl, this.rootPath)
+        }
     }
     get rootUrl() {
         return this._rootUrl;
@@ -114,7 +116,9 @@ export default class WebDAVProvider
         let url = resolvePathname(parentPath, this.rootUrl);
         url = resolvePathname(folderName, url);
 
-        console.log("WebDAVProvider.create - url: %s", url);
+        if (ENV_DEVELOPMENT) {
+            console.log("WebDAVProvider.create - url: %s", url);
+        }
 
         const props = {
             headers: {
@@ -135,7 +139,10 @@ export default class WebDAVProvider
         filePath = typeof filePath === "object" ? filePath.path : filePath;
 
         const url = resolvePathname(filePath, this.rootUrl);
-        console.log("WebDAVProvider.delete - url: %s", url);
+
+        if (ENV_DEVELOPMENT) {
+            console.log("WebDAVProvider.delete - url: %s", url);
+        }
 
         const props = {
             headers: {
@@ -177,7 +184,10 @@ export default class WebDAVProvider
         };
 
         const url = encodeURI(resolvePathname(filePath, this.rootUrl));
-        console.log("WebDAVProvider.move/rename - url: %s to %s", url, props.headers.Destination);
+
+        if (ENV_DEVELOPMENT) {
+            console.log("WebDAVProvider.move/rename - url: %s to %s", url, props.headers.Destination);
+        }
 
         return fetch(url, props).then(response => {
             if (!response.ok) {

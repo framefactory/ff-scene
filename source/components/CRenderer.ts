@@ -145,7 +145,10 @@ export default class CRenderer extends Component
         }
 
         this.views.push(view);
-        //console.log("RenderSystem.attachView - total views: %s", this.views.length);
+
+        if (ENV_DEVELOPMENT) {
+            console.log("RenderSystem.attachView - total views: %s", this.views.length);
+        }
     }
 
     detachView(view: RenderView)
@@ -155,7 +158,10 @@ export default class CRenderer extends Component
             throw new Error("render view not registered");
         }
         this.views.splice(index, 1);
-        //console.log("RenderSystem.detachView - total views: %s", this.views.length);
+
+        if (ENV_DEVELOPMENT) {
+            console.log("RenderSystem.detachView - total views: %s", this.views.length);
+        }
     }
 
     logInfo()
@@ -168,7 +174,9 @@ export default class CRenderer extends Component
     protected onPulse(event: IPulseEvent)
     {
         if (event.systemUpdated || this._forceRender) {
-            console.log("CRenderer.onPulse - render views...");
+            if (ENV_DEVELOPMENT) {
+                console.log("CRenderer.onPulse - render views...");
+            }
 
             this.views.forEach(view => {
                 view.render();

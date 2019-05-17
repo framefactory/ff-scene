@@ -122,8 +122,10 @@ export default class RenderView extends Publisher implements IManip
 
     renderImage(width: number, height: number, format: string, quality: number)
     {
-        console.log("RenderView.renderImage - width: %s, height: %s, format: %s, quality: %s",
-            width, height, format, quality);
+        if (ENV_DEVELOPMENT) {
+            console.log("RenderView.renderImage - width: %s, height: %s, format: %s, quality: %s",
+                width, height, format, quality);
+        }
 
         const canvasWidth = this.canvas.width;
         const canvasHeight = this.canvas.height;
@@ -147,7 +149,10 @@ export default class RenderView extends Publisher implements IManip
         let camera = sceneComponent.activeCamera;
 
         if (!scene || !camera) {
-            console.warn(!scene ? !camera ? "no scene/camera" : "no scene" : "no camera");
+            if (ENV_DEVELOPMENT) {
+                console.warn(!scene ? !camera ? "no scene/camera" : "no scene" : "no camera");
+            }
+
             scene = this.defaultScene;
             camera = this.defaultCamera;
         }
@@ -348,7 +353,9 @@ export default class RenderView extends Publisher implements IManip
             if (scene && camera) {
                 object3D = this.picker.pickObject(scene, camera, event);
                 if (object3D === undefined) {
-                    console.log("Pick Index - Background");
+                    if (ENV_DEVELOPMENT) {
+                        console.log("Pick Index - Background");
+                    }
                 }
                 else {
                     let componentObject3D = object3D;
@@ -358,11 +365,14 @@ export default class RenderView extends Publisher implements IManip
                             componentObject3D = componentObject3D.parent;
                         }
                     }
-                    if (component) {
-                        console.log("Pick Index - Component: %s", component.typeName);
-                    }
-                    else {
-                        console.warn("Pick Index - Object without component");
+
+                    if (ENV_DEVELOPMENT) {
+                        if (component) {
+                            console.log("Pick Index - Component: %s", component.typeName);
+                        }
+                        else {
+                            console.warn("Pick Index - Object without component");
+                        }
                     }
                 }
             }
