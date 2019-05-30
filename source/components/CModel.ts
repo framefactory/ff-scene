@@ -5,8 +5,12 @@
  * License: MIT
  */
 
-import CRenderGraph, { types } from "./CRenderGraph";
+import * as THREE from "three";
+
 import { IPointerEvent } from "../RenderView";
+
+import CRenderGraph, { types } from "./CRenderGraph";
+import CAssetLoader from "./CAssetLoader";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -30,13 +34,25 @@ export default class CModel extends CRenderGraph
 
     private _isPickable = false;
 
+    protected get assetLoader() {
+        return this.getMainComponent(CAssetLoader, true);
+    }
+
     load(assetPath: string)
+    {
+        const modelLoader = this.assetLoader.getLoader("model");
+        this.clearInnerGraph();
+
+        if (assetPath && modelLoader && modelLoader.canLoad(assetPath)) {
+
+        }
+    }
+
+    parse(object: THREE.Object3D)
     {
         this.clearInnerGraph();
 
-        if (assetPath) {
 
-        }
     }
 
     update(context)
