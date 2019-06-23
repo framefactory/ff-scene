@@ -25,6 +25,6 @@ export default class SelectionView extends SystemView
 
     protected firstConnected()
     {
-        this.selection = this.system.getComponent(CSelection, true);
+        this.selection = this.system.getComponent(CSelection);
     }
 }

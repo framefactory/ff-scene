@@ -71,7 +71,7 @@ export {
     CVideoTexture,
 };
 
-export const componentTypes = [
+export const components = [
     CAssetManager,
     CBackground,
     CBasicMaterial,
