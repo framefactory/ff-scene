@@ -10,6 +10,7 @@ import CPulse, { IPulseEvent } from "@ff/graph/components/CPulse";
 
 import RenderView from "../RenderView";
 import CScene, { IActiveCameraEvent } from "./CScene";
+import Notification from "@ff/ui/Notification";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -24,15 +25,6 @@ export interface IActiveSceneEvent extends ITypedEvent<"active-scene">
     previous: CScene;
     next: CScene;
 }
-
-const _inputs = {
-    shadowsEnabled: types.Boolean("Shadows.Enabled", true),
-};
-
-const _outputs = {
-    maxTextureSize: types.Integer("Caps.MaxTextureSize"),
-    maxCubemapSize: types.Integer("Caps.MaxCubemapSize"),
-};
 
 /**
  * Manages 3D rendering. Keeps track of one "active" scene/camera pair,
@@ -53,8 +45,17 @@ export default class CRenderer extends Component
     static readonly typeName: string = "CRenderer";
     static readonly isSystemSingleton: boolean = true;
 
-    ins = this.addInputs(_inputs);
-    outs = this.addOutputs(_outputs);
+    static readonly ins = {
+        shadowsEnabled: types.Boolean("Shadows.Enabled", true),
+    };
+
+    static readonly outs = {
+        maxTextureSize: types.Integer("Caps.MaxTextureSize"),
+        maxCubemapSize: types.Integer("Caps.MaxCubemapSize"),
+    };
+
+    ins = this.addInputs(CRenderer.ins);
+    outs = this.addOutputs(CRenderer.outs);
 
     readonly views: RenderView[] = [];
 
@@ -138,10 +139,15 @@ export default class CRenderer extends Component
     attachView(view: RenderView)
     {
         // set WebGL caps if it's the first view attached
-        if (!this.views.length) {
+        if (this.views.length === 0) {
             const renderer = view.renderer;
-            this.outs.maxTextureSize.setValue(renderer.capabilities.maxTextureSize);
-            this.outs.maxCubemapSize.setValue(renderer.capabilities.maxCubemapSize);
+            const outs = this.outs;
+            outs.maxTextureSize.setValue(renderer.capabilities.maxTextureSize);
+            outs.maxCubemapSize.setValue(renderer.capabilities.maxCubemapSize);
+
+            if (ENV_DEVELOPMENT) {
+                //Notification.show(`Max. texture size: ${outs.maxTextureSize.value}`, "info");
+            }
         }
 
         this.views.push(view);
