@@ -35,9 +35,13 @@ export { Viewport };
 
 interface IBaseEvent extends IViewportBaseEvent
 {
+    /** The render view on which the event occurred. */
     view: RenderView;
-    object3D: THREE.Object3D;
+    /** The component the event originates from. */
     component: Component;
+    /** The 3D object the event originates from. */
+    object3D: THREE.Object3D;
+    /** In order to stop propagation of the event, set this to true while handling the event. */
     stopPropagation: boolean;
 }
 
@@ -63,7 +67,6 @@ export default class RenderView extends Publisher implements IManip
     protected defaultScene = new THREE.Scene();
     protected defaultCamera = new UniversalCamera();
 
-    protected shouldResize = false;
     protected picker: GPUPicker;
 
     constructor(system: System, canvas: HTMLCanvasElement, overlay: HTMLElement)

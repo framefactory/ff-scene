@@ -48,6 +48,10 @@ export default class CCamera extends CObject3D
         super(node, id);
         this.object3D = new UniversalCamera();
     }
+
+    /**
+     * Returns the internal [[UniversalCamera]] camera object of this component.
+     */
     get camera() {
         return this.object3D as UniversalCamera;
     }
@@ -56,6 +60,7 @@ export default class CCamera extends CObject3D
     {
         const { autoActivate, activate } = this.ins;
 
+        // set the camera as active in the containing scene
         if (activate.changed || autoActivate.changed && autoActivate.value) {
             const scene = this.scene;
             if (scene) {
@@ -96,6 +101,11 @@ export default class CCamera extends CObject3D
         super.dispose();
     }
 
+    /**
+     * Sets the position, rotation, and order properties from the given 4x4 transform matrix.
+     * Updating the properties then also updates the matrix of the internal universal camera object.
+     * @param matrix A 4x4 transform matrix. If omitted, properties are updated from the matrix of the internal camera.
+     */
     setPropertiesFromMatrix(matrix?: THREE.Matrix4)
     {
         const silent = !matrix;
