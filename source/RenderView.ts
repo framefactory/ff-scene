@@ -83,6 +83,8 @@ export default class RenderView extends Publisher implements IManip
         });
 
         this.renderer.autoClear = false;
+        this.renderer.gammaOutput = true;
+        this.renderer.gammaFactor = 2;
 
         this.picker = new GPUPicker(this.renderer);
     }
