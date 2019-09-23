@@ -5,12 +5,13 @@
  * License: MIT
  */
 
+import * as THREE from "three";
+
 import Component, { Node, ITypedEvent, types } from "@ff/graph/Component";
 import CPulse, { IPulseEvent } from "@ff/graph/components/CPulse";
 
 import RenderView from "../RenderView";
 import CScene, { IActiveCameraEvent } from "./CScene";
-import Notification from "@ff/ui/Notification";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -46,6 +47,8 @@ export default class CRenderer extends Component
     static readonly isSystemSingleton: boolean = true;
 
     static readonly ins = {
+        exposure: types.Number("Shading.Exposure", 1),
+        gamma: types.Number("Shading.Gamma", 2),
         shadowsEnabled: types.Boolean("Shadows.Enabled", true),
     };
 
@@ -132,6 +135,27 @@ export default class CRenderer extends Component
         if (ins.shadowsEnabled.changed) {
             this.views.forEach(view => view.renderer.shadowMap.enabled = ins.shadowsEnabled.value);
         }
+        if (ins.exposure.changed) {
+            this.views.forEach(view => view.renderer.toneMappingExposure = ins.exposure.value);
+        }
+        if (ins.gamma.changed) {
+            this.views.forEach(view => view.renderer.gammaFactor = ins.gamma.value);
+
+            const scene = this.activeScene;
+            if (scene) {
+                scene.traverse(object => {
+                    const mesh = object as THREE.Mesh;
+                    if (mesh.isMesh) {
+                        if (Array.isArray(mesh.material)) {
+                            mesh.material.forEach(material => material.needsUpdate = true);
+                        }
+                        else {
+                            mesh.material.needsUpdate = true;
+                        }
+                    }
+                });
+            }
+        }
 
         return true;
     }
@@ -144,10 +168,6 @@ export default class CRenderer extends Component
             const outs = this.outs;
             outs.maxTextureSize.setValue(renderer.capabilities.maxTextureSize);
             outs.maxCubemapSize.setValue(renderer.capabilities.maxCubemapSize);
-
-            if (ENV_DEVELOPMENT) {
-                //Notification.show(`Max. texture size: ${outs.maxTextureSize.value}`, "info");
-            }
         }
 
         this.views.push(view);
