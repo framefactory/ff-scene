@@ -103,9 +103,7 @@ export default class CObject3D extends Component implements ICObject3D
      */
     set object3D(object: THREE.Object3D)
     {
-        const parentComponent = this.parentComponent;
         const currentObject = this._object3D;
-
         if (currentObject) {
             currentObject.userData["component"] = null;
 
@@ -126,6 +124,7 @@ export default class CObject3D extends Component implements ICObject3D
 
             this.registerPickableObject3D(object, true);
 
+            const parentComponent = this.parentComponent;
             if (parentComponent) {
                 this.onAddToParent(parentComponent.object3D);
             }

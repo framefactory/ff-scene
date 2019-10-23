@@ -7,12 +7,13 @@
 
 import * as THREE from "three";
 
-import { Node, types } from "@ff/graph/Component";
+import { IComponentEvent, Node, types } from "@ff/graph/Component";
 
 import CTransform from "./CTransform";
 import CObject3D from "./CObject3D";
 import CGeometry from "./CGeometry";
 import CMaterial from "./CMaterial";
+import ComponentTracker from "@ff/graph/ComponentTracker";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -29,17 +30,46 @@ export default class CMesh extends CObject3D
 
     ins = this.addInputs<CObject3D, typeof CMesh["meshIns"]>(CMesh.meshIns);
 
-    constructor(node: Node, id: string)
-    {
-        super(node, id);
+    protected static dummyGeometry = new THREE.BufferGeometry();
+    protected static dummyMaterial = new THREE.MeshBasicMaterial();
 
-        this.object3D = new THREE.Mesh();
-        this.object3D.visible = false;
-        this.object3D.castShadow = true;
-    }
+    protected geometryComponent: CGeometry = null;
+    protected materialComponent: CMaterial = null;
 
     get mesh() {
         return this.object3D as THREE.Mesh;
+    }
+
+    create()
+    {
+        this.object3D = new THREE.Mesh(CMesh.dummyGeometry, CMesh.dummyMaterial);
+        this.object3D.castShadow = true;
+
+        this.trackComponent(CGeometry, component => {
+            if (!this.geometryComponent) {
+                this.geometryComponent = component;
+                component.on("update", this.updateGeometry, this);
+            }
+        }, component => {
+            if (this.geometryComponent === component) {
+                this.geometryComponent = null;
+                component.off("update", this.updateGeometry, this);
+            }
+        });
+
+        this.trackComponent(CMaterial, component => {
+            if (!this.materialComponent) {
+                this.materialComponent = component;
+                component.on("update", this.updateMaterial, this);
+            }
+        }, component => {
+            if (this.materialComponent === component) {
+                this.materialComponent = null;
+                component.off("update", this.updateMaterial, this);
+            }
+        });
+
+        super.create();
     }
 
     update(context)
@@ -72,17 +102,17 @@ export default class CMesh extends CObject3D
         return `${this.typeName} - Geometry: '${geo ? geo.type : "N/A"}', Material: '${mat ? mat.type : "N/A"}'`
     }
 
-    protected updateGeometry(component: CGeometry | null)
+    protected updateGeometry(component: CGeometry | undefined)
     {
-        const geometry = component ? component.geometry : null;
-        this.mesh.geometry = geometry;
-        this.mesh.visible = !!(geometry && this.mesh.material);
+        component = component || this.geometryComponent;
+        const geometry = component ? component.geometry : undefined;
+        this.mesh.geometry = geometry || CMesh.dummyGeometry;
     }
 
-    protected updateMaterial(component: CMaterial | null)
+    protected updateMaterial(component: CMaterial | undefined)
     {
-        const material = component ? component.material : null;
-        this.mesh.material = material;
-        this.mesh.visible = !!(this.mesh.geometry && material);
+        component = component || this.materialComponent;
+        const material = component ? component.material : undefined;
+        this.mesh.material = material || CMesh.dummyMaterial;
     }
 }
