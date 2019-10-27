@@ -53,7 +53,6 @@ export default class CMaterial extends Component
         blending: types.Enum("Material.Blending", EBlending, EBlending.Normal),
         transparent: types.Boolean("Material.Transparent"),
         flat: types.Boolean("Material.Flat", false),
-        lights: types.Boolean("Material.Lights", true),
         fog: types.Boolean("Material.Fog", true),
         writeColor: types.Boolean("Material.WriteColor", true),
         writeDepth: types.Boolean("Material.WriteDepth", true),
@@ -92,11 +91,10 @@ export default class CMaterial extends Component
         if (ins.side.changed) {
             material.side = _THREE_SIDE[ins.side.getValidatedValue()];
         }
-        if (ins.blending.changed || ins.transparent.changed || ins.flat.changed || ins.lights.changed || ins.fog.changed) {
+        if (ins.blending.changed || ins.transparent.changed || ins.flat.changed || ins.fog.changed) {
             material.blending = _THREE_BLENDING[ins.blending.getValidatedValue()];
             material.transparent = ins.transparent.value;
             material.flatShading = ins.flat.value;
-            material.lights = ins.lights.value;
             material.fog = ins.fog.value;
         }
         if (ins.writeColor.changed || ins.writeDepth.changed || ins.testDepth.changed || ins.depthFunc.changed) {
