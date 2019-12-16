@@ -15,6 +15,15 @@ import CScene, { IActiveCameraEvent } from "./CScene";
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export enum EShadowMapType { Basic, PCF, PCFSoft /* , VSM */ }
+
+const _shadowMapType = {
+    [EShadowMapType.Basic]: THREE.BasicShadowMap,
+    [EShadowMapType.PCF]: THREE.PCFShadowMap,
+    [EShadowMapType.PCFSoft]: THREE.PCFSoftShadowMap,
+    //[EShadowMapType.VSM]: THREE.VSMShadowMap,
+};
+
 export { IActiveCameraEvent };
 
 /**
@@ -50,6 +59,7 @@ export default class CRenderer extends Component
         exposure: types.Number("Shading.Exposure", 1),
         gamma: types.Number("Shading.Gamma", 2),
         shadowsEnabled: types.Boolean("Shadows.Enabled", true),
+        shadowMapType: types.Enum("Shadows.MapType", EShadowMapType, EShadowMapType.PCF),
     };
 
     static readonly outs = {
@@ -132,9 +142,6 @@ export default class CRenderer extends Component
     {
         const ins = this.ins;
 
-        if (ins.shadowsEnabled.changed) {
-            this.views.forEach(view => view.renderer.shadowMap.enabled = ins.shadowsEnabled.value);
-        }
         if (ins.exposure.changed) {
             this.views.forEach(view => view.renderer.toneMappingExposure = ins.exposure.value);
         }
@@ -155,6 +162,13 @@ export default class CRenderer extends Component
                     }
                 });
             }
+        }
+
+        if (ins.shadowsEnabled.changed) {
+            this.views.forEach(view => view.renderer.shadowMap.enabled = ins.shadowsEnabled.value);
+        }
+        if (ins.shadowMapType.changed) {
+            this.views.forEach(view => view.renderer.shadowMap.type = _shadowMapType[ins.shadowMapType.getValidatedValue()]);
         }
 
         return true;

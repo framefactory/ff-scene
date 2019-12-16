@@ -55,9 +55,13 @@ export default class CLight extends CObject3D
             ins.shadowResolution.changed || ins.shadowBlur.changed))) {
 
             light.castShadow = ins.shadowEnabled.value;
-            const mapResolution = _mapResolution[ins.shadowResolution.getValidatedValue()];
-            light.shadow.mapSize.set(mapResolution, mapResolution);
             light.shadow.radius = ins.shadowBlur.value;
+
+            if (ins.shadowResolution.changed) {
+                const mapResolution = _mapResolution[ins.shadowResolution.getValidatedValue()];
+                light.shadow.mapSize.set(mapResolution, mapResolution);
+                light.shadow.map = null; // TODO: check for resource leak
+            }
         }
 
         return true;
