@@ -1,17 +1,18 @@
 {
     "compilerOptions": {
-        "composite": true,
+        "noEmit": true,
         "target": "ES6",
         "module": "commonjs",
         "experimentalDecorators": true,
+        "sourceMap": true,
 
-        "baseUrl": "..",
+        "baseUrl": ".",
         "paths": {
-            "@ff/core/*": [ "./ff-core/source/*" ],
-            "@ff/graph/*": [ "./ff-graph/source/*" ],
-            "@ff/ui/*": [ "./ff-ui/source/*" ],
-            "@ff/browser/*": [ "./ff-browser/source/*" ],
-            "@ff/three/*": [ "./ff-three/source/*" ]
+            "@ff/core/*": [ "../ff-core/source/*" ],
+            "@ff/graph/*": [ "../ff-graph/source/*" ],
+            "@ff/browser/*": [ "../ff-browser/source/*" ],
+            "@ff/ui/*": [ "../ff-ui/source/*" ],
+            "@ff/three/*": [ "../ff-three/source/*" ]
         }
     }
 }

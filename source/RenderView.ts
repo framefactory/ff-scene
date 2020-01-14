@@ -12,7 +12,6 @@ import System from "@ff/graph/System";
 import Component from "@ff/graph/Component";
 import CHierarchy from "@ff/graph/components/CHierarchy";
 
-
 import {
     IManip,
     IPointerEvent as IManipPointerEvent,
@@ -83,7 +82,7 @@ export default class RenderView extends Publisher implements IManip
         });
 
         this.renderer.autoClear = false;
-        this.renderer.gammaOutput = true;
+        //this.renderer.gammaOutput = true;
         this.renderer.gammaFactor = 2;
 
         this.picker = new GPUPicker(this.renderer);
