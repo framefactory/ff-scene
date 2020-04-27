@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Color } from "three";
 
 import { types } from "@ff/graph/propertyTypes";
 
@@ -48,9 +48,9 @@ export default class CGrid extends CObject3D
             const props: IGridProps = {
                 size: size.value,
                 mainDivisions: mainDivs.value,
-                mainColor: new THREE.Color().fromArray(mainColor.value),
+                mainColor: new Color().fromArray(mainColor.value),
                 subDivisions: subDivs.value,
-                subColor: new THREE.Color().fromArray(subColor.value)
+                subColor: new Color().fromArray(subColor.value)
             };
 
             const newGrid = this.object3D = new Grid(props);

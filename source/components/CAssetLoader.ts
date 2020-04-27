@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { LoadingManager } from "three";
 
 import Component, { Node, ITypedEvent } from "@ff/graph/Component";
 import Loader from "@ff/three/loaders/Loader";
@@ -26,7 +26,7 @@ export default class CAssetLoader extends Component
 {
     static readonly typeName: string = "CAssetLoader";
 
-    readonly loadingManager: THREE.LoadingManager;
+    readonly loadingManager: LoadingManager;
 
     private _loaders = new Map<string, Loader>();
     private _rootUrl: string;
@@ -37,7 +37,7 @@ export default class CAssetLoader extends Component
     {
         super(node, id);
 
-        const loadingManager = this.loadingManager = new THREE.LoadingManager();
+        const loadingManager = this.loadingManager = new LoadingManager();
 
         loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
             this.emit<IAssetLoadingEvent>({ type: "loading", state: ELoadingState.Start, url, itemsLoaded, itemsTotal });

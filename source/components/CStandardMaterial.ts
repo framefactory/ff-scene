@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { MeshStandardMaterial } from "three";
 
 import CMaterial, { Node, types } from "./CMaterial";
 
@@ -25,11 +25,11 @@ export default class CStandardMaterial extends CMaterial
     constructor(node: Node, id: string)
     {
         super(node, id);
-        this._material = new THREE.MeshStandardMaterial();
+        this._material = new MeshStandardMaterial();
     }
 
     get material() {
-        return this._material as THREE.MeshStandardMaterial;
+        return this._material as MeshStandardMaterial;
     }
 
     update()

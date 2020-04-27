@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Object3D } from "three";
 
 import CGraph, { Node, types } from "@ff/graph/components/CGraph";
 import CHierarchy from "@ff/graph/components/CHierarchy";
@@ -28,14 +28,14 @@ export default class CRenderGraph extends CGraph implements ICObject3D
 
     ins = this.addInputs<CGraph, typeof CRenderGraph.rgIns>(CRenderGraph.rgIns);
 
-    private _object3D: THREE.Object3D = null;
+    private _object3D: Object3D = null;
     private _isAttached = false;
 
     constructor(node: Node, id: string)
     {
         super(node, id);
 
-        this._object3D = new THREE.Object3D();
+        this._object3D = new Object3D();
         this._object3D.matrixAutoUpdate = false;
     }
 
@@ -48,8 +48,8 @@ export default class CRenderGraph extends CGraph implements ICObject3D
         const transform = this.transform;
         return transform ? transform.getParentComponent(CScene, true) : undefined;
     }
-    /** The underlying [[THREE.Object3D]] of this component. */
-    get object3D(): THREE.Object3D | null {
+    /** The underlying [[Object3D]] of this component. */
+    get object3D(): Object3D | null {
         return this._object3D;
     }
 

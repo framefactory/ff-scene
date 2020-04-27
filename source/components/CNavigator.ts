@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import Component, { IComponentEvent, types } from "@ff/graph/Component";
+import Component, { types } from "@ff/graph/Component";
 
 import OrbitManipulator from "@ff/three/OrbitManipulator";
 

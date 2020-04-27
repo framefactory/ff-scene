@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Object3D } from "three";
 
 import { IPointerEvent } from "../RenderView";
 
@@ -48,7 +48,7 @@ export default class CModel extends CRenderGraph
         }
     }
 
-    parse(object: THREE.Object3D)
+    parse(object: Object3D)
     {
         this.clearInnerGraph();
 

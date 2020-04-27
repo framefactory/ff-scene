@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Light } from "three";
 
 import { types } from "@ff/graph/propertyTypes";
 import CObject3D from "./CObject3D";
@@ -34,9 +34,9 @@ export default class CLight extends CObject3D
 
     ins = this.addInputs<CObject3D, typeof CLight["lightIns"]>(CLight.lightIns);
 
-    get light(): THREE.Light
+    get light(): Light
     {
-        return this.object3D as THREE.Light;
+        return this.object3D as Light;
     }
 
     update(context)

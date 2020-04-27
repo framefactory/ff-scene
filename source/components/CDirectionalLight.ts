@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Object3D, DirectionalLight } from "three";
 
 import { Node, types } from "@ff/graph/Component";
 
@@ -29,12 +29,12 @@ export default class CDirectionalLight extends CLight
     {
         super(node, id);
 
-        this.object3D = new THREE.DirectionalLight();
+        this.object3D = new DirectionalLight();
         this.light.target.matrixAutoUpdate = false;
     }
 
-    get light(): THREE.DirectionalLight {
-        return this.object3D as THREE.DirectionalLight;
+    get light(): DirectionalLight {
+        return this.object3D as DirectionalLight;
     }
 
     update(context)
@@ -62,13 +62,13 @@ export default class CDirectionalLight extends CLight
         return true;
     }
 
-    protected onAddToParent(parent: THREE.Object3D)
+    protected onAddToParent(parent: Object3D)
     {
         super.onAddToParent(parent);
         parent.add(this.light.target);
     }
 
-    protected onRemoveFromParent(parent: THREE.Object3D)
+    protected onRemoveFromParent(parent: Object3D)
     {
         super.onRemoveFromParent(parent);
         parent.remove(this.light.target);

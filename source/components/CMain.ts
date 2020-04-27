@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Scene, Camera } from "three";
 
 import Component, { types } from "@ff/graph/Component";
 import { IComponentEvent } from "@ff/graph/System"
@@ -40,11 +40,11 @@ export default class CMain extends Component
         return this.selectedCamera;
     }
 
-    get scene(): THREE.Scene | null {
+    get scene(): Scene | null {
         return this.selectedScene ? this.selectedScene.scene : null;
     }
 
-    get camera(): THREE.Camera | null {
+    get camera(): Camera | null {
         return this.selectedCamera ? this.selectedCamera.camera : null;
     }
 

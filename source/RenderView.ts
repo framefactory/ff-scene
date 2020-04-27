@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { WebGLRenderer, Object3D, Camera, Scene, Box3, Vector3 } from "three";
 
 import Publisher from "@ff/core/Publisher";
 import System from "@ff/graph/System";
@@ -39,7 +39,7 @@ interface IBaseEvent extends IViewportBaseEvent
     /** The component the event originates from. */
     component: Component;
     /** The 3D object the event originates from. */
-    object3D: THREE.Object3D;
+    object3D: Object3D;
     /** In order to stop propagation of the event, set this to true while handling the event. */
     stopPropagation: boolean;
 }
@@ -50,7 +50,7 @@ export interface ITriggerEvent extends IManipTriggerEvent, IBaseEvent { }
 export default class RenderView extends Publisher implements IManip
 {
     readonly system: System;
-    readonly renderer: THREE.WebGLRenderer;
+    readonly renderer: WebGLRenderer;
     readonly canvas: HTMLCanvasElement;
     readonly overlay: HTMLElement;
     readonly viewports: Viewport[] = [];
@@ -58,12 +58,12 @@ export default class RenderView extends Publisher implements IManip
     protected rendererComponent: CRenderer = null;
 
     protected targetViewport: Viewport = null;
-    protected targetObject3D: THREE.Object3D = null;
+    protected targetObject3D: Object3D = null;
     protected targetComponent: Component = null;
-    protected targetScene: THREE.Scene = null;
-    protected targetCamera: THREE.Camera = null;
+    protected targetScene: Scene = null;
+    protected targetCamera: Camera = null;
 
-    protected defaultScene = new THREE.Scene();
+    protected defaultScene = new Scene();
     protected defaultCamera = new UniversalCamera();
 
     protected picker: GPUPicker;
@@ -76,7 +76,7 @@ export default class RenderView extends Publisher implements IManip
         this.canvas = canvas;
         this.overlay = overlay;
 
-        this.renderer = new THREE.WebGLRenderer({
+        this.renderer = new WebGLRenderer({
             canvas,
             antialias: true
         });
@@ -300,12 +300,12 @@ export default class RenderView extends Publisher implements IManip
         return false;
     }
 
-    pickPosition(event: IPointerEvent, range?: THREE.Box3, result?: THREE.Vector3)
+    pickPosition(event: IPointerEvent, range?: Box3, result?: Vector3)
     {
         return this.picker.pickPosition(this.targetScene, this.targetCamera, event, range, result);
     }
 
-    pickNormal(event: IPointerEvent, result?: THREE.Vector3)
+    pickNormal(event: IPointerEvent, result?: Vector3)
     {
         return this.picker.pickNormal(this.targetScene, this.targetCamera, event, result);
     }

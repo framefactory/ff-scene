@@ -5,7 +5,8 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Mesh } from "three";
+import * as constants from "three/src/constants";
 
 import Component, { Node, ITypedEvent, types } from "@ff/graph/Component";
 import CPulse, { IPulseEvent } from "@ff/graph/components/CPulse";
@@ -18,10 +19,10 @@ import CScene, { IActiveCameraEvent } from "./CScene";
 export enum EShadowMapType { Basic, PCF, PCFSoft /* , VSM */ }
 
 const _shadowMapType = {
-    [EShadowMapType.Basic]: THREE.BasicShadowMap,
-    [EShadowMapType.PCF]: THREE.PCFShadowMap,
-    [EShadowMapType.PCFSoft]: THREE.PCFSoftShadowMap,
-    //[EShadowMapType.VSM]: THREE.VSMShadowMap,
+    [EShadowMapType.Basic]: constants.BasicShadowMap,
+    [EShadowMapType.PCF]: constants.PCFShadowMap,
+    [EShadowMapType.PCFSoft]: constants.PCFSoftShadowMap,
+    //[EShadowMapType.VSM]: constants.VSMShadowMap,
 };
 
 export { IActiveCameraEvent };
@@ -151,7 +152,7 @@ export default class CRenderer extends Component
             const scene = this.activeScene;
             if (scene) {
                 scene.traverse(object => {
-                    const mesh = object as THREE.Mesh;
+                    const mesh = object as Mesh;
                     if (mesh.isMesh) {
                         if (Array.isArray(mesh.material)) {
                             mesh.material.forEach(material => material.needsUpdate = true);

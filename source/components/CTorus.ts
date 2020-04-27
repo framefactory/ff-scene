@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { TorusBufferGeometry } from "three";
 
 import{ types } from "@ff/graph/propertyTypes";
 
@@ -30,7 +30,7 @@ export default class CTorus extends CGeometry
     {
         const { radius, tube, angle, segments } = this.ins;
 
-        this.geometry = new THREE.TorusBufferGeometry(
+        this.geometry = new TorusBufferGeometry(
             radius.value, tube.value,
             segments.value[0], segments.value[1],
             angle.value

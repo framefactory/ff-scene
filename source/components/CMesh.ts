@@ -5,15 +5,14 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { BufferGeometry, Mesh, Material, MeshBasicMaterial } from "three";
 
-import { IComponentEvent, Node, types } from "@ff/graph/Component";
+import { types } from "@ff/graph/Component";
 
 import CTransform from "./CTransform";
 import CObject3D from "./CObject3D";
 import CGeometry from "./CGeometry";
 import CMaterial from "./CMaterial";
-import ComponentTracker from "@ff/graph/ComponentTracker";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -30,19 +29,19 @@ export default class CMesh extends CObject3D
 
     ins = this.addInputs<CObject3D, typeof CMesh["meshIns"]>(CMesh.meshIns);
 
-    protected static dummyGeometry = new THREE.BufferGeometry();
-    protected static dummyMaterial = new THREE.MeshBasicMaterial();
+    protected static dummyGeometry = new BufferGeometry();
+    protected static dummyMaterial = new MeshBasicMaterial();
 
     protected geometryComponent: CGeometry = null;
     protected materialComponent: CMaterial = null;
 
     get mesh() {
-        return this.object3D as THREE.Mesh;
+        return this.object3D as Mesh;
     }
 
     create()
     {
-        this.object3D = new THREE.Mesh(CMesh.dummyGeometry, CMesh.dummyMaterial);
+        this.object3D = new Mesh(CMesh.dummyGeometry, CMesh.dummyMaterial);
         this.object3D.castShadow = true;
 
         this.trackComponent(CGeometry, component => {
@@ -98,7 +97,7 @@ export default class CMesh extends CObject3D
     toString()
     {
         const geo = this.mesh.geometry;
-        const mat = this.mesh.material as THREE.Material;
+        const mat = this.mesh.material as Material;
         return `${this.typeName} - Geometry: '${geo ? geo.type : "N/A"}', Material: '${mat ? mat.type : "N/A"}'`
     }
 

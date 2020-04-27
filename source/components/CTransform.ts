@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Object3D, Vector3, Matrix4, Quaternion, Euler } from "three";
 
 import math from "@ff/core/math";
 
@@ -14,10 +14,10 @@ import CHierarchy from "@ff/graph/components/CHierarchy";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const _vec3a = new THREE.Vector3();
-const _vec3b = new THREE.Vector3();
-const _quat = new THREE.Quaternion();
-const _euler = new THREE.Euler();
+const _vec3a = new Vector3();
+const _vec3b = new Vector3();
+const _quat = new Quaternion();
+const _euler = new Euler();
 
 export { types };
 
@@ -25,7 +25,7 @@ export enum ERotationOrder { XYZ, YZX, ZXY, XZY, YXZ, ZYX }
 
 export interface ICObject3D extends Component
 {
-    object3D: THREE.Object3D;
+    object3D: Object3D;
 }
 
 /**
@@ -51,7 +51,7 @@ export default class CTransform extends CHierarchy implements ICObject3D
     ins = this.addInputs(CTransform.transformIns);
     outs = this.addOutputs(CTransform.transformOuts);
 
-    private _object3D: THREE.Object3D;
+    private _object3D: Object3D;
 
     constructor(node: Node, id: string)
     {
@@ -68,7 +68,7 @@ export default class CTransform extends CHierarchy implements ICObject3D
     /**
      * Returns the three.js renderable object wrapped in this component.
      */
-    get object3D(): THREE.Object3D {
+    get object3D(): Object3D {
         return this._object3D;
     }
 
@@ -82,7 +82,7 @@ export default class CTransform extends CHierarchy implements ICObject3D
     /**
      * Returns a reference to the local transformation matrix.
      */
-    get matrix(): Readonly<THREE.Matrix4> {
+    get matrix(): Readonly<Matrix4> {
         return this._object3D.matrix;
     }
 
@@ -120,7 +120,7 @@ export default class CTransform extends CHierarchy implements ICObject3D
         super.dispose();
     }
 
-    setPropertiesFromMatrix(matrix?: THREE.Matrix4)
+    setPropertiesFromMatrix(matrix?: Matrix4)
     {
         const silent = !matrix;
         matrix = matrix || this._object3D.matrix;
@@ -164,6 +164,6 @@ export default class CTransform extends CHierarchy implements ICObject3D
 
     protected createObject3D()
     {
-        return new THREE.Object3D();
+        return new Object3D();
     }
 }

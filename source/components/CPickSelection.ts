@@ -8,7 +8,6 @@
 import Component, { types } from "@ff/graph/Component";
 import ComponentTracker from "@ff/graph/ComponentTracker";
 import Node from "@ff/graph/Node";
-import Graph from "@ff/graph/Graph";
 import CSelection from "@ff/graph/components/CSelection";
 
 import Bracket from "@ff/three/Bracket";

@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { WebGLRenderer, Scene, Camera } from "three";
 
 import { ITypedEvent } from "@ff/core/Publisher";
 
@@ -47,9 +47,9 @@ export interface IRenderContext
 {
     view: RenderView;
     viewport: Viewport;
-    renderer: THREE.WebGLRenderer;
-    scene: THREE.Scene;
-    camera: THREE.Camera;
+    renderer: WebGLRenderer;
+    scene: Scene;
+    camera: Camera;
 }
 
 interface ISceneRenderEvent<T extends string> extends ITypedEvent<T>
@@ -94,8 +94,8 @@ export default class CScene extends CTransform
         this.addEvents("before-render", "after-render", "active-camera");
     }
 
-    get scene(): THREE.Scene {
-        return this.object3D as THREE.Scene;
+    get scene(): Scene {
+        return this.object3D as Scene;
     }
 
     get activeCameraComponent() {
@@ -187,7 +187,7 @@ export default class CScene extends CTransform
 
     protected createObject3D()
     {
-        const scene = new THREE.Scene();
+        const scene = new Scene();
         scene.onBeforeRender = this._onBeforeRender.bind(this);
         scene.onAfterRender = this._onAfterRender.bind(this);
         return scene;
@@ -217,7 +217,7 @@ export default class CScene extends CTransform
         this.changed = true;
     }
 
-    private _onBeforeRender(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera)
+    private _onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera)
     {
         _context.view = renderer["__view"];
         _context.viewport = renderer["__viewport"];
@@ -231,7 +231,7 @@ export default class CScene extends CTransform
         this.emit<ISceneBeforeRenderEvent>(_beforeRenderEvent);
     }
 
-    private _onAfterRender(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera)
+    private _onAfterRender(renderer: WebGLRenderer, scene: Scene, camera: Camera)
     {
         _context.view = renderer["__view"];
         _context.viewport = renderer["__viewport"];

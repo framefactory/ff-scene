@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Object3D, Vector3, MathUtils } from "three";
 
 import { TypeOf } from "@ff/core/types";
 import { ITypedEvent } from "@ff/core/Publisher";
@@ -19,19 +19,19 @@ import CTransform, { ERotationOrder } from "./CTransform";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const _vec3 = new THREE.Vector3();
+const _vec3 = new Vector3();
 
 export { Node, types, IPointerEvent, ITriggerEvent, IRenderContext, ERotationOrder };
 
 export interface ICObject3D extends Component
 {
-    object3D: THREE.Object3D;
+    object3D: Object3D;
 }
 
 export interface IObject3DObjectEvent extends ITypedEvent<"object">
 {
-    current: THREE.Object3D;
-    next: THREE.Object3D;
+    current: Object3D;
+    next: Object3D;
 }
 
 /**
@@ -240,7 +240,7 @@ export default class CObject3D extends Component implements ICObject3D
             object3D.position.fromArray(position.value);
 
             // update rotation angles, rotation order
-            _vec3.fromArray(rotation.value).multiplyScalar(THREE.Math.DEG2RAD);
+            _vec3.fromArray(rotation.value).multiplyScalar(MathUtils.DEG2RAD);
             const orderName = order.getOptionText();
             object3D.rotation.setFromVector3(_vec3, orderName);
 

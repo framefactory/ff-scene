@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { SpotLight, Object3D, MathUtils } from "three";
 
 import { Node, types } from "@ff/graph/Component";
 
@@ -32,12 +32,12 @@ export default class CSpotLight extends CLight
     {
         super(node, id);
 
-        this.object3D = new THREE.SpotLight();
+        this.object3D = new SpotLight();
         this.light.target.matrixAutoUpdate = false;
     }
 
-    get light(): THREE.SpotLight {
-        return this.object3D as THREE.SpotLight;
+    get light(): SpotLight {
+        return this.object3D as SpotLight;
     }
 
     update(context)
@@ -57,20 +57,20 @@ export default class CSpotLight extends CLight
          if (ins.distance.changed || ins.decay.changed || ins.angle.changed || ins.penumbra.changed) {
             light.distance = ins.distance.value;
             light.decay = ins.decay.value;
-            light.angle = ins.angle.value * THREE.Math.DEG2RAD;
+            light.angle = ins.angle.value * MathUtils.DEG2RAD;
             light.penumbra = ins.penumbra.value;
         }
 
         return true;
     }
 
-    protected onAddToParent(parent: THREE.Object3D)
+    protected onAddToParent(parent: Object3D)
     {
         super.onAddToParent(parent);
         parent.add(this.light.target);
     }
 
-    protected onRemoveFromParent(parent: THREE.Object3D)
+    protected onRemoveFromParent(parent: Object3D)
     {
         super.onRemoveFromParent(parent);
         parent.remove(this.light.target);

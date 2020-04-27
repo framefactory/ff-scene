@@ -5,7 +5,8 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Texture, MathUtils } from "three";
+import * as constants from "three/src/constants";
 
 import Component, { Node, types } from "@ff/graph/Component";
 
@@ -25,14 +26,14 @@ export enum EMappingMode {
 }
 
 const _THREE_MAPPING_MODE = [
-    THREE.UVMapping,
-    THREE.CubeReflectionMapping,
-    THREE.CubeRefractionMapping,
-    THREE.EquirectangularReflectionMapping,
-    THREE.EquirectangularRefractionMapping,
-    THREE.SphericalReflectionMapping,
-    THREE.CubeUVReflectionMapping,
-    THREE.CubeUVRefractionMapping,
+    constants.UVMapping,
+    constants.CubeReflectionMapping,
+    constants.CubeRefractionMapping,
+    constants.EquirectangularReflectionMapping,
+    constants.EquirectangularRefractionMapping,
+    constants.SphericalReflectionMapping,
+    constants.CubeUVReflectionMapping,
+    constants.CubeUVRefractionMapping,
 ];
 
 export enum EWrapMode {
@@ -42,9 +43,9 @@ export enum EWrapMode {
 }
 
 const _THREE_WRAP_MODE = [
-    THREE.ClampToEdgeWrapping,
-    THREE.RepeatWrapping,
-    THREE.MirroredRepeatWrapping
+    constants.ClampToEdgeWrapping,
+    constants.RepeatWrapping,
+    constants.MirroredRepeatWrapping
 ];
 
 export enum EFilterMode {
@@ -53,13 +54,13 @@ export enum EFilterMode {
 }
 
 const _THREE_FILTER_MODE = [
-    THREE.LinearFilter,
-    THREE.NearestFilter
+    constants.LinearFilter,
+    constants.NearestFilter
 ];
 
 const _THREE_MIPMAP_FILTER_MODE = [
-    [ THREE.LinearMipMapLinearFilter, THREE.LinearMipMapNearestFilter ],
-    [ THREE.NearestMipMapLinearFilter, THREE.NearestMipMapNearestFilter ],
+    [ constants.LinearMipMapLinearFilter, constants.LinearMipMapNearestFilter ],
+    [ constants.NearestMipMapLinearFilter, constants.NearestMipMapNearestFilter ],
 ];
 
 export enum EEncodingType {
@@ -74,14 +75,14 @@ export enum EEncodingType {
 }
 
 const _THREE_ENCODING_TYPE = [
-    THREE.LinearEncoding,
-    THREE.sRGBEncoding,
-    THREE.GammaEncoding,
-    THREE.RGBEEncoding,
-    THREE.LogLuvEncoding,
-    THREE.RGBM7Encoding,
-    THREE.RGBM16Encoding,
-    THREE.RGBDEncoding
+    constants.LinearEncoding,
+    constants.sRGBEncoding,
+    constants.GammaEncoding,
+    constants.RGBEEncoding,
+    constants.LogLuvEncoding,
+    constants.RGBM7Encoding,
+    constants.RGBM16Encoding,
+    constants.RGBDEncoding
 ];
 
 export default class CTexture extends Component
@@ -114,7 +115,7 @@ export default class CTexture extends Component
     ins = this.addInputs(CTexture.texIns);
     outs = this.addOutputs(CTexture.texOuts);
 
-    protected _texture: THREE.Texture = undefined;
+    protected _texture: Texture = undefined;
 
     get texture() {
         return this._texture;
@@ -169,7 +170,7 @@ export default class CTexture extends Component
             texture.offset.fromArray(ins.offset.value);
             texture.repeat.fromArray(ins.repeat.value);
             texture.center.fromArray(ins.center.value);
-            texture.rotation = ins.rotation.value * THREE.Math.DEG2RAD;
+            texture.rotation = ins.rotation.value * MathUtils.DEG2RAD;
             (texture as any).updateMatrix();
         }
 
@@ -186,7 +187,7 @@ export default class CTexture extends Component
         super.dispose();
     }
 
-    setFromTexture(texture: THREE.Texture)
+    setFromTexture(texture: Texture)
     {
         (texture as any).matrixAutoUpdate = false;
         this._texture = texture;
@@ -206,21 +207,21 @@ export default class CTexture extends Component
 
         ins.magFilter.value = _THREE_FILTER_MODE.indexOf(texture.magFilter);
         switch(texture.minFilter) {
-            case THREE.NearestFilter:
-            case THREE.NearestMipMapNearestFilter:
+            case constants.NearestFilter:
+            case constants.NearestMipMapNearestFilter:
                 ins.minFilter.value = EFilterMode.Nearest;
                 ins.mipmapFilter.value = EFilterMode.Nearest;
                 break;
-            case THREE.LinearFilter:
-            case THREE.LinearMipMapLinearFilter:
+            case constants.LinearFilter:
+            case constants.LinearMipMapLinearFilter:
                 ins.minFilter.value = EFilterMode.Linear;
                 ins.mipmapFilter.value = EFilterMode.Linear;
                 break;
-            case THREE.LinearMipMapNearestFilter:
+            case constants.LinearMipMapNearestFilter:
                 ins.minFilter.value = EFilterMode.Linear;
                 ins.mipmapFilter.value = EFilterMode.Nearest;
                 break;
-            case THREE.NearestMipMapLinearFilter:
+            case constants.NearestMipMapLinearFilter:
                 ins.minFilter.value = EFilterMode.Nearest;
                 ins.mipmapFilter.value = EFilterMode.Linear;
                 break;

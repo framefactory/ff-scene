@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { BufferGeometry } from "three";
 
 import { types } from "@ff/graph/propertyTypes";
 
@@ -23,13 +23,13 @@ export default class CGeometry extends Component
 
     outs = this.addOutputs(CGeometry.geometryOuts);
 
-    private _geometry: THREE.BufferGeometry = null;
+    private _geometry: BufferGeometry = null;
     
     get geometry() {
         return this._geometry;
     }
 
-    set geometry(geometry: THREE.BufferGeometry) {
+    set geometry(geometry: BufferGeometry) {
         if (geometry !== this._geometry) {
             if (this._geometry) {
                 this._geometry.dispose();

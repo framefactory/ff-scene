@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { ConeBufferGeometry, MathUtils } from "three";
 
 import{ types } from "@ff/graph/propertyTypes";
 
@@ -30,9 +30,9 @@ export default class CCone extends CGeometry
     update()
     {
         const { radius, height, open, theta, segments } = this.ins;
-        const D2R = THREE.Math.DEG2RAD;
+        const D2R = MathUtils.DEG2RAD;
 
-        this.geometry = new THREE.ConeBufferGeometry(
+        this.geometry = new ConeBufferGeometry(
             radius.value,
             height.value,
             segments.value[0], segments.value[1],

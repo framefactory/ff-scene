@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { BoxBufferGeometry } from "three";
 
 import { types } from "@ff/graph/propertyTypes";
 
@@ -28,7 +28,7 @@ export default class CBox extends CGeometry
     {
         const { size, segments } = this.ins;
 
-        this.geometry = new THREE.BoxBufferGeometry(
+        this.geometry = new BoxBufferGeometry(
             size.value[0], size.value[1], size.value[2],
             segments.value[0], segments.value[1], segments.value[2]
         );

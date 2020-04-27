@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Vector3, Euler, Quaternion } from "three";
 
 import { Node, types } from "@ff/graph/Component";
 
@@ -15,10 +15,10 @@ import math from "@ff/core/math";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const _vec3a = new THREE.Vector3();
-const _vec3b = new THREE.Vector3();
-const _euler = new THREE.Euler();
-const _quat = new THREE.Quaternion();
+const _vec3a = new Vector3();
+const _vec3b = new Vector3();
+const _euler = new Euler();
+const _quat = new Quaternion();
 
 export { EProjection };
 

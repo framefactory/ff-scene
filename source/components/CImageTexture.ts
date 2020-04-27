@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Texture, ImageLoader } from "three";
 
 import CTexture, { Node, types } from "./CTexture";
 
@@ -24,7 +24,7 @@ export default class CImageTexture extends CTexture
     constructor(node: Node, id: string)
     {
         super(node, id);
-        this._texture = new THREE.Texture();
+        this._texture = new Texture();
     }
 
     update(context)
@@ -39,7 +39,7 @@ export default class CImageTexture extends CTexture
             const path = ins.imagePath.value;
 
             if (path) {
-                new THREE.ImageLoader().load(path, image => {
+                new ImageLoader().load(path, image => {
                     texture.image = image;
                     texture.needsUpdate = true;
                     outs.width.setValue(image.width);
@@ -48,7 +48,7 @@ export default class CImageTexture extends CTexture
                     outs.self.set();
                 }, undefined, () => {
                     texture.dispose();
-                    texture.image = THREE.Texture.DEFAULT_IMAGE;
+                    texture.image = Texture.DEFAULT_IMAGE;
                     outs.width.setValue(texture.image ? texture.image.width : 0);
                     outs.height.setValue(texture.image ? texture.image.height : 0);
                     outs.isReady.setValue(!!texture.image);
@@ -57,7 +57,7 @@ export default class CImageTexture extends CTexture
             }
             else {
                 texture.dispose();
-                texture.image = THREE.Texture.DEFAULT_IMAGE;
+                texture.image = Texture.DEFAULT_IMAGE;
                 outs.width.setValue(texture.image ? texture.image.width : 0);
                 outs.height.setValue(texture.image ? texture.image.height : 0);
                 outs.isReady.setValue(!!texture.image);

@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { MeshPhongMaterial } from "three";
 
 import { Node, types } from "@ff/graph/Component";
 
@@ -36,11 +36,11 @@ export default class CPhongMaterial extends CMaterial
     constructor(node: Node, id: string)
     {
         super(node, id);
-        this._material = new THREE.MeshPhongMaterial();
+        this._material = new MeshPhongMaterial();
     }
 
     get material() {
-        return this._material as THREE.MeshPhongMaterial;
+        return this._material as MeshPhongMaterial;
     }
 
     update()

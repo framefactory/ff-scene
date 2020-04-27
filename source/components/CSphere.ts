@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { SphereBufferGeometry, MathUtils } from "three";
 
 import{ types } from "@ff/graph/propertyTypes";
 
@@ -29,9 +29,9 @@ export default class CSphere extends CGeometry
     update()
     {
         const { radius, phi, theta, segments } = this.ins;
-        const D2R = THREE.Math.DEG2RAD;
+        const D2R = MathUtils.DEG2RAD;
 
-        this.geometry = new THREE.SphereBufferGeometry(
+        this.geometry = new SphereBufferGeometry(
             radius.value,
             segments.value[0], segments.value[1],
             phi.value[0] * D2R, phi.value[1] * D2R,

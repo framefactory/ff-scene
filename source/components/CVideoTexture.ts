@@ -5,9 +5,9 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { VideoTexture } from "three";
 
-import CTexture, { EFilterMode, types } from "./CTexture";
+import CTexture, { types } from "./CTexture";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -72,7 +72,7 @@ export default class CVideoTexture extends CTexture
             outs.self.set();
         };
 
-        this._texture = new THREE.VideoTexture(this._video);
+        this._texture = new VideoTexture(this._video);
 
         super.create();
     }

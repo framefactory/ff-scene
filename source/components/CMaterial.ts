@@ -5,7 +5,8 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Material } from "three";
+import * as constants from "three/src/constants";
 
 import Component, { Node, types } from "@ff/graph/Component";
 
@@ -16,32 +17,32 @@ export { Node, types };
 export enum EBlending { Off, Normal, Additive, Subtractive, Multiply, Custom }
 
 const _THREE_BLENDING = [
-    THREE.NoBlending,
-    THREE.NormalBlending,
-    THREE.AdditiveBlending,
-    THREE.SubtractiveBlending,
-    THREE.MultiplyBlending,
-    THREE.CustomBlending,
+    constants.NoBlending,
+    constants.NormalBlending,
+    constants.AdditiveBlending,
+    constants.SubtractiveBlending,
+    constants.MultiplyBlending,
+    constants.CustomBlending,
 ];
 
 export enum EDepthFunction { Never, Always, Less, LessEqual, GreaterEqual, Greater, NotEqual }
 
 const _THREE_DEPTH_FUNCTION = [
-    THREE.NeverDepth,
-    THREE.AlwaysDepth,
-    THREE.LessDepth,
-    THREE.LessEqualDepth,
-    THREE.GreaterEqualDepth,
-    THREE.GreaterDepth,
-    THREE.NotEqualDepth
+    constants.NeverDepth,
+    constants.AlwaysDepth,
+    constants.LessDepth,
+    constants.LessEqualDepth,
+    constants.GreaterEqualDepth,
+    constants.GreaterDepth,
+    constants.NotEqualDepth
 ];
 
 export enum ESide { Front, Back, Double }
 
 const _THREE_SIDE = [
-    THREE.FrontSide,
-    THREE.BackSide,
-    THREE.DoubleSide,
+    constants.FrontSide,
+    constants.BackSide,
+    constants.DoubleSide,
 ];
 
 export default class CMaterial extends Component
@@ -67,7 +68,7 @@ export default class CMaterial extends Component
     ins = this.addInputs(CMaterial.matIns);
     outs = this.addOutputs(CMaterial.matOuts);
 
-    protected _material: THREE.Material = null;
+    protected _material: Material = null;
 
     constructor(node: Node, id: string)
     {

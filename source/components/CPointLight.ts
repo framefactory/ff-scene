@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Vector3, PointLight } from "three";
 
 import { Node, types } from "@ff/graph/Component";
 
@@ -13,7 +13,7 @@ import CLight from "./CLight";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-const _vec3 = new THREE.Vector3();
+const _vec3 = new Vector3();
 
 export default class CPointLight extends CLight
 {
@@ -30,11 +30,11 @@ export default class CPointLight extends CLight
     constructor(node: Node, id: string)
     {
         super(node, id);
-        this.object3D = new THREE.PointLight();
+        this.object3D = new PointLight();
     }
 
-    get light(): THREE.PointLight {
-        return this.object3D as THREE.PointLight;
+    get light(): PointLight {
+        return this.object3D as PointLight;
     }
 
     update(context)

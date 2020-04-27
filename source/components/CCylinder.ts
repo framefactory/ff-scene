@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { CylinderBufferGeometry, MathUtils } from "three";
 
 import{ types } from "@ff/graph/propertyTypes";
 
@@ -31,9 +31,9 @@ export default class CCylinder extends CGeometry
     update()
     {
         const { radiusTop, radiusBottom, height, open, theta, segments } = this.ins;
-        const D2R = THREE.Math.DEG2RAD;
+        const D2R = MathUtils.DEG2RAD;
 
-        this.geometry = new THREE.CylinderBufferGeometry(
+        this.geometry = new CylinderBufferGeometry(
             radiusTop.value, radiusBottom.value,
             height.value,
             segments.value[0], segments.value[1],

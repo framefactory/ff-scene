@@ -24,14 +24,13 @@
     },
     "homepage": "https://github.com/framelab/ff-scene#readme",
     "dependencies": {
-        "three": "^0.112.1"
+        "three": "^0.115.0"
     },
     "devDependencies": {
-        "@types/three": "^0.103.2",
-        "@types/chai": "^4.2.7",
-        "@types/mocha": "^5.2.7",
+        "@types/chai": "^4.2.11",
+        "@types/mocha": "^7.0.2",
         "chai": "^4.2.0",
-        "mocha": "^7.0.0",
-        "typescript": "^3.7.4"
+        "mocha": "^7.0.1",
+        "typescript": "^3.8.3"
     }
 }

@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { MeshBasicMaterial } from "three";
 
 import { Node, types } from "@ff/graph/Component";
 
@@ -27,11 +27,11 @@ export default class CBasicMaterial extends CMaterial
     constructor(node: Node, id: string)
     {
         super(node, id);
-        this._material = new THREE.MeshBasicMaterial();
+        this._material = new MeshBasicMaterial();
     }
 
     get material() {
-        return this._material as THREE.MeshBasicMaterial;
+        return this._material as MeshBasicMaterial;
     }
 
     update()

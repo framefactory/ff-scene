@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import * as THREE from "three";
+import { Object3D } from "three";
 
 import Node from "@ff/graph/Node";
 import Graph from "@ff/graph/Graph";
@@ -18,7 +18,7 @@ import CGeometry from "./components/CGeometry";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export function parseScene(root: THREE.Object3D, graph: Graph, includeRoot: boolean)
+export function parseScene(root: Object3D, graph: Graph, includeRoot: boolean)
 {
 
 }
