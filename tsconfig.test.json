@@ -2,19 +2,29 @@
     "compilerOptions": {
         "composite": true,
         "target": "ES6",
-        "module": "commonjs",
+        "module": "CommonJS",
         "experimentalDecorators": true,
 
         "declaration": true,
         "sourceMap": true,
 
+        "outDir": "built/test",
         "rootDir": "test",
-        "outDir": "../../node_modules/@ff/test/scene"
+
+        "baseUrl": ".",
+        "paths": {
+            "@ff/scene/*": [ "source/*" ],
+            "@ff/core/*": [ "../ff-core/source/*" ],
+            "@ff/browser/*": [ "../ff-browser/source/*" ],
+            "@ff/graph/*": [ "../ff-graph/source/*" ],
+            "@ff/ui/*": [ "../ff-ui/source/*" ],
+            "@ff/three/*": [ "../ff-three/source/*" ]
+        }
     },
     "include": [
         "test/**/*"
     ],
     "references": [{
-        "path": "tsconfig.module.json"
+        "path": "tsconfig.json"
     }]
 }
