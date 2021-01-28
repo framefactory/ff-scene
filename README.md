@@ -1,3 +1,3 @@
 # FF Scene - Typescript Foundation Library
 
-Copyright 2019 [Frame Factory GmbH](https://framefactory.ch), [Ralph Wiedemeier](https://about.me/ralphw)  
+Copyright 2021 [Frame Factory GmbH](https://framefactory.ch), [Ralph Wiedemeier](https://about.me/ralphw)  

@@ -1,6 +1,6 @@
 /**
  * FF Typescript Foundation Library
- * Copyright 2019 Ralph Wiedemeier, Frame Factory GmbH
+ * Copyright 2021 Ralph Wiedemeier, Frame Factory GmbH
  *
  * License: MIT
  */
@@ -13,7 +13,7 @@ import Component from "@ff/graph/Component";
 import CHierarchy from "@ff/graph/components/CHierarchy";
 
 import {
-    IManip,
+    IManipListener,
     IPointerEvent as IManipPointerEvent,
     ITriggerEvent as IManipTriggerEvent
 } from "@ff/browser/ManipTarget";
@@ -47,7 +47,7 @@ interface IBaseEvent extends IViewportBaseEvent
 export interface IPointerEvent extends IManipPointerEvent, IBaseEvent { }
 export interface ITriggerEvent extends IManipTriggerEvent, IBaseEvent { }
 
-export default class RenderView extends Publisher implements IManip
+export default class RenderView extends Publisher implements IManipListener
 {
     readonly system: System;
     readonly renderer: WebGLRenderer;

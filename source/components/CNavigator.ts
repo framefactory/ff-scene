@@ -1,6 +1,6 @@
 /**
  * FF Typescript Foundation Library
- * Copyright 2019 Ralph Wiedemeier, Frame Factory GmbH
+ * Copyright 2021 Ralph Wiedemeier, Frame Factory GmbH
  *
  * License: MIT
  */
