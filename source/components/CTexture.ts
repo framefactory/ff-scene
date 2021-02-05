@@ -31,7 +31,6 @@ const _THREE_MAPPING_MODE = [
     constants.CubeRefractionMapping,
     constants.EquirectangularReflectionMapping,
     constants.EquirectangularRefractionMapping,
-    constants.SphericalReflectionMapping,
     constants.CubeUVReflectionMapping,
     constants.CubeUVRefractionMapping,
 ];
