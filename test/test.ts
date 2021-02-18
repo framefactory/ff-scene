@@ -9,12 +9,12 @@ import * as path from "path";
 import * as moduleAlias from "module-alias";
 
 moduleAlias.addAliases({
-    "@ff/scene": path.resolve(__dirname, "../export"),
-    "@ff/core": path.resolve(__dirname, "../../../ff-core/built/export"),
-    "@ff/browser": path.resolve(__dirname, "../../../ff-browser/built/export"),
-    "@ff/graph": path.resolve(__dirname, "../../../ff-graph/built/export"),
-    "@ff/ui": path.resolve(__dirname, "../../../ff-ui/built/export"),
-    "@ff/three": path.resolve(__dirname, "../../../ff-three/built/export"),
+    "@ff/scene": path.resolve(__dirname, "../exports"),
+    "@ff/core": path.resolve(__dirname, "../../../core/dist/exports"),
+    "@ff/browser": path.resolve(__dirname, "../../../browser/dist/exports"),
+    "@ff/graph": path.resolve(__dirname, "../../../graph/dist/exports"),
+    "@ff/ui": path.resolve(__dirname, "../../../ui/dist/exports"),
+    "@ff/three": path.resolve(__dirname, "../../../three/dist/exports"),
 });
 
 // define vars on node global object (usually done by Webpack)

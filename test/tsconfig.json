@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "CommonJS",
+        "experimentalDecorators": true,
+        "sourceMap": true,
+
+        "outDir": "../dist/test",
+        "rootDir": ".",
+
+        "baseUrl": ".",
+        "paths": {
+            "@ff/scene/*": [ "../src/*" ],
+            "@ff/core/*": [ "../../core/src/*" ],
+            "@ff/browser/*": [ "../../browser/src/*" ],
+            "@ff/graph/*": [ "../../graph/src/*" ],
+            "@ff/ui/*": [ "../../ui/src/*" ],
+            "@ff/three/*": [ "../../three/src/*" ]
+        }
+    },
+    "include": [
+        "**/*"
+    ],
+    "references": [
+        { "path": ".." }
+    ]
+}
