@@ -13,23 +13,23 @@ import System from "@ff/graph/System";
 
 import CSelection, { INodeEvent, IComponentEvent } from "@ff/graph/components/CSelection";
 
-import Tree, { customElement, property, html } from "@ff/ui/Tree";
+import Tree, { customElement, property, html, ITreeNode } from "@ff/ui/Tree";
 
 import "./PropertyView";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-interface ITreeNode
+interface IPropertyTreeNode extends ITreeNode
 {
     id: string;
-    children: ITreeNode[];
+    children: IPropertyTreeNode[];
     text: string;
     classes: string;
     property?: Property;
 }
 
 @customElement("ff-property-tree")
-export default class PropertyTree extends Tree<ITreeNode>
+export default class PropertyTree extends Tree<IPropertyTreeNode>
 {
     @property({ attribute: false })
     system: System;
@@ -79,12 +79,12 @@ export default class PropertyTree extends Tree<ITreeNode>
         this.selection.selectedComponents.off(Component, this.onSelectComponent, this);
     }
 
-    protected getClasses(node: ITreeNode)
+    protected getClasses(node: IPropertyTreeNode)
     {
         return node.classes;
     }
 
-    protected renderNodeHeader(node: ITreeNode)
+    protected renderNodeHeader(node: IPropertyTreeNode)
     {
         if (node.property) {
             return html`<div class="ff-text ff-property-label ff-ellipsis">${node.text}</div>
@@ -114,7 +114,7 @@ export default class PropertyTree extends Tree<ITreeNode>
         }
     }
 
-    protected createNodeTreeNode(node: Node): ITreeNode
+    protected createNodeTreeNode(node: Node): IPropertyTreeNode
     {
         return {
             id: node.id,
@@ -124,7 +124,7 @@ export default class PropertyTree extends Tree<ITreeNode>
         };
     }
 
-    protected createComponentTreeNode(component: Component): ITreeNode
+    protected createComponentTreeNode(component: Component): IPropertyTreeNode
     {
         const id = component.id;
         const inputsId = id + "i";
@@ -142,10 +142,10 @@ export default class PropertyTree extends Tree<ITreeNode>
         };
     }
 
-    protected createGroupNode(id: string, text: string, group: PropertyGroup): ITreeNode
+    protected createGroupNode(id: string, text: string, group: PropertyGroup): IPropertyTreeNode
     {
         const properties = group.properties;
-        const root: ITreeNode = {
+        const root: IPropertyTreeNode = {
             id,
             text,
             classes: group.isInputGroup() ? "ff-inputs" : "ff-outputs",

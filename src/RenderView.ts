@@ -14,12 +14,13 @@ import CHierarchy from "@ff/graph/components/CHierarchy";
 
 import {
     IManipListener,
+    IManipEvent as IManipBaseEvent,
     IPointerEvent as IManipPointerEvent,
     ITriggerEvent as IManipTriggerEvent
 } from "@ff/browser/ManipTarget";
 
 import Viewport, {
-    IBaseEvent as IViewportBaseEvent
+    IViewportEventExt,
 } from "@ff/three/Viewport";
 
 import ViewportOverlay from "@ff/three/ui/ViewportOverlay";
@@ -32,7 +33,7 @@ import UniversalCamera from "@ff/three/UniversalCamera";
 
 export { Viewport };
 
-interface IBaseEvent extends IViewportBaseEvent
+interface IRenderViewEventExt extends IViewportEventExt
 {
     /** The render view on which the event occurred. */
     view: RenderView;
@@ -44,8 +45,9 @@ interface IBaseEvent extends IViewportBaseEvent
     stopPropagation: boolean;
 }
 
-export interface IPointerEvent extends IManipPointerEvent, IBaseEvent { }
-export interface ITriggerEvent extends IManipTriggerEvent, IBaseEvent { }
+export interface IBaseEvent extends IManipBaseEvent, IRenderViewEventExt { }
+export interface IPointerEvent extends IManipPointerEvent, IRenderViewEventExt { }
+export interface ITriggerEvent extends IManipTriggerEvent, IRenderViewEventExt { }
 
 export default class RenderView extends Publisher implements IManipListener
 {
