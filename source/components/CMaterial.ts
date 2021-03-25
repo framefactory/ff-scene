@@ -95,7 +95,6 @@ export default class CMaterial extends Component
         if (ins.blending.changed || ins.transparent.changed || ins.flat.changed || ins.fog.changed) {
             material.blending = _THREE_BLENDING[ins.blending.getValidatedValue()];
             material.transparent = ins.transparent.value;
-            material.flatShading = ins.flat.value;
             material.fog = ins.fog.value;
         }
         if (ins.writeColor.changed || ins.writeDepth.changed || ins.testDepth.changed || ins.depthFunc.changed) {

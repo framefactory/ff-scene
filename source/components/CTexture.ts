@@ -20,7 +20,6 @@ export enum EMappingMode {
     CubeRefraction,
     EquiRectReflection,
     EquiRectRefraction,
-    SphericalReflection,
     CubeUVReflection,
     CubeUVRefraction,
 }

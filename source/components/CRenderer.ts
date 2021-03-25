@@ -220,7 +220,9 @@ export default class CRenderer extends Component
             }
 
             this.views.forEach(view => {
-                view.render();
+                if(!view.renderer.xr.isPresenting) {
+                    view.render();
+                }
             });
 
             this._forceRender = false;
