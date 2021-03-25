@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import { WebGLRenderer, Object3D, Camera, Scene, Box3, Vector3 } from "three";
+import { WebGLRenderer, Object3D, Camera, Scene, Box3, Vector3, sRGBEncoding } from "three";
 
 import Publisher from "@ff/core/Publisher";
 import System from "@ff/graph/System";
@@ -84,6 +84,7 @@ export default class RenderView extends Publisher implements IManip
         this.renderer.autoClear = false;
         //this.renderer.gammaOutput = true;
         this.renderer.gammaFactor = 2;
+        this.renderer.outputEncoding = sRGBEncoding;
 
         this.picker = new GPUPicker(this.renderer);
     }
@@ -182,13 +183,19 @@ export default class RenderView extends Publisher implements IManip
         this.canvas.height = height;
 
         this.viewports.forEach(viewport => viewport.setCanvasSize(width, height));
-        this.renderer.setSize(width, height, false);
+
+        if(!this.renderer.xr.isPresenting) {
+            this.renderer.setSize(width, height, false);
+        }
     }
 
     resize()
     {
         this.setRenderSize(this.canvas.clientWidth, this.canvas.clientHeight);
-        this.render();
+
+        if(!this.renderer.xr.isPresenting) {
+            this.render();
+        }
     }
 
     setViewportCount(count: number)
