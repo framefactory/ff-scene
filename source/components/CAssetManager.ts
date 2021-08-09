@@ -199,7 +199,7 @@ export default class CAssetManager extends Component
                         children: []
                     };
 
-                    this._assetsByPath[info.path] = asset;
+                    this._assetsByPath[decodeURI(info.path)] = asset;
                     entry.children.push(asset);
                 }
             }
