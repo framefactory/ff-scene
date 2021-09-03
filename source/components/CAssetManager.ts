@@ -51,6 +51,9 @@ export default class CAssetManager extends Component
     get root() {
         return this._rootAsset;
     }
+    set root(asset: IAssetEntry) {
+        this._rootAsset = asset;
+    }
     get rootPath() {
         return this._provider.rootPath;
     }
