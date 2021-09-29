@@ -97,11 +97,16 @@ export default class WebDAVProvider
             props.headers["Depth"] = "1";
         }
 
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), 8000);
+        props["signal"] = controller.signal;
+
         return fetch(url, props).then(response => {
                 if (!response.ok) {
                     throw new Error(`failed to get content: ${response.status} ${response.statusText}`);
                 }
 
+                clearTimeout(id);
                 return response.text();
             })
             .then(xml => xmlTools.xml2js(xml))
@@ -226,7 +231,7 @@ export default class WebDAVProvider
 
         const info: Partial<IFileInfo> = {
             url: decodeURI(element.dict["D:href"].elements[0].text as string),
-            name: decodeURI(prop.dict["D:displayname"].elements[0].text as string),
+            name: decodeURI(prop.dict["D:displayname"].elements ? prop.dict["D:displayname"].elements[0].text as string : ""),
             created: prop.dict["D:creationdate"].elements[0].text as string,
             modified: prop.dict["D:getlastmodified"].elements[0].text as string,
             folder: isCollection,
