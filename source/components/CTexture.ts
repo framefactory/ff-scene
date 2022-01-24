@@ -64,8 +64,8 @@ const _THREE_MIPMAP_FILTER_MODE = [
 export enum EEncodingType {
     Linear,
     sRGB,
-    Gamma,
-    RGBE,
+    //Gamma,
+    //RGBE,
     // LogLuv,
     // RGBM7,
     // RGBM16,
@@ -75,12 +75,12 @@ export enum EEncodingType {
 const _THREE_ENCODING_TYPE = [
     constants.LinearEncoding,
     constants.sRGBEncoding,
-    constants.GammaEncoding,
-    constants.RGBEEncoding,
-    constants.LogLuvEncoding,
-    constants.RGBM7Encoding,
-    constants.RGBM16Encoding,
-    constants.RGBDEncoding
+    //constants.GammaEncoding,
+    //constants.RGBEEncoding,
+    //constants.LogLuvEncoding,
+    //constants.RGBM7Encoding,
+    //constants.RGBM16Encoding
+    //constants.RGBDEncoding
 ];
 
 export default class CTexture extends Component
