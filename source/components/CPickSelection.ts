@@ -17,6 +17,7 @@ import { IPointerEvent } from "../RenderView";
 import CObject3D from "./CObject3D";
 import CTransform from "./CTransform";
 import CScene, { ISceneAfterRenderEvent } from "./CScene";
+import { DirectionalLight, DirectionalLightHelper } from "three";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -31,7 +32,7 @@ export default class CPickSelection extends CSelection
 
     ins = this.addInputs<CSelection, typeof _inputs>(_inputs);
 
-    private _brackets = new Map<Component, Bracket>();
+    private _brackets = new Map<Component, any>();
     private _sceneTracker: ComponentTracker<CScene> = null;
 
 
@@ -121,6 +122,9 @@ export default class CPickSelection extends CSelection
         const camera = event.context.camera;
 
         for (let entry of this._brackets) {
+            if(entry[1] instanceof DirectionalLightHelper) {
+                entry[1].update();
+            }
             renderer.render(entry[1] as any, camera);
         }
     }
@@ -134,8 +138,14 @@ export default class CPickSelection extends CSelection
         if (selected) {
             const object3D = component.object3D;
             if (object3D) {
-                const bracket = new Bracket(component.object3D);
-                this._brackets.set(component, bracket);
+                if(object3D.children[0] instanceof DirectionalLight) {
+                    const helper = new DirectionalLightHelper( object3D.children[0], 1.0, 0xffd633 );
+                    this._brackets.set(component, helper);
+                }
+                else {
+                    const bracket = new Bracket(component.object3D);
+                    this._brackets.set(component, bracket);
+                }
             }
         }
         else {
