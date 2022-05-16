@@ -170,6 +170,11 @@ export default class RenderView extends Publisher implements IManip
         for (let i = 0, n = viewports.length; i < n; ++i) {
             const viewport = viewports[i];
 
+            // Remove when Webkit bug is fixed: https://bugs.webkit.org/show_bug.cgi?id=237230
+            let gl = renderer.getContext();
+            gl.clear(gl.DEPTH_BUFFER_BIT);
+            gl.finish(); 
+
             renderer["__viewport"] = viewport;
             const currentCamera = viewport.updateCamera(camera);
             viewport.applyViewport(this.renderer);
