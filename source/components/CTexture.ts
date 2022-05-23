@@ -31,7 +31,6 @@ const _THREE_MAPPING_MODE = [
     constants.EquirectangularReflectionMapping,
     constants.EquirectangularRefractionMapping,
     constants.CubeUVReflectionMapping,
-    constants.CubeUVRefractionMapping,
 ];
 
 export enum EWrapMode {

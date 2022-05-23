@@ -118,7 +118,7 @@ export default class CCamera extends CObject3D
 
         const orderName = order.getOptionText();
         _euler.setFromQuaternion(_quat, orderName);
-        _euler.toVector3(_vec3a);
+        _vec3a.setFromEuler(_euler);
         _vec3a.multiplyScalar(math.RAD2DEG).toArray(rotation.value);
 
         position.set(silent);
