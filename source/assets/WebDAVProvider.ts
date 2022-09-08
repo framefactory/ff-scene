@@ -239,7 +239,7 @@ export default class WebDAVProvider
             type: contentType ? contentType.elements[0].text as string : "",
         };
 
-        let path = new URL(info.url).pathname;
+        let path = new URL(info.url, this._rootUrl).pathname;
         const index = path.indexOf(this._rootPath);
         if (index >= 0) {
             path = path.substr(index + this._rootPath.length);
