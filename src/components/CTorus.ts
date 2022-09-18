@@ -1,11 +1,11 @@
 /**
  * FF Typescript Foundation Library
- * Copyright 2021 Ralph Wiedemeier, Frame Factory GmbH
+ * Copyright 2022 Ralph Wiedemeier, Frame Factory GmbH
  *
  * License: MIT
  */
 
-import { TorusBufferGeometry } from "three";
+import { TorusGeometry } from "three";
 
 import{ types } from "@ff/graph/propertyTypes";
 
@@ -30,7 +30,7 @@ export default class CTorus extends CGeometry
     {
         const { radius, tube, angle, segments } = this.ins;
 
-        this.geometry = new TorusBufferGeometry(
+        this.geometry = new TorusGeometry(
             radius.value, tube.value,
             segments.value[0], segments.value[1],
             angle.value

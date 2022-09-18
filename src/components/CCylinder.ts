@@ -1,11 +1,11 @@
 /**
  * FF Typescript Foundation Library
- * Copyright 2021 Ralph Wiedemeier, Frame Factory GmbH
+ * Copyright 2022 Ralph Wiedemeier, Frame Factory GmbH
  *
  * License: MIT
  */
 
-import { CylinderBufferGeometry, MathUtils } from "three";
+import { CylinderGeometry, MathUtils } from "three";
 
 import{ types } from "@ff/graph/propertyTypes";
 
@@ -33,7 +33,7 @@ export default class CCylinder extends CGeometry
         const { radiusTop, radiusBottom, height, open, theta, segments } = this.ins;
         const D2R = MathUtils.DEG2RAD;
 
-        this.geometry = new CylinderBufferGeometry(
+        this.geometry = new CylinderGeometry(
             radiusTop.value, radiusBottom.value,
             height.value,
             segments.value[0], segments.value[1],

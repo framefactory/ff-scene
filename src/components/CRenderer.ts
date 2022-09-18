@@ -1,6 +1,6 @@
 /**
  * FF Typescript Foundation Library
- * Copyright 2021 Ralph Wiedemeier, Frame Factory GmbH
+ * Copyright 2022 Ralph Wiedemeier, Frame Factory GmbH
  *
  * License: MIT
  */
@@ -147,7 +147,8 @@ export default class CRenderer extends Component
             this.views.forEach(view => view.renderer.toneMappingExposure = ins.exposure.value);
         }
         if (ins.gamma.changed) {
-            this.views.forEach(view => view.renderer.gammaFactor = ins.gamma.value);
+            // TODO: Gamma no longer supported
+            // this.views.forEach(view => view.renderer.gammaFactor = ins.gamma.value);
 
             const scene = this.activeScene;
             if (scene) {

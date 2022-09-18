@@ -1,11 +1,11 @@
 /**
  * FF Typescript Foundation Library
- * Copyright 2021 Ralph Wiedemeier, Frame Factory GmbH
+ * Copyright 2022 Ralph Wiedemeier, Frame Factory GmbH
  *
  * License: MIT
  */
 
-import { ConeBufferGeometry, MathUtils } from "three";
+import { ConeGeometry, MathUtils } from "three";
 
 import{ types } from "@ff/graph/propertyTypes";
 
@@ -32,7 +32,7 @@ export default class CCone extends CGeometry
         const { radius, height, open, theta, segments } = this.ins;
         const D2R = MathUtils.DEG2RAD;
 
-        this.geometry = new ConeBufferGeometry(
+        this.geometry = new ConeGeometry(
             radius.value,
             height.value,
             segments.value[0], segments.value[1],

@@ -1,6 +1,6 @@
 /**
  * FF Typescript Foundation Library
- * Copyright 2021 Ralph Wiedemeier, Frame Factory GmbH
+ * Copyright 2022 Ralph Wiedemeier, Frame Factory GmbH
  *
  * License: MIT
  */
@@ -22,7 +22,6 @@ export enum EMappingMode {
     EquiRectRefraction,
     SphericalReflection,
     CubeUVReflection,
-    CubeUVRefraction,
 }
 
 const _THREE_MAPPING_MODE = [
@@ -32,7 +31,6 @@ const _THREE_MAPPING_MODE = [
     constants.EquirectangularReflectionMapping,
     constants.EquirectangularRefractionMapping,
     constants.CubeUVReflectionMapping,
-    constants.CubeUVRefractionMapping,
 ];
 
 export enum EWrapMode {
@@ -76,12 +74,12 @@ export enum EEncodingType {
 const _THREE_ENCODING_TYPE = [
     constants.LinearEncoding,
     constants.sRGBEncoding,
-    constants.GammaEncoding,
-    constants.RGBEEncoding,
-    constants.LogLuvEncoding,
-    constants.RGBM7Encoding,
-    constants.RGBM16Encoding,
-    constants.RGBDEncoding
+    // constants.GammaEncoding,
+    // constants.RGBEEncoding,
+    // constants.LogLuvEncoding,
+    // constants.RGBM7Encoding,
+    // constants.RGBM16Encoding,
+    // constants.RGBDEncoding
 ];
 
 export default class CTexture extends Component

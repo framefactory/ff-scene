@@ -1,6 +1,6 @@
 /**
  * FF Typescript Foundation Library
- * Copyright 2021 Ralph Wiedemeier, Frame Factory GmbH
+ * Copyright 2022 Ralph Wiedemeier, Frame Factory GmbH
  *
  * License: MIT
  */
@@ -85,7 +85,7 @@ export default class RenderView extends Publisher implements IManipListener
 
         this.renderer.autoClear = false;
         //this.renderer.gammaOutput = true;
-        this.renderer.gammaFactor = 2;
+        //this.renderer.gammaFactor = 2;
 
         this.picker = new GPUPicker(this.renderer);
     }

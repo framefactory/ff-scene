@@ -1,6 +1,6 @@
 /**
  * FF Typescript Foundation Library
- * Copyright 2021 Ralph Wiedemeier, Frame Factory GmbH
+ * Copyright 2022 Ralph Wiedemeier, Frame Factory GmbH
  *
  * License: MIT
  */
@@ -132,7 +132,7 @@ export default class CTransform extends CHierarchy implements ICObject3D
 
         const orderName = order.getOptionText();
         _euler.setFromQuaternion(_quat, orderName);
-        _euler.toVector3(_vec3a);
+        _vec3a.setFromEuler(_euler);
         _vec3a.multiplyScalar(math.RAD2DEG).toArray(rotation.value);
 
         _vec3b.toArray(scale.value);
