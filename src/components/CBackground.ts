@@ -5,14 +5,14 @@
  * License: MIT
  */
 
-import CObject3D, { Node, types } from "./CObject3D";
-import Background, { EBackgroundStyle } from "@ff/three/Background";
+import { Background, EBackgroundStyle } from "@ffweb/three/Background.js";
+import { CObject3D, Node, types } from "./CObject3D.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export { EBackgroundStyle };
 
-export default class CBackground extends CObject3D
+export class CBackground extends CObject3D
 {
     static readonly typeName: string = "CBackground";
 

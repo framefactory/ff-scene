@@ -5,14 +5,14 @@
  * License: MIT
  */
 
-import { types } from "@ff/graph/propertyTypes";
-import Component from "@ff/graph/Component";
+import { types } from "@ffweb/graph/propertyTypes.js";
+import { Component } from "@ffweb/graph/Component.js";
+import { OrbitManipulator } from "@ffweb/three/OrbitManipulator.js";
 
-import OrbitManip from "@ff/three/OrbitManipulator";
-import CScene, { IActiveCameraEvent } from "./CScene";
-import CCamera from "./CCamera";
+import { IPointerEvent, ITriggerEvent } from "../RenderView.js";
 
-import { IPointerEvent, ITriggerEvent } from "../RenderView";
+import { CScene, IActiveCameraEvent } from "./CScene.js";
+import { CCamera } from "./CCamera.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -32,14 +32,14 @@ const _outputs = {
     size: types.Number("Size")
 };
 
-export default class COrbitManipulator extends Component
+export class COrbitManipulator extends Component
 {
     static readonly typeName: string = "COrbitManipulator";
 
     ins = this.addInputs(_inputs);
     outs = this.addOutputs(_outputs);
 
-    private _manip = new OrbitManip();
+    private _manip = new OrbitManipulator();
     private _activeCameraComponent: CCamera;
 
     create()

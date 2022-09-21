@@ -5,21 +5,28 @@
  * License: MIT
  */
 
-import CSelection from "@ff/graph/components/CSelection";
+import { CSelection } from "@ffweb/graph/components/CSelection.js";
 
-import SystemView, {
+import {
+    SystemView,
     customElement,
     property,
     html,
-    PropertyValues,
-    TemplateResult
-} from "./SystemView";
+    type PropertyValues,
+    type TemplateResult
+} from "./SystemView.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { customElement, property, html, PropertyValues, TemplateResult };
+export {
+    customElement, 
+    property, 
+    html, 
+    type PropertyValues, 
+    type TemplateResult 
+};
 
-export default class SelectionView extends SystemView
+export class SelectionView extends SystemView
 {
     protected selection: CSelection = null;
 

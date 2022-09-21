@@ -7,13 +7,13 @@
 
 import { SpotLight, Object3D, MathUtils } from "three";
 
-import { Node, types } from "@ff/graph/Component";
+import { Node, types } from "@ffweb/graph/Component.js";
 
-import CLight from "./CLight";
+import { CLight } from "./CLight.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CSpotLight extends CLight
+export class CSpotLight extends CLight
 {
     static readonly typeName: string = "CSpotLight";
 

@@ -5,12 +5,12 @@
  * License: MIT
  */
 
-import NTransform from "./NTransform";
-import CScene from "../components/CScene";
+import { NTransform } from "./NTransform.js";
+import { CScene } from "../components/CScene.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class NScene extends NTransform
+export class NScene extends NTransform
 {
     static readonly typeName: string = "NScene";
 

@@ -7,13 +7,13 @@
 
 import { BufferGeometry } from "three";
 
-import { types } from "@ff/graph/propertyTypes";
+import { types } from "@ffweb/graph/propertyTypes.js";
 
-import Component from "@ff/graph/Component";
+import { Component } from "@ffweb/graph/Component.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CGeometry extends Component
+export class CGeometry extends Component
 {
     static readonly typeName: string = "CGeometry";
 

@@ -7,16 +7,16 @@
 
 import { BufferGeometry, Mesh, Material, MeshBasicMaterial } from "three";
 
-import { types } from "@ff/graph/Component";
+import { types } from "@ffweb/graph/Component.js";
 
-import CTransform from "./CTransform";
-import CObject3D from "./CObject3D";
-import CGeometry from "./CGeometry";
-import CMaterial from "./CMaterial";
+import { CTransform } from "./CTransform.js";
+import { CObject3D } from "./CObject3D.js";
+import { CGeometry } from "./CGeometry.js";
+import { CMaterial } from "./CMaterial.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CMesh extends CObject3D
+export class CMesh extends CObject3D
 {
     static readonly typeName: string = "CMesh";
 

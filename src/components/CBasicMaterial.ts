@@ -7,13 +7,13 @@
 
 import { MeshBasicMaterial } from "three";
 
-import { Node, types } from "@ff/graph/Component";
+import { Node, types } from "@ffweb/graph/Component.js";
 
-import CMaterial from "./CMaterial";
+import { CMaterial } from "./CMaterial.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CBasicMaterial extends CMaterial
+export class CBasicMaterial extends CMaterial
 {
     static readonly typeName: string = "CBasicMaterial";
 

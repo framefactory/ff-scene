@@ -5,12 +5,12 @@
  * License: MIT
  */
 
-import NTransform from "./NTransform";
-import CLight from "../components/CLight";
+import { NTransform } from "./NTransform.js";
+import { CLight } from "../components/CLight.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class NLight extends NTransform
+export class NLight extends NTransform
 {
     static readonly typeName: string = "NLight";
 

@@ -5,14 +5,14 @@
  * License: MIT
  */
 
-import Component, { Node, types } from "@ff/graph/Component";
-import { IRenderContext } from "./CScene";
+import { Component, Node, types } from "@ffweb/graph/Component.js";
+import { IRenderContext } from "./CScene.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export { Node, types };
 
-export default class CRenderable extends Component
+export class CRenderable extends Component
 {
     static readonly typeName: string = "CRenderable";
 
@@ -23,6 +23,7 @@ export default class CRenderable extends Component
      */
     preRender(context: IRenderContext)
     {
+        // optional override
     }
 
     /**
@@ -32,6 +33,7 @@ export default class CRenderable extends Component
      */
     postRender(context: IRenderContext)
     {
+        // optional override
     }
 }
 

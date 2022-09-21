@@ -8,7 +8,7 @@
 import * as xmlTools from "xml-js";
 import resolvePathname from "resolve-pathname";
 
-import { Dictionary } from "@ff/core/types";
+import { Dictionary } from "@ffweb/core/types.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -55,7 +55,7 @@ export interface IFileInfo
     type: string;
 }
 
-export default class WebDAVProvider
+export class WebDAVProvider
 {
     private _rootUrl: string;
     private _rootPath: string;

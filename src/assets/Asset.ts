@@ -14,7 +14,7 @@ export enum EAssetType {
     Model
 }
 
-export default class Asset
+export class Asset
 {
     path: string;
     type: EAssetType;

@@ -7,27 +7,28 @@
 
 import { WebGLRenderer, Object3D, Camera, Scene, Box3, Vector3 } from "three";
 
-import Publisher from "@ff/core/Publisher";
-import System from "@ff/graph/System";
-import Component from "@ff/graph/Component";
-import CHierarchy from "@ff/graph/components/CHierarchy";
+import { Publisher } from "@ffweb/core/Publisher.js";
+import { System } from "@ffweb/graph/System.js";
+import { Component } from "@ffweb/graph/Component.js";
+import { CHierarchy } from "@ffweb/graph/components/CHierarchy.js";
 
 import {
     IManipListener,
     IManipEvent as IManipBaseEvent,
     IPointerEvent as IManipPointerEvent,
     ITriggerEvent as IManipTriggerEvent
-} from "@ff/browser/ManipTarget";
+} from "@ffweb/browser/ManipTarget.js";
 
-import Viewport, {
+import {
+    Viewport,
     IViewportEventExt,
-} from "@ff/three/Viewport";
+} from "@ffweb/three/Viewport.js";
 
-import ViewportOverlay from "@ff/three/ui/ViewportOverlay";
-import GPUPicker from "@ff/three/GPUPicker";
+import { ViewportOverlay } from "@ffweb/three/ui/ViewportOverlay.js";
+import { GPUPicker } from "@ffweb/three/GPUPicker.js";
+import { UniversalCamera } from "@ffweb/three/UniversalCamera.js";
 
-import CRenderer from "./components/CRenderer";
-import UniversalCamera from "@ff/three/UniversalCamera";
+import { CRenderer } from "./components/CRenderer.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -49,7 +50,7 @@ export interface IBaseEvent extends IManipBaseEvent, IRenderViewEventExt { }
 export interface IPointerEvent extends IManipPointerEvent, IRenderViewEventExt { }
 export interface ITriggerEvent extends IManipTriggerEvent, IRenderViewEventExt { }
 
-export default class RenderView extends Publisher implements IManipListener
+export class RenderView extends Publisher implements IManipListener
 {
     readonly system: System;
     readonly renderer: WebGLRenderer;

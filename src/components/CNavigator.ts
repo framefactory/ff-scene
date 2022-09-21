@@ -5,12 +5,11 @@
  * License: MIT
  */
 
-import Component, { types } from "@ff/graph/Component";
+import { Component, types } from "@ffweb/graph/Component.js";
+import { OrbitManipulator } from "@ffweb/three/OrbitManipulator.js";
 
-import OrbitManipulator from "@ff/three/OrbitManipulator";
-
-import { IPointerEvent, ITriggerEvent } from "../RenderView";
-import CCamera from "./CCamera";
+import { IPointerEvent, ITriggerEvent } from "../RenderView.js";
+import { CCamera } from "./CCamera.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -31,7 +30,7 @@ const _outputs = {
     offset: types.Vector3("Current.Offset", [ 0, 0, 100 ]),
 };
 
-export default class CNavigator extends Component
+export class CNavigator extends Component
 {
     static readonly typeName: string = "CNavigator";
 

@@ -5,13 +5,13 @@
  * License: MIT
  */
 
-import Component, { ComponentOrType, IComponentEvent } from "@ff/graph/Component";
-import Node, { NodeOrType, INodeEvent } from "@ff/graph/Node";
-import Graph from "@ff/graph/Graph";
-import CSelection from "@ff/graph/components/CSelection";
+import { Component, ComponentOrType, IComponentEvent } from "@ffweb/graph/Component.js";
+import { Node, NodeOrType, INodeEvent } from "@ffweb/graph/Node.js";
+import { Graph } from "@ffweb/graph/Graph.js";
+import { CSelection } from "@ffweb/graph/components/CSelection.js";
 
-import { customElement, property, PropertyValues } from "@ff/ui/CustomElement";
-import List from "@ff/ui/List";
+import { customElement, property, PropertyValues } from "@ffweb/ui/CustomElement.js";
+import { List } from "@ffweb/ui/List.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -22,7 +22,7 @@ import List from "@ff/ui/List";
  *
  */
 @customElement("ff-node-list")
-class NodeList<N extends Node = Node, C extends Component = Component> extends List<N>
+export class NodeList<N extends Node = Node, C extends Component = Component> extends List<N>
 {
     @property({ attribute: false })
     graph: Graph = null;
@@ -67,7 +67,7 @@ class NodeList<N extends Node = Node, C extends Component = Component> extends L
         super.update(props);
     }
 
-    protected renderItem(node: N)
+    protected renderItem(node: N): string
     {
         return node.displayName;
     }
@@ -134,7 +134,7 @@ class NodeList<N extends Node = Node, C extends Component = Component> extends L
         }
     }
 
-    protected onClickEmpty(event: MouseEvent)
+    protected onClickEmpty(_event: MouseEvent)
     {
         const selection = this._selection;
 

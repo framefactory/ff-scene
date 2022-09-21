@@ -6,9 +6,13 @@
  */
 
 import { Texture, MathUtils } from "three";
-import * as constants from "three/src/constants";
+import * as constants from "three/src/constants.js";
 
-import Component, { Node, types } from "@ff/graph/Component";
+import {
+    Component,
+    Node,
+    types
+} from "@ffweb/graph/Component.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -82,7 +86,7 @@ const _THREE_ENCODING_TYPE = [
     // constants.RGBDEncoding
 ];
 
-export default class CTexture extends Component
+export class CTexture extends Component
 {
     static readonly typeName: string = "CTexture";
 

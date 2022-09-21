@@ -7,13 +7,14 @@
 
 import resolvePathname from "resolve-pathname";
 
-import Component, { Node, ITypedEvent } from "@ff/graph/Component";
-import WebDAVProvider, { IFileInfo } from "../assets/WebDAVProvider";
-import { Dictionary } from "@ff/core/types";
+import { Dictionary } from "@ffweb/core/types.js";
+import { Component, Node, ITypedEvent } from "@ffweb/graph/Component.js";
+
+import { WebDAVProvider, IFileInfo } from "../assets/WebDAVProvider.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { IFileInfo };
+export { type IFileInfo };
 
 export interface IAssetEntry
 {
@@ -32,7 +33,7 @@ export interface IAssetOpenEvent extends ITypedEvent<"asset-open">
     asset: IAssetEntry;
 }
 
-export default class CAssetManager extends Component
+export class CAssetManager extends Component
 {
     static readonly typeName: string = "CAssetManager";
     static readonly isGraphSingleton = true;

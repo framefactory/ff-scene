@@ -7,18 +7,18 @@
 
 import { Object3D } from "three";
 
-import CGraph, { Node, types } from "@ff/graph/components/CGraph";
-import CHierarchy from "@ff/graph/components/CHierarchy";
-import { ICObject3D } from "./CObject3D";
+import { CGraph, Node, types } from "@ffweb/graph/components/CGraph.js";
+import { CHierarchy } from "@ffweb/graph/components/CHierarchy.js";
 
-import CTransform from "./CTransform";
-import CScene from "./CScene";
+import { ICObject3D } from "./CObject3D.js";
+import { CTransform } from "./CTransform.js";
+import { CScene } from "./CScene.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export { Node, types };
 
-export default class CRenderGraph extends CGraph implements ICObject3D
+export class CRenderGraph extends CGraph implements ICObject3D
 {
     static readonly typeName: string = "CRenderGraph";
 

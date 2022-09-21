@@ -6,9 +6,9 @@
  */
 
 import { Material } from "three";
-import * as constants from "three/src/constants";
+import * as constants from "three/src/constants.js";
 
-import Component, { Node, types } from "@ff/graph/Component";
+import { Component, Node, types } from "@ffweb/graph/Component.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -45,7 +45,7 @@ const _THREE_SIDE = [
     constants.DoubleSide,
 ];
 
-export default class CMaterial extends Component
+export class CMaterial extends Component
 {
     static readonly typeName: string = "CMaterial";
 

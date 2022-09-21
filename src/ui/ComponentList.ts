@@ -5,20 +5,25 @@
  * License: MIT
  */
 
-import Component, { ComponentOrType, IComponentEvent } from "@ff/graph/Component";
-import Node from "@ff/graph/Node";
-import Graph from "@ff/graph/Graph";
-import CSelection from "@ff/graph/components/CSelection";
+import { Component, ComponentOrType, IComponentEvent } from "@ffweb/graph/Component.js";
+import { Node } from "@ffweb/graph/Node.js";
+import { Graph } from "@ffweb/graph/Graph.js";
+import { CSelection } from "@ffweb/graph/components/CSelection.js";
 
-import { customElement, property, PropertyValues } from "@ff/ui/CustomElement";
-import List from "@ff/ui/List";
+import { 
+    customElement, 
+    property, 
+    type PropertyValues,
+} from "@ffweb/ui/CustomElement.js";
+
+import { List } from "@ffweb/ui/List.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 type GraphOrNode = Graph | Node;
 
 @customElement("ff-component-list")
-class ComponentList<C extends Component = Component> extends List<C>
+export class ComponentList<C extends Component = Component> extends List<C>
 {
     @property({ attribute: false })
     scope: GraphOrNode = null;
@@ -59,7 +64,7 @@ class ComponentList<C extends Component = Component> extends List<C>
         super.update(props);
     }
 
-    protected renderItem(component: C)
+    protected renderItem(component: C): string
     {
         return component.displayName;
     }
@@ -97,7 +102,7 @@ class ComponentList<C extends Component = Component> extends List<C>
         this._selection.selectComponent(component, event.ctrlKey);
     }
 
-    protected onClickEmpty(event: MouseEvent)
+    protected onClickEmpty(_event: MouseEvent)
     {
         this._selection.clearSelection();
     }

@@ -5,12 +5,12 @@
  * License: MIT
  */
 
-import NLight from "./NLight";
-import CDirectionalLight from "../components/CDirectionalLight";
+import { NLight } from "./NLight.js";
+import { CDirectionalLight } from "../components/CDirectionalLight.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class NDirectionalLight extends NLight
+export class NDirectionalLight extends NLight
 {
     static readonly typeName: string = "NDirectionalLight";
 

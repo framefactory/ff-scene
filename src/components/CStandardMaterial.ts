@@ -7,11 +7,11 @@
 
 import { MeshStandardMaterial } from "three";
 
-import CMaterial, { Node, types } from "./CMaterial";
+import { CMaterial, Node, types } from "./CMaterial.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CStandardMaterial extends CMaterial
+export class CStandardMaterial extends CMaterial
 {
     static readonly typeName: string = "CStandardMaterial";
 

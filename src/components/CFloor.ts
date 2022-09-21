@@ -5,12 +5,12 @@
  * License: MIT
  */
 
-import CObject3D, { Node, types } from "./CObject3D";
-import Floor from "@ff/three/Floor";
+import { Floor } from "@ffweb/three/Floor.js";
+import { CObject3D, Node, types } from "./CObject3D.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CFloor extends CObject3D
+export class CFloor extends CObject3D
 {
     static readonly typeName: string = "CFloor";
 

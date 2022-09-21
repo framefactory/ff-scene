@@ -7,13 +7,13 @@
 
 import { Object3D, DirectionalLight } from "three";
 
-import { Node, types } from "@ff/graph/Component";
+import { Node, types } from "@ffweb/graph/Component.js";
 
-import CLight from "./CLight";
+import { CLight } from "./CLight.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CDirectionalLight extends CLight
+export class CDirectionalLight extends CLight
 {
     static readonly typeName: string = "CDirectionalLight";
 

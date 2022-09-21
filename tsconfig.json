@@ -1,31 +1,35 @@
 {
+    "extends": "./tsconfig.base.json",
+
     "compilerOptions": {
+        "target": "ES2022",
+        "module": "ESNext",
+        "moduleResolution": "NodeNext",
+
         "composite": true,
-        "target": "ES2020",
-        "module": "CommonJS",
-        "experimentalDecorators": true,
-        "sourceMap": true,
+        "declaration": true,
+        "declarationMap": true,
+        "declarationDir": "./build/types",
+        "outDir": "./build/esm",
+        "rootDir": "./src",
 
-        "outDir": "dist/exports",
-        "rootDir": "src",
-
-        "baseUrl": ".",
+        "baseUrl": "..",
         "paths": {
-            "@ff/core/*": [ "../core/src/*" ],
-            "@ff/browser/*": [ "../browser/src/*" ],
-            "@ff/graph/*": [ "../graph/src/*" ],
-            "@ff/ui/*": [ "../ui/src/*" ],
-            "@ff/three/*": [ "../three/src/*" ]
+            "@ffweb/core/*": [ "core/src/*" ],
+            "@ffweb/browser/*": [ "browser/src/*" ],
+            "@ffweb/graph/*": [ "graph/src/*" ],
+            "@ffweb/three/*": [ "three/src/*" ],
+            "@ffweb/ui/*": [ "ui/src/*" ],
         }
     },
     "include": [
-        "src/**/*"
+        "./src/**/*"
     ],
     "references": [
-        { "path":  "../core" },
-        { "path":  "../browser" },
-        { "path":  "../graph" },
-        { "path":  "../ui" },
-        { "path":  "../three" }
+        { "path": "../core/tsconfig.json" },
+        { "path": "../browser/tsconfig.json" },
+        { "path": "../graph/tsconfig.json" },
+        { "path": "../three/tsconfig.json" },
+        { "path": "../ui/tsconfig.json" }
     ]
 }

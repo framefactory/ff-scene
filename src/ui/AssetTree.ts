@@ -5,22 +5,32 @@
  * License: MIT
  */
 
-import System from "@ff/graph/System";
+import { System } from "@ffweb/graph/System.js";
 
-import Tree, { customElement, property, html } from "@ff/ui/Tree";
+import { 
+    Tree, 
+    customElement, 
+    property, 
+    html, 
+    type TemplateResult 
+} from "@ffweb/ui/Tree.js";
 
-import CAssetManager, { IAssetEntry, IAssetTreeChangeEvent } from "../components/CAssetManager";
+import { 
+    CAssetManager, 
+    IAssetEntry, 
+    IAssetTreeChangeEvent 
+} from "../components/CAssetManager.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 @customElement("ff-asset-tree")
-export default class AssetTree extends Tree<IAssetEntry>
+export class AssetTree extends Tree<IAssetEntry>
 {
     @property({ attribute: false })
     system: System;
 
     @property({ type: String })
-    path: string = "";
+    path = "";
 
     protected assetManager: CAssetManager = null;
 
@@ -54,7 +64,7 @@ export default class AssetTree extends Tree<IAssetEntry>
         super.disconnected();
     }
 
-    protected renderNodeHeader(treeNode: IAssetEntry)
+    protected renderNodeHeader(treeNode: IAssetEntry): TemplateResult
     {
         const isFolder = treeNode.info.folder;
         const iconName = isFolder ? "folder" : "file";

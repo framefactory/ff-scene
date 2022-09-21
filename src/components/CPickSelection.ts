@@ -5,18 +5,17 @@
  * License: MIT
  */
 
-import Component, { types } from "@ff/graph/Component";
-import ComponentTracker from "@ff/graph/ComponentTracker";
-import Node from "@ff/graph/Node";
-import CSelection from "@ff/graph/components/CSelection";
+import { Component, types } from "@ffweb/graph/Component.js";
+import { ComponentTracker } from "@ffweb/graph/ComponentTracker.js";
+import { Node } from "@ffweb/graph/Node.js";
+import { CSelection } from "@ffweb/graph/components/CSelection.js";
+import { Bracket } from "@ffweb/three/Bracket.js";
 
-import Bracket from "@ff/three/Bracket";
+import { IPointerEvent } from "../RenderView.js";
 
-import { IPointerEvent } from "../RenderView";
-
-import CObject3D from "./CObject3D";
-import CTransform from "./CTransform";
-import CScene, { ISceneAfterRenderEvent } from "./CScene";
+import { CObject3D } from "./CObject3D.js";
+import { CTransform } from "./CTransform.js";
+import { CScene, ISceneAfterRenderEvent } from "./CScene.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -25,7 +24,7 @@ const _inputs = {
     viewportBrackets: types.Boolean("Viewport.Brackets", true),
 };
 
-export default class CPickSelection extends CSelection
+export class CPickSelection extends CSelection
 {
     static readonly typeName: string = "CPickSelection";
 

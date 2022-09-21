@@ -5,14 +5,18 @@
  * License: MIT
  */
 
-import { Mesh } from "three";
-import * as constants from "three/src/constants";
+import { Mesh, Scene } from "three";
+import * as constants from "three/src/constants.js";
 
-import Component, { Node, ITypedEvent, types } from "@ff/graph/Component";
-import CPulse, { IPulseEvent } from "@ff/graph/components/CPulse";
+import { Component, Node, ITypedEvent, types } from "@ffweb/graph/Component.js";
+import { Graph } from "@ffweb/graph/Graph.js";
+import { CPulse, IPulseEvent } from "@ffweb/graph/components/CPulse.js";
 
-import RenderView from "../RenderView";
-import CScene, { IActiveCameraEvent } from "./CScene";
+import { UniversalCamera } from "@ffweb/three/UniversalCamera.js";
+
+import { RenderView } from "../RenderView.js";
+import { CScene, type IActiveCameraEvent } from "./CScene.js";
+import { CCamera } from "./CCamera.js"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -25,7 +29,7 @@ const _shadowMapType = {
     //[EShadowMapType.VSM]: constants.VSMShadowMap,
 };
 
-export { IActiveCameraEvent };
+export { type IActiveCameraEvent };
 
 /**
  * Emitted by [[CRenderer]] if the active scene changes.
@@ -51,7 +55,7 @@ export interface IActiveSceneEvent extends ITypedEvent<"active-scene">
  * - [[CCamera]]
  * - [[RenderView]]
  */
-export default class CRenderer extends Component
+export class CRenderer extends Component
 {
     static readonly typeName: string = "CRenderer";
     static readonly isSystemSingleton: boolean = true;
@@ -109,17 +113,17 @@ export default class CRenderer extends Component
         }
     }
 
-    get activeSceneGraph() {
+    get activeSceneGraph(): Graph | null {
         return this._activeSceneComponent ? this._activeSceneComponent.graph : null;
     }
-    get activeScene() {
+    get activeScene(): Scene | null {
         return this._activeSceneComponent ? this._activeSceneComponent.scene : null;
     }
 
-    get activeCameraComponent() {
+    get activeCameraComponent(): CCamera | null {
         return this._activeSceneComponent ? this._activeSceneComponent.activeCameraComponent : null;
     }
-    get activeCamera() {
+    get activeCamera(): UniversalCamera | null {
         const component = this._activeSceneComponent ? this._activeSceneComponent.activeCameraComponent : null;
         return component ? component.camera : null;
     }

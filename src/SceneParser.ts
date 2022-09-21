@@ -7,20 +7,20 @@
 
 import { Object3D } from "three";
 
-import Node from "@ff/graph/Node";
-import Graph from "@ff/graph/Graph";
-import CTransform from "./components/CTransform";
-import CMesh from "./components/CMesh";
-import CDirectionalLight from "./components/CDirectionalLight";
-import CPointLight from "./components/CPointLight";
-import CSpotLight from "./components/CSpotLight";
-import CGeometry from "./components/CGeometry";
+import { Node } from "@ffweb/graph/Node.js";
+import { Graph } from "@ffweb/graph/Graph.js";
+import { CTransform } from "./components/CTransform.js";
+import { CMesh } from "./components/CMesh.js";
+import { CDirectionalLight } from "./components/CDirectionalLight.js";
+import { CPointLight } from "./components/CPointLight.js";
+import { CSpotLight } from "./components/CSpotLight.js";
+import { CGeometry } from "./components/CGeometry.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export function parseScene(root: Object3D, graph: Graph, includeRoot: boolean)
 {
-
+    // TODO: implement
 }
 
 function parse(object: any, parent: CTransform)
@@ -42,7 +42,7 @@ function parse(object: any, parent: CTransform)
         }
 
         if (object.material) {
-
+            // TODO: implement
         }
     }
 
@@ -62,7 +62,6 @@ function parse(object: any, parent: CTransform)
 
         const light = node.createComponent(CPointLight);
         light.object3D = object;
-
     }
 
     if (object.isSpotLight) {

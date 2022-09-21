@@ -5,17 +5,16 @@
  * License: MIT
  */
 
-import { ITypedEvent } from "@ff/core/Publisher";
-import System from "@ff/graph/System";
+import { ITypedEvent } from "@ffweb/core/Publisher.js";
+import { System } from "@ffweb/graph/System.js";
 
-import Viewport from "@ff/three/Viewport";
-import { EViewPreset, EProjection } from "@ff/three/UniversalCamera";
+import { EViewPreset, EProjection } from "@ffweb/three/UniversalCamera.js";
 
-import RenderView, { IPointerEvent, ITriggerEvent } from "./RenderView";
+import { RenderView, IPointerEvent, ITriggerEvent } from "./RenderView.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { IPointerEvent, ITriggerEvent };
+export { type IPointerEvent, type ITriggerEvent };
 
 export enum EQuadViewLayout { Single, HorizontalSplit, VerticalSplit, Quad }
 
@@ -24,7 +23,7 @@ export interface ILayoutChange extends ITypedEvent<"layout">
     layout: EQuadViewLayout;
 }
 
-export default class RenderQuadView extends RenderView
+export class RenderQuadView extends RenderView
 {
     private _layout: EQuadViewLayout = EQuadViewLayout.Quad;
     private _horizontalSplit = 0.5;

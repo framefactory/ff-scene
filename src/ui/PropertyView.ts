@@ -5,26 +5,26 @@
  * License: MIT
  */
 
-import Color from "@ff/core/Color";
-import Property from "@ff/graph/Property";
+import { Property } from "@ffweb/graph/Property.js";
 
-import ColorButton, { IColorEditChangeEvent } from "@ff/ui/ColorButton";
+import { ColorButton, IColorEditChangeEvent } from "@ffweb/ui/ColorButton.js";
 
-import CustomElement, {
-    PropertyValues,
+import {
+    CustomElement,
     customElement,
     property,
-    html
-} from "@ff/ui/CustomElement";
+    html,
+    type TemplateResult
+} from "@ffweb/ui/CustomElement.js";
 
-import "./PropertyField";
+import "./PropertyField.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 const _defaultLabels = [ "X", "Y", "Z", "W" ];
 
 @customElement("ff-property-view")
-export default class PropertyView extends CustomElement
+export class PropertyView extends CustomElement
 {
     @property({ attribute: false })
     property: Property = null;
@@ -52,7 +52,7 @@ export default class PropertyView extends CustomElement
         this.property.off("value", this.onPropertyValue, this);
     }
 
-    protected render()
+    protected render(): TemplateResult
     {
         const property = this.property;
         const schema = property.schema;
@@ -79,7 +79,7 @@ export default class PropertyView extends CustomElement
             }
 
             const labels = property.schema.labels || _defaultLabels;
-            let fields = [];
+            const fields = [];
             for (let i = 0; i < property.elementCount; ++i) {
                 fields.push(html`
                     <div class="ff-label">${labels[i]}</div>

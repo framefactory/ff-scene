@@ -7,11 +7,11 @@
 
 import { VideoTexture } from "three";
 
-import CTexture, { types } from "./CTexture";
+import { CTexture, types } from "./CTexture.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CVideoTexture extends CTexture
+export class CVideoTexture extends CTexture
 {
     static readonly typeName: string = "CVideoTexture";
 

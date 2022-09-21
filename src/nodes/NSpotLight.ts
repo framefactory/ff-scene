@@ -5,12 +5,12 @@
  * License: MIT
  */
 
-import NLight from "./NLight";
-import CSpotLight from "../components/CSpotLight";
+import { NLight } from "./NLight.js";
+import { CSpotLight } from "../components/CSpotLight.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class NSpotLight extends NLight
+export class NSpotLight extends NLight
 {
     static readonly typeName: string = "NSpotLight";
 

@@ -5,17 +5,17 @@
  * License: MIT
  */
 
-import Property from "@ff/graph/Property";
-import PropertyGroup from "@ff/graph/PropertyGroup";
-import Component from "@ff/graph/Component";
-import Node from "@ff/graph/Node";
-import System from "@ff/graph/System";
+import { Property } from "@ffweb/graph/Property.js";
+import { PropertyGroup } from "@ffweb/graph/PropertyGroup.js";
+import { Component } from "@ffweb/graph/Component.js";
+import { Node } from "@ffweb/graph/Node.js";
+import { System } from "@ffweb/graph/System.js";
 
-import CSelection, { INodeEvent, IComponentEvent } from "@ff/graph/components/CSelection";
+import { CSelection, INodeEvent, IComponentEvent } from "@ffweb/graph/components/CSelection.js";
 
-import Tree, { customElement, property, html, ITreeNode } from "@ff/ui/Tree";
+import { Tree, customElement, property, html, ITreeNode } from "@ffweb/ui/Tree.js";
 
-import "./PropertyView";
+import "./PropertyView.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -29,7 +29,7 @@ interface IPropertyTreeNode extends ITreeNode
 }
 
 @customElement("ff-property-tree")
-export default class PropertyTree extends Tree<IPropertyTreeNode>
+export class PropertyTree extends Tree<IPropertyTreeNode>
 {
     @property({ attribute: false })
     system: System;

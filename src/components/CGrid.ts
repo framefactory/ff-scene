@@ -7,15 +7,14 @@
 
 import { Color } from "three";
 
-import { types } from "@ff/graph/propertyTypes";
+import { types } from "@ffweb/graph/propertyTypes.js";
+import { Grid, IGridProps } from "@ffweb/three/Grid.js";
 
-import Grid, { IGridProps } from "@ff/three/Grid";
-
-import CObject3D from "./CObject3D";
+import { CObject3D } from "./CObject3D.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CGrid extends CObject3D
+export class CGrid extends CObject3D
 {
     static readonly typeName: string = "CGrid";
 

@@ -7,13 +7,13 @@
 
 import { TorusGeometry } from "three";
 
-import{ types } from "@ff/graph/propertyTypes";
+import { types } from "@ffweb/graph/propertyTypes.js";
 
-import CGeometry from "./CGeometry";
+import { CGeometry } from "./CGeometry.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CTorus extends CGeometry
+export class CTorus extends CGeometry
 {
     static readonly typeName: string = "CTorus";
 

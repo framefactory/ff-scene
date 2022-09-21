@@ -5,11 +5,11 @@
  * License: MIT
  */
 
-import Component, { Node, types } from "@ff/graph/Component";
+import { Component, Node, types } from "@ffweb/graph/Component.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CFullscreen extends Component
+export class CFullscreen extends Component
 {
     static readonly typeName: string = "CFullscreen";
 

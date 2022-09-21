@@ -7,15 +7,15 @@
 
 import { Vector3, PointLight } from "three";
 
-import { Node, types } from "@ff/graph/Component";
+import { Node, types } from "@ffweb/graph/Component.js";
 
-import CLight from "./CLight";
+import { CLight } from "./CLight.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 const _vec3 = new Vector3();
 
-export default class CPointLight extends CLight
+export class CPointLight extends CLight
 {
     static readonly typeName: string = "CPointLight";
 

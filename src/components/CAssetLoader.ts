@@ -7,8 +7,8 @@
 
 import { LoadingManager } from "three";
 
-import Component, { Node, ITypedEvent } from "@ff/graph/Component";
-import Loader from "@ff/three/loaders/Loader";
+import { Component, Node, ITypedEvent } from "@ffweb/graph/Component.js";
+import { Loader } from "@ffweb/three/loaders/Loader.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -22,7 +22,7 @@ export interface IAssetLoadingEvent extends ITypedEvent<"loading">
     itemsTotal?: number;
 }
 
-export default class CAssetLoader extends Component
+export class CAssetLoader extends Component
 {
     static readonly typeName: string = "CAssetLoader";
 

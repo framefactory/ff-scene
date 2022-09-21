@@ -5,11 +5,11 @@
  * License: MIT
  */
 
-import Component, { types } from "@ff/graph/Component";
+import { Component, types } from "@ffweb/graph/Component.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CImage extends Component
+export class CImage extends Component
 {
     static readonly typeName: string = "CImage";
 }

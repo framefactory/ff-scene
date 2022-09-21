@@ -5,21 +5,29 @@
  * License: MIT
  */
 
-import System from "@ff/graph/System";
+import { System } from "@ffweb/graph/System.js";
 
-import CustomElement, {
+import {
+    CustomElement,
     customElement,
     property,
     html,
-    PropertyValues,
-    TemplateResult
-} from "@ff/ui/CustomElement";
+    type PropertyValues,
+    type TemplateResult
+} from "@ffweb/ui/CustomElement.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { System, customElement, property, html, PropertyValues, TemplateResult };
+export { 
+    System, 
+    customElement, 
+    property, 
+    html, 
+    type PropertyValues, 
+    type TemplateResult 
+};
 
-export default class SystemView extends CustomElement
+export class SystemView extends CustomElement
 {
     @property({ attribute: false })
     system: System;

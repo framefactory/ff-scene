@@ -5,20 +5,20 @@
  * License: MIT
  */
 
-import math from "@ff/core/math";
+import { math } from "@ffweb/core/math.js";
 
-import Property, { IPropertyChangeEvent } from "@ff/graph/Property";
+import { Property, IPropertyChangeEvent } from "@ffweb/graph/Property.js";
 
-import CustomElement, { customElement, property, PropertyValues } from "@ff/ui/CustomElement";
-import PopupOptions, { IPopupMenuSelectEvent } from "@ff/ui/PopupOptions";
-import LineEdit, { ILineEditChangeEvent } from "@ff/ui/LineEdit";
+import { CustomElement, customElement, property, PropertyValues } from "@ffweb/ui/CustomElement.js";
+import { PopupOptions, IPopupMenuSelectEvent } from "@ffweb/ui/PopupOptions.js";
+import { LineEdit, ILineEditChangeEvent } from "@ffweb/ui/LineEdit.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export { Property };
 
 @customElement("ff-property-field")
-export default class PropertyField extends CustomElement
+export class PropertyField extends CustomElement
 {
     static readonly defaultPrecision = 2;
     static readonly defaultEditPrecision = 5;
@@ -28,19 +28,19 @@ export default class PropertyField extends CustomElement
     property: Property;
 
     @property({ attribute: false })
-    index: number = undefined;
+    index = undefined;
 
     @property({ type: Boolean })
     commitonly = false;
 
     protected value: any = undefined;
-    protected isActive: boolean = false;
-    protected isDragging: boolean = false;
-    protected startValue: number = 0;
-    protected startX: number = 0;
-    protected startY: number = 0;
-    protected lastX: number = 0;
-    protected lastY: number = 0;
+    protected isActive = false;
+    protected isDragging = false;
+    protected startValue = 0;
+    protected startX = 0;
+    protected startY = 0;
+    protected lastX = 0;
+    protected lastY = 0;
 
     protected editElement: LineEdit = null;
     protected barElement: HTMLDivElement = null;
@@ -71,7 +71,7 @@ export default class PropertyField extends CustomElement
         this.addEventListener("pointercancel", this.onPointerUp);
     }
 
-    protected update(changedProperties: PropertyValues)
+    protected update(_changedProperties: PropertyValues)
     {
         // remove child elements
         if (this.contentElement) {
@@ -155,8 +155,9 @@ export default class PropertyField extends CustomElement
         this.property.off<IPropertyChangeEvent>("change", this.onPropertyChange, this);
     }
 
-    protected onFocus(event: FocusEvent)
+    protected onFocus(_event: FocusEvent)
     {
+        // do nothing
     }
 
     protected onClick(event: MouseEvent)
@@ -325,7 +326,7 @@ export default class PropertyField extends CustomElement
         editElement.addEventListener("change", this.onEditChange);
     }
 
-    protected stopEditing(commit: boolean)
+    protected stopEditing(_commit: boolean)
     {
         if (!this.editElement) {
             return;

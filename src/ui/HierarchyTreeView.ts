@@ -5,26 +5,26 @@
  * License: MIT
  */
 
-import uniqueId from "@ff/core/uniqueId";
+import { uniqueId } from "@ffweb/core/uniqueId.js";
 
-import System from "@ff/graph/System";
-import Graph from "@ff/graph/Graph";
-import Node from "@ff/graph/Node";
-import Component from "@ff/graph/Component";
+import { System } from "@ffweb/graph/System.js";
+import { Graph } from "@ffweb/graph/Graph.js";
+import { Node } from "@ffweb/graph/Node.js";
+import { Component } from "@ffweb/graph/Component.js";
 
-import CGraph from "@ff/graph/components/CGraph";
-import CHierarchy, { IHierarchyEvent } from "@ff/graph/components/CHierarchy";
-import CSelection, { INodeEvent, IComponentEvent, IActiveGraphEvent } from "@ff/graph/components/CSelection";
+import { CGraph } from "@ffweb/graph/components/CGraph.js";
+import { CHierarchy, IHierarchyEvent } from "@ffweb/graph/components/CHierarchy.js";
+import { CSelection, INodeEvent, IComponentEvent, IActiveGraphEvent } from "@ffweb/graph/components/CSelection.js";
 
-import "@ff/ui/Button";
-import Tree from "@ff/ui/Tree";
+import "@ffweb/ui/Button.js";
+import { Tree } from "@ffweb/ui/Tree.js";
 
-import SelectionView, { customElement, html, property } from "./SelectionView";
+import { SelectionView, customElement, html, property, type TemplateResult } from "./SelectionView.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 @customElement("ff-hierarchy-tree-view")
-export default class HierarchyTreeView extends SelectionView
+export class HierarchyTreeView extends SelectionView
 {
     protected tree: HierarchyTree = null;
 
@@ -57,7 +57,7 @@ export default class HierarchyTreeView extends SelectionView
         this.selection.off<IActiveGraphEvent>("active-graph", this.onActiveGraph, this);
     }
 
-    protected render()
+    protected render(): TemplateResult
     {
         const selection = this.selection;
         const activeGraphComponent = selection.activeGraph && selection.activeGraph.parent;
@@ -89,15 +89,15 @@ export default class HierarchyTreeView extends SelectionView
 
     protected onContextMenu()
     {
-
+        // do nothing
     }
 
-    protected onSelectGraph(event: IComponentEvent)
+    protected onSelectGraph(_event: IComponentEvent)
     {
         this.requestUpdate();
     }
 
-    protected onActiveGraph(event: IActiveGraphEvent)
+    protected onActiveGraph(_event: IActiveGraphEvent)
     {
         this.requestUpdate();
     }
@@ -162,7 +162,7 @@ export class HierarchyTree extends Tree<NCG>
         selection.system.off<IHierarchyEvent>("hierarchy", this.onUpdate, this);
     }
 
-    protected renderNodeHeader(item: NCG)
+    protected renderNodeHeader(item: NCG): TemplateResult
     {
         if (item instanceof Component || item instanceof Node) {
             if (item instanceof CGraph) {
@@ -177,7 +177,7 @@ export class HierarchyTree extends Tree<NCG>
         }
     }
 
-    protected isNodeSelected(treeNode: NCG)
+    protected isNodeSelected(treeNode: NCG): boolean
     {
         const selection = this.selection;
         if (treeNode instanceof Component) {
@@ -189,12 +189,12 @@ export class HierarchyTree extends Tree<NCG>
         return false;
     }
 
-    protected getId(node: NCG)
+    protected getId(node: NCG): string
     {
         return (node as any).id || this.rootId;
     }
 
-    protected getClasses(node: NCG)
+    protected getClasses(node: NCG): string
     {
         if (node instanceof Node) {
             return "ff-node";
@@ -256,7 +256,7 @@ export class HierarchyTree extends Tree<NCG>
         this.setSelected(event.object, event.add);
     }
 
-    protected onActiveGraph(event: IActiveGraphEvent)
+    protected onActiveGraph(_event: IActiveGraphEvent)
     {
         this.root = this.selection.activeGraph;
     }

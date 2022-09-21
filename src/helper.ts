@@ -5,8 +5,8 @@
  * License: MIT
  */
 
-import Node from "@ff/graph/Node";
-import Graph from "@ff/graph/Graph";
+import { Node } from "@ffweb/graph/Node.js";
+import { Graph } from "@ffweb/graph/Graph.js";
 
 import {
     CBox,
@@ -19,7 +19,7 @@ import {
     CSpotLight,
     CTorus,
     CTransform
-} from "./components";
+} from "./components/index.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 

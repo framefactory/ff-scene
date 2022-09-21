@@ -7,21 +7,28 @@
 
 import { Object3D, Vector3, MathUtils } from "three";
 
-import { TypeOf } from "@ff/core/types";
-import { ITypedEvent } from "@ff/core/Publisher";
-import Component, { Node, types, IComponentEvent } from "@ff/graph/Component";
-import GPUPicker from "@ff/three/GPUPicker";
+import { TypeOf } from "@ffweb/core/types.js";
+import { ITypedEvent } from "@ffweb/core/Publisher.js";
+import { Component, Node, types, IComponentEvent } from "@ffweb/graph/Component.js";
+import { GPUPicker } from "@ffweb/three/GPUPicker.js";
 
-import { IPointerEvent, ITriggerEvent } from "../RenderView";
+import { IPointerEvent, ITriggerEvent } from "../RenderView.js";
 
-import CScene, { IRenderContext } from "./CScene";
-import CTransform, { ERotationOrder } from "./CTransform";
+import { CScene, IRenderContext } from "./CScene.js";
+import { CTransform, ERotationOrder } from "./CTransform.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 const _vec3 = new Vector3();
 
-export { Node, types, IPointerEvent, ITriggerEvent, IRenderContext, ERotationOrder };
+export {
+    Node, 
+    types, 
+    ERotationOrder,
+    type IPointerEvent, 
+    type ITriggerEvent, 
+    type IRenderContext, 
+};
 
 export interface ICObject3D extends Component
 {
@@ -39,7 +46,7 @@ export interface IObject3DObjectEvent extends ITypedEvent<"object">
  * If component is added to a node together with a [[Transform]] component,
  * it is automatically added as a child to the transform.
  */
-export default class CObject3D extends Component implements ICObject3D
+export class CObject3D extends Component implements ICObject3D
 {
     static readonly typeName: string = "CObject3D";
 

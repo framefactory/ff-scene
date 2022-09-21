@@ -7,10 +7,10 @@
 
 import { Object3D, Vector3, Matrix4, Quaternion, Euler } from "three";
 
-import math from "@ff/core/math";
+import { math } from "@ffweb/core/math.js";
 
-import Component, { Node, types } from "@ff/graph/Component";
-import CHierarchy from "@ff/graph/components/CHierarchy";
+import { Component, Node, types } from "@ffweb/graph/Component.js";
+import { CHierarchy } from "@ffweb/graph/components/CHierarchy.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -33,7 +33,7 @@ export interface ICObject3D extends Component
  * contains a transformation which affects its children as well as other components which
  * are part of the same entity.
  */
-export default class CTransform extends CHierarchy implements ICObject3D
+export class CTransform extends CHierarchy implements ICObject3D
 {
     static readonly typeName: string = "CTransform";
 
@@ -162,7 +162,7 @@ export default class CTransform extends CHierarchy implements ICObject3D
         super.removeChild(component);
     }
 
-    protected createObject3D()
+    protected createObject3D(): Object3D
     {
         return new Object3D();
     }

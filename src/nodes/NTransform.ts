@@ -5,12 +5,12 @@
  * License: MIT
  */
 
-import NHierarchy from "@ff/graph/nodes/NHierarchy";
-import CTransform from "../components/CTransform";
+import { NHierarchy } from "@ffweb/graph/nodes/NHierarchy.js";
+import { CTransform } from "../components/CTransform.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class NTransform extends NHierarchy
+export class NTransform extends NHierarchy
 {
     static readonly typeName: string = "NTransform";
 

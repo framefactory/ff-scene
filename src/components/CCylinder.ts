@@ -7,13 +7,13 @@
 
 import { CylinderGeometry, MathUtils } from "three";
 
-import{ types } from "@ff/graph/propertyTypes";
+import { types } from "@ffweb/graph/propertyTypes.js";
 
-import CGeometry from "./CGeometry";
+import { CGeometry } from "./CGeometry.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CCylinder extends CGeometry
+export class CCylinder extends CGeometry
 {
     static readonly typeName: string = "CCylinder";
 

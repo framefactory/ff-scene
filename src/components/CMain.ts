@@ -7,11 +7,11 @@
 
 import { Scene, Camera } from "three";
 
-import Component, { types } from "@ff/graph/Component";
-import { IComponentEvent } from "@ff/graph/System"
+import { Component, types } from "@ffweb/graph/Component.js";
+import { IComponentEvent } from "@ffweb/graph/System.js";
 
-import CScene from "./CScene";
-import CCamera from "./CCamera";
+import { CScene } from "./CScene.js";
+import { CCamera } from "./CCamera.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -20,7 +20,7 @@ const ins = {
     camera: types.Option("Camera", [])
 };
 
-export default class CMain extends Component
+export class CMain extends Component
 {
     static readonly typeName: string = "CMain";
 

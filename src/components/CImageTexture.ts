@@ -7,11 +7,11 @@
 
 import { Texture, ImageLoader } from "three";
 
-import CTexture, { Node, types } from "./CTexture";
+import { CTexture, Node, types } from "./CTexture.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CImageTexture extends CTexture
+export class CImageTexture extends CTexture
 {
     static readonly typeName: string = "CImageTexture";
 

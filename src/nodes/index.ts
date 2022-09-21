@@ -5,12 +5,12 @@
  * License: MIT
  */
 
-import NCamera from "./NCamera";
-import NDirectionalLight from "./NDirectionalLight";
-import NPointLight from "./NPointLight";
-import NScene from "./NScene";
-import NSpotLight from "./NSpotLight";
-import NTransform from "./NTransform";
+import { NCamera } from "./NCamera.js";
+import { NDirectionalLight } from "./NDirectionalLight.js";
+import { NPointLight } from "./NPointLight.js";
+import { NScene } from "./NScene.js";
+import { NSpotLight } from "./NSpotLight.js";
+import { NTransform } from "./NTransform.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 

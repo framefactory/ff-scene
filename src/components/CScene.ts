@@ -7,21 +7,20 @@
 
 import { WebGLRenderer, Scene, Camera } from "three";
 
-import { ITypedEvent } from "@ff/core/Publisher";
+import { ITypedEvent } from "@ffweb/core/Publisher.js";
+import { Node, types } from "@ffweb/graph/Component.js";
+import { IChildEvent, IHierarchyEvent } from "@ffweb/graph/components/CHierarchy.js";
 
-import { Node, types } from "@ff/graph/Component";
-import { IChildEvent, IHierarchyEvent } from "@ff/graph/components/CHierarchy";
+import { RenderView, Viewport } from "../RenderView.js";
 
-import RenderView, { Viewport } from "../RenderView";
-import CRenderer, { IActiveSceneEvent } from "./CRenderer";
-
-import CTransform from "./CTransform";
-import CCamera from "./CCamera";
-import CObject3D from "./CObject3D";
+import { CRenderer, type IActiveSceneEvent } from "./CRenderer.js";
+import { CTransform } from "./CTransform.js";
+import { CCamera } from "./CCamera.js";
+import { CObject3D } from "./CObject3D.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { IActiveSceneEvent };
+export { type IActiveSceneEvent };
 
 const _context: IRenderContext = {
     view: null,
@@ -58,8 +57,8 @@ interface ISceneRenderEvent<T extends string> extends ITypedEvent<T>
     context: IRenderContext;
 }
 
-export interface ISceneBeforeRenderEvent extends ISceneRenderEvent<"before-render"> { }
-export interface ISceneAfterRenderEvent extends ISceneRenderEvent<"after-render"> { }
+export type ISceneBeforeRenderEvent = ISceneRenderEvent<"before-render">;
+export type ISceneAfterRenderEvent = ISceneRenderEvent<"after-render">;
 
 export interface IActiveCameraEvent extends ITypedEvent<"active-camera">
 {
@@ -76,7 +75,7 @@ const _inputs = {
  * or multiple cameras. Only one camera at a time can be the "active" camera which is
  * used during each render cycle to render the currently active scene to one or multiple render views.
  */
-export default class CScene extends CTransform
+export class CScene extends CTransform
 {
     static readonly typeName: string = "CScene";
     static readonly isGraphSingleton = true;

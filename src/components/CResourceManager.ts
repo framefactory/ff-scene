@@ -8,50 +8,49 @@
 // import {
 //     Mesh,
 //     Texture,
-//     Geometry,
 //     BufferGeometry,
 //     Material,
 //     Object3D
 // } from "three";
-//
-// import Component, { types } from "@ff/graph/Component";
-//
+
+// import { Component, types } from "@ffweb/graph/Component.js";
+
 // ////////////////////////////////////////////////////////////////////////////////
-//
-// export type Resource = Texture | Geometry | BufferGeometry | Material;
-//
+
+// export type Resource = Texture | BufferGeometry | Material;
+
 // export interface IResourceEntry
 // {
 //     refCount: number;
 //     components: Map<Component, number>;
 // }
-//
+
 // /**
 //  * Resource manager for Three.js geometry, textures, and materials (shaders).
 //  */
-// export default class CResourceManager extends Component
+// export class CResourceManager extends Component
 // {
 //     static readonly typeName: string = "CResourceManager";
-//
-//     private geometries = new Map<Geometry | BufferGeometry, Map<Component, number>>();
+
+//     private geometries = new Map<BufferGeometry, Map<Component, number>>();
 //     private materials = new Map<Material, Map<Component, number>>();
 //     private textures = new Map<Texture, Map<Component, number>>();
-//
-//     useGeometry(geometry: Geometry | BufferGeometry, component: Component)
+
+//     useGeometry(geometry: BufferGeometry, component: Component)
 //     {
-//
+//         // not implemented
 //     }
-//
+
 //     addResource(resource: Resource)
 //     {
 //         this._getOrCreateEntry(resource, { refCount: 1 });
 //     }
-//
+
 //     removeResource(resource: Resource)
 //     {
 //         this._deleteEntry(resource);
 //     }
-//
+
 //     addSubtree(object: Object3D)
 //     {
 //         object.traverse(object => {
@@ -70,20 +69,20 @@
 //                             textures.set(texture.uuid, texture);
 //                         }
 //                     }
-//
+
 //                 }
 //             }
 //         });
 //     }
-//
+
 //     removeSubtree(object: Object3D)
 //     {
 //         this.traverseSubtree(object, texture => this)
 //     }
-//
+
 //     traverseSubtree(object: Object3D,
 //         onTexture: (texture: Texture) => void,
-//         onGeometry: (geometry: Geometry | BufferGeometry) => void,
+//         onGeometry: (geometry: BufferGeometry) => void,
 //         onMaterial: (material: Material) => void)
 //     {
 //         object.traverse(object => {
@@ -92,7 +91,7 @@
 //                 if (mesh.geometry) {
 //                     onGeometry(mesh.geometry);
 //                 }
-//
+
 //                 const material = mesh.material as THREE.Material;
 //                 if (material) {
 //                     if (Array.isArray(material)) {
@@ -109,7 +108,7 @@
 //             }
 //         });
 //     }
-//
+
 //     private _visitTextures(material: Material, onTexture: (texture: Texture) => void)
 //     {
 //         const keys = Object.keys(material);
@@ -120,11 +119,11 @@
 //             }
 //         }
 //     }
-//
+
 //     private _getOrCreateEntry(resource: Resource, template?: IResourceEntry): IResourceEntry | undefined
 //     {
 //         let entry;
-//
+
 //         if (resource.isTexture) {
 //             entry = this.textures.get(resource as Texture);
 //             if (!entry) {
@@ -152,10 +151,10 @@
 //                 }
 //             }
 //         }
-//
+
 //         return entry;
 //     }
-//
+
 //     private _deleteEntry(resource: Resource)
 //     {
 //         if (resource.isTexture) {

@@ -7,13 +7,13 @@
 
 import { BoxGeometry } from "three";
 
-import { types } from "@ff/graph/propertyTypes";
+import { types } from "@ffweb/graph/propertyTypes.js";
 
-import CGeometry from "./CGeometry";
+import { CGeometry } from "./CGeometry.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CBox extends CGeometry
+export class CBox extends CGeometry
 {
     static readonly typeName: string = "CBox";
 

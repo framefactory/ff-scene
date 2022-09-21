@@ -7,13 +7,13 @@
 
 import { SphereGeometry, MathUtils } from "three";
 
-import{ types } from "@ff/graph/propertyTypes";
+import { types } from "@ffweb/graph/propertyTypes.js";
 
-import CGeometry from "./CGeometry";
+import { CGeometry } from "./CGeometry.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CSphere extends CGeometry
+export class CSphere extends CGeometry
 {
     static readonly typeName: string = "CSphere";
 

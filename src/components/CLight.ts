@@ -7,8 +7,8 @@
 
 import { Light } from "three";
 
-import { types } from "@ff/graph/propertyTypes";
-import CObject3D from "./CObject3D";
+import { types } from "@ffweb/graph/propertyTypes.js";
+import { CObject3D } from "./CObject3D.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -20,7 +20,7 @@ const _mapResolution = {
     [EShadowMapResolution.High]: 2048,
 };
 
-export default class CLight extends CObject3D
+export class CLight extends CObject3D
 {
     static readonly typeName: string = "CLight";
 

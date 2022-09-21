@@ -5,36 +5,36 @@
  * License: MIT
  */
 
-import CAssetManager from "./CAssetManager";
-import CBackground from "./CBackground";
-import CBasicMaterial from "./CBasicMaterial";
-import CBox from "./CBox";
-import CCamera from "./CCamera";
-import CDirectionalLight from "./CDirectionalLight";
-import CFloor from "./CFloor";
-import CFullscreen from "./CFullscreen";
-import CGeometry from "./CGeometry";
-import CGrid from "./CGrid";
-import CImageTexture from "./CImageTexture";
-import CLight from "./CLight";
-import CMain from "./CMain";
-import CMaterial from "./CMaterial";
-import CMesh from "./CMesh";
-import CNavigator from "./CNavigator";
-import CObject3D from "./CObject3D";
-import COrbitManipulator from "./COrbitManipulator";
-import CPhongMaterial from "./CPhongMaterial";
-import CPickSelection from "./CPickSelection";
-import CPointLight from "./CPointLight";
-import CRenderer from "./CRenderer";
-import CRenderGraph from "./CRenderGraph";
-import CScene from "./CScene";
-import CSpotLight from "./CSpotLight";
-import CStandardMaterial from "./CStandardMaterial";
-import CTexture from "./CTexture";
-import CTorus from "./CTorus";
-import CTransform from "./CTransform";
-import CVideoTexture from "./CVideoTexture";
+import { CAssetManager } from "./CAssetManager.js";
+import { CBackground } from "./CBackground.js";
+import { CBasicMaterial } from "./CBasicMaterial.js";
+import { CBox } from "./CBox.js";
+import { CCamera } from "./CCamera.js";
+import { CDirectionalLight } from "./CDirectionalLight.js";
+import { CFloor } from "./CFloor.js";
+import { CFullscreen } from "./CFullscreen.js";
+import { CGeometry } from "./CGeometry.js";
+import { CGrid } from "./CGrid.js";
+import { CImageTexture } from "./CImageTexture.js";
+import { CLight } from "./CLight.js";
+import { CMain } from "./CMain.js";
+import { CMaterial } from "./CMaterial.js";
+import { CMesh } from "./CMesh.js";
+import { CNavigator } from "./CNavigator.js";
+import { CObject3D } from "./CObject3D.js";
+import { COrbitManipulator } from "./COrbitManipulator.js";
+import { CPhongMaterial } from "./CPhongMaterial.js";
+import { CPickSelection } from "./CPickSelection.js";
+import { CPointLight } from "./CPointLight.js";
+import { CRenderer } from "./CRenderer.js";
+import { CRenderGraph } from "./CRenderGraph.js";
+import { CScene } from "./CScene.js";
+import { CSpotLight } from "./CSpotLight.js";
+import { CStandardMaterial } from "./CStandardMaterial.js";
+import { CTexture } from "./CTexture.js";
+import { CTorus } from "./CTorus.js";
+import { CTransform } from "./CTransform.js";
+import { CVideoTexture } from "./CVideoTexture.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 

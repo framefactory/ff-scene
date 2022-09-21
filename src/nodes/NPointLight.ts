@@ -5,12 +5,12 @@
  * License: MIT
  */
 
-import NLight from "./NLight";
-import CPointLight from "../components/CPointLight";
+import { NLight } from "./NLight.js";
+import { CPointLight } from "../components/CPointLight.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class NPointLight extends NLight
+export class NPointLight extends NLight
 {
     static readonly typeName: string = "NPointLight";
 

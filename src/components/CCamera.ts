@@ -7,11 +7,11 @@
 
 import { Vector3, Euler, Quaternion } from "three";
 
-import { Node, types } from "@ff/graph/Component";
+import { Node, types } from "@ffweb/graph/Component.js";
 
-import UniversalCamera, { EProjection } from "@ff/three/UniversalCamera";
-import CObject3D, { ERotationOrder } from "./CObject3D";
-import math from "@ff/core/math";
+import { UniversalCamera, EProjection } from "@ffweb/three/UniversalCamera.js";
+import { CObject3D, ERotationOrder } from "./CObject3D.js";
+import { math } from "@ffweb/core/math.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +23,7 @@ const _quat = new Quaternion();
 export { EProjection };
 
 
-export default class CCamera extends CObject3D
+export class CCamera extends CObject3D
 {
     static readonly typeName: string = "CCamera";
 

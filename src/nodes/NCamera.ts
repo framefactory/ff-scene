@@ -5,14 +5,14 @@
  * License: MIT
  */
 
-import NTransform from "./NTransform";
-import CCamera, { EProjection } from "../components/CCamera";
+import { NTransform } from "./NTransform.js";
+import { CCamera, EProjection } from "../components/CCamera.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export { EProjection };
 
-export default class NCamera extends NTransform
+export class NCamera extends NTransform
 {
     static readonly typeName: string = "NCamera";
 

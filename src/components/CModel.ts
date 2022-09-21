@@ -7,14 +7,14 @@
 
 import { Object3D } from "three";
 
-import { IPointerEvent } from "../RenderView";
+import { IPointerEvent } from "../RenderView.js";
 
-import CRenderGraph, { types } from "./CRenderGraph";
-import CAssetLoader from "./CAssetLoader";
+import { CRenderGraph, types } from "./CRenderGraph.js";
+import { CAssetLoader } from "./CAssetLoader.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export default class CModel extends CRenderGraph
+export class CModel extends CRenderGraph
 {
     static readonly typeName: string = "CModel";
 
