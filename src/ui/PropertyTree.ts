@@ -5,8 +5,8 @@
  * License: MIT
  */
 
-import { Property } from "@ffweb/graph/Property.js";
-import { PropertyGroup } from "@ffweb/graph/PropertyGroup.js";
+import { PropertySocket } from "@ffweb/graph/PropertySocket.js";
+import { PropertySocketGroup } from "@ffweb/graph/PropertySocketGroup.js";
 import { Component } from "@ffweb/graph/Component.js";
 import { Node } from "@ffweb/graph/Node.js";
 import { System } from "@ffweb/graph/System.js";
@@ -25,7 +25,7 @@ interface IPropertyTreeNode extends ITreeNode
     children: IPropertyTreeNode[];
     text: string;
     classes: string;
-    property?: Property;
+    property?: PropertySocket;
 }
 
 @customElement("ff-property-tree")
@@ -142,9 +142,9 @@ export class PropertyTree extends Tree<IPropertyTreeNode>
         };
     }
 
-    protected createGroupNode(id: string, text: string, group: PropertyGroup): IPropertyTreeNode
+    protected createGroupNode(id: string, text: string, group: PropertySocketGroup): IPropertyTreeNode
     {
-        const properties = group.properties;
+        const sockets = group.sockets;
         const root: IPropertyTreeNode = {
             id,
             text,
@@ -152,8 +152,8 @@ export class PropertyTree extends Tree<IPropertyTreeNode>
             children: []
         };
 
-        properties.forEach(property => {
-            const fragments = property.path.split(".");
+        sockets.forEach(socket => {
+            const fragments = socket.path.split(".");
             let node = root;
 
             const count = fragments.length;
@@ -164,14 +164,14 @@ export class PropertyTree extends Tree<IPropertyTreeNode>
                 let child = node.children.find(node => node.text === fragment);
 
                 if (!child) {
-                    const id = i === last ? property.key : fragment;
+                    const id = i === last ? socket.key : fragment;
 
                     child = {
                         id,
                         text: fragment,
                         classes: "",
                         children: [],
-                        property: i === last ? property : null
+                        property: i === last ? socket : null
                     };
                     node.children.push(child);
                 }

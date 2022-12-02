@@ -5,7 +5,7 @@
  * License: MIT
  */
 
-import { Property } from "@ffweb/graph/Property.js";
+import { PropertySocket } from "@ffweb/graph/PropertySocket.js";
 
 import { ColorButton, IColorEditChangeEvent } from "@ffweb/ui/ColorButton.js";
 
@@ -27,7 +27,7 @@ const _defaultLabels = [ "X", "Y", "Z", "W" ];
 export class PropertyView extends CustomElement
 {
     @property({ attribute: false })
-    property: Property = null;
+    property: PropertySocket<any> = null;
 
     protected editButton: HTMLElement = null;
 

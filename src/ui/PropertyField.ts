@@ -7,7 +7,7 @@
 
 import { math } from "@ffweb/core/math.js";
 
-import { Property, IPropertyChangeEvent } from "@ffweb/graph/Property.js";
+import { PropertySocket, ISocketChangeEvent } from "@ffweb/graph/PropertySocket.js";
 
 import { CustomElement, customElement, property, PropertyValues } from "@ffweb/ui/CustomElement.js";
 import { PopupOptions, IPopupMenuSelectEvent } from "@ffweb/ui/PopupOptions.js";
@@ -15,7 +15,7 @@ import { LineEdit, ILineEditChangeEvent } from "@ffweb/ui/LineEdit.js";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export { Property };
+export { PropertySocket as Property };
 
 @customElement("ff-property-field")
 export class PropertyField extends CustomElement
@@ -25,7 +25,7 @@ export class PropertyField extends CustomElement
     static readonly defaultSpeed = 0.1;
 
     @property({ attribute: false })
-    property: Property;
+    property: PropertySocket;
 
     @property({ attribute: false })
     index = undefined;
@@ -47,7 +47,7 @@ export class PropertyField extends CustomElement
     protected buttonElement: HTMLDivElement = null;
     protected contentElement: HTMLDivElement = null;
 
-    constructor(property?: Property)
+    constructor(property?: PropertySocket)
     {
         super();
 
@@ -146,13 +146,13 @@ export class PropertyField extends CustomElement
     protected connected()
     {
         this.property.on("value", this.onPropertyValue, this);
-        this.property.on<IPropertyChangeEvent>("change", this.onPropertyChange, this);
+        this.property.on<ISocketChangeEvent>("change", this.onPropertyChange, this);
     }
 
     protected disconnected()
     {
         this.property.off("value", this.onPropertyValue, this);
-        this.property.off<IPropertyChangeEvent>("change", this.onPropertyChange, this);
+        this.property.off<ISocketChangeEvent>("change", this.onPropertyChange, this);
     }
 
     protected onFocus(_event: FocusEvent)
