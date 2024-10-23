@@ -2,7 +2,6 @@
     "compilerOptions": {
         //"strict": true,
         "forceConsistentCasingInFileNames": true,
-        //"preserveSymlinks": true,
         "checkJs": true,
         "allowJs": true,
         "allowSyntheticDefaultImports": true,

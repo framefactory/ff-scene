@@ -1,6 +1,6 @@
 /**
  * FF Typescript Foundation Library
- * Copyright 2022 Ralph Wiedemeier, Frame Factory GmbH
+ * Copyright 2024 Ralph Wiedemeier, Frame Factory GmbH
  *
  * License: MIT
  */
@@ -15,7 +15,7 @@ import {
     property,
     html,
     type TemplateResult
-} from "@ffweb/ui/CustomElement.js";
+} from "@ffweb/lit/CustomElement.js";
 
 import "./PropertyField.js";
 

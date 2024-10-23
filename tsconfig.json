@@ -2,8 +2,8 @@
     "extends": "./tsconfig.base.json",
 
     "compilerOptions": {
-        "target": "ES2022",
-        "module": "ESNext",
+        "target": "ES2021",
+        "module": "NodeNext",
         "moduleResolution": "NodeNext",
 
         "composite": true,
@@ -19,7 +19,7 @@
             "@ffweb/browser/*": [ "browser/src/*" ],
             "@ffweb/graph/*": [ "graph/src/*" ],
             "@ffweb/three/*": [ "three/src/*" ],
-            "@ffweb/ui/*": [ "ui/src/*" ],
+            "@ffweb/lit/*": [ "lit/src/*" ],
         }
     },
     "include": [
@@ -30,6 +30,6 @@
         { "path": "../browser/tsconfig.json" },
         { "path": "../graph/tsconfig.json" },
         { "path": "../three/tsconfig.json" },
-        { "path": "../ui/tsconfig.json" }
+        { "path": "../lit/tsconfig.json" }
     ]
 }

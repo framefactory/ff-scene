@@ -2,9 +2,9 @@
     "extends": "./tsconfig.base.json",
 
     "compilerOptions": {
-        "target": "ES2022",
+        "target": "ES2021",
         "module": "CommonJS",
-        "moduleResolution": "NodeNext",
+        "moduleResolution": "Node",
 
         "composite": true,
         "declaration": true,
@@ -19,7 +19,7 @@
             "@ffweb/browser/*": [ "browser/src/*" ],
             "@ffweb/graph/*": [ "graph/src/*" ],
             "@ffweb/three/*": [ "three/src/*" ],
-            "@ffweb/ui/*": [ "ui/src/*" ],
+            "@ffweb/lit/*": [ "lit/src/*" ],
         }
     },
     "include": [
@@ -30,6 +30,6 @@
         { "path": "../browser/tsconfig.cjs.json" },
         { "path": "../graph/tsconfig.cjs.json" },
         { "path": "../three/tsconfig.cjs.json" },
-        { "path": "../ui/tsconfig.cjs.json" }
+        { "path": "../lit/tsconfig.cjs.json" }
     ]
 }
